@@ -1,5 +1,268 @@
 # 해외 언론보도 데이터 기반 주요 분쟁의 무기·방산기술 사용 동향 분석 대시보드
 
+## 프로젝트 구조
+
+```text
+conflict-defense-news-dashboard/
+├── README.md                    # 프로젝트 안내와 실행 방법
+├── requirements.txt             # 필요한 Python 패키지
+├── requirements-dev.txt         # 개발용 Ruff 버전
+├── pyproject.toml               # Python 포맷·코드 검사 규칙
+├── schema.dbml                  # 실제 데이터 연결용 테이블·관계·제약 명세
+├── .editorconfig                # 편집기의 Python 들여쓰기·줄바꿈
+├── app.py                       # 앱 설정, 상단 메뉴, 공통 필터 연결
+├── config.py                    # 기본 기간, 분쟁 정보, 색상, 분류 수
+├── .vscode/
+│   ├── settings.json           # Python 저장 시 Ruff 포맷 적용
+│   └── extensions.json         # 팀 공통 Ruff 확장 추천
+├── .streamlit/
+│   └── config.toml              # Streamlit 기본 테마
+├── pages/
+│   ├── 00_overview.py           # 분쟁 요약과 범주별 상세 명칭
+│   ├── 01_overview_map.py       # 지도와 분쟁별 주요 범주
+│   ├── 02_weapons_monthly.py    # 무기 월간 화면 호출
+│   └── 03_technology_monthly.py # 기술 월간 화면 호출
+├── data/
+│   ├── reference_data.py        # ERD 기준 테이블의 가상 예시
+│   ├── sample_data.py           # 가상 기사·판정 결과 생성과 화면용 집계
+│   └── ucdp/
+│       ├── README.md            # UCDP 파일별 한글 설명과 데이터 처리 흐름
+│       ├── raw/                 # GED·Actor 원본 CSV와 추출 안내
+│       ├── references/          # 국가코드 매핑과 GDELT FIPS 기준표
+│       └── processed/           # 모든 가공 CSV·JSON을 하위 폴더 없이 보관
+├── services/
+│   └── analysis_service.py      # 조건별 필터링, 월별 집계, Top 3
+├── ui/
+│   ├── maps.py                  # 국가 경계 로딩과 Folium 지도 생성
+│   ├── monthly_view.py          # 무기·기술 월간 화면의 공통 구성
+│   ├── components.py            # 공통 필터, 범주 선택, 공통 표시 요소
+│   └── charts.py                # 현재 디자인의 Plotly 차트
+├── tests/
+│   ├── test_app.py              # 최초 실행·페이지 이동·공통 필터 검사
+│   └── test_sample_data.py      # ERD 제약·중복 제거·SQL 집계 대조 검사
+├── utils/
+│   └── state.py                 # 선택값 초기화·저장·초기화 버튼 처리
+└── assets/
+    ├── README.md                # 지도 데이터 출처와 가공 내역
+    ├── style.css                # 화면 스타일
+    └── world_countries.geojson  # 지도 경계 데이터
+```
+
+`app.py`가 공통 설정과 필터를 준비합니다. 보도 동향은 `pages/00_overview.py`에서 분쟁별 요약과 범주별 상세 명칭을 표시하고, 지도 화면은 `pages/01_overview_map.py`에서 구성합니다. 무기·기술 월간 페이지는 `ui/monthly_view.py`의 공통 화면 함수를 호출합니다. 데이터는 `data`, 집계 함수는 `services`, 페이지 이동 후에도 유지할 선택값과 선택 변경 콜백은 `utils/state.py`에서 관리합니다.
+
+`schema.dbml`은 실제 데이터 연결을 위한 7개 테이블의 설계 명세입니다. 파일 전체를 dbdiagram.io에 붙여 넣으면 관계와 제약조건을 확인할 수 있습니다. `kind`는 `wp`·`tech`, `usage_code`는 `0`(사용 외 언급)·`1`(사용 확인)·`2`(확인 필요)로 정의하며, DB의 `kind`를 화면에 전달할 때는 `무기`·`기술`로 변환합니다. URL 중복 제거와 사전별 범주 유형 검증은 적재 단계에서 처리합니다. 현재 앱은 계속 샘플 데이터를 사용합니다.
+
+## UCDP 데이터 추출
+
+UCDP GED 26.1에서 **2016~2025년 국가 기반 분쟁(`type_of_violence=1`)**을
+추출하는 코드는 `scripts/prepare_ucdp.py`에 있다. 원본 두 파일은
+`data/ucdp/raw/`에 보관하며, 실행하면 필요한 20개 컬럼의 사건 CSV와
+버전·필터·건수를 기록한 JSON을 `data/ucdp/processed/`에 생성한다.
+
+```bash
+conda activate streamlit
+python scripts/prepare_ucdp.py
+```
+
+원본 위치, 실행 옵션과 검증 방법은 [UCDP 추출 안내](data/ucdp/raw/README.md)를
+참고한다. 이 추출 결과는 이후 분쟁 목록과 GDELT 검색 조건을 만드는 입력이다.
+
+2단계 추출 후 다음 명령으로 **분쟁 목록·행위자 검색어·사건별 검색 조건·국가별
+월간 조회 계획**을 생성한다. 2단계 JSON에서 추출 CSV 경로와 해시를 확인하고
+Actor 자료를 연결하며, 결과는 추출 CSV와 같은 `data/ucdp/processed/`에 저장한다.
+
+```bash
+python scripts/build_ucdp_search_inputs.py
+```
+
+기본값, 입력 경로 지정과 결과 파일 설명은 위 UCDP 추출 안내의 3단계를 참고한다.
+전체 파일의 역할은 [UCDP 파일별 한글 설명](data/ucdp/README.md)에 정리했다.
+
+## 대시보드 실행
+
+현재 화면은 **ERD의 7개 테이블에 맞춘 가상 기사와 판정 결과**를 사용합니다. 분쟁·일 단위 기간·유형·범주 필터를 조작하면 원본에서 계산한 지표를 조회합니다. 기사 제목·URL·근거 문장은 모두 예시이며 실제 보도나 SIPRI/NATO 공식 사전이 아닙니다.
+
+프로젝트 루트에서 실행합니다.
+
+```bash
+conda activate streamlit
+python -m streamlit run app.py
+```
+
+새 Python 환경에서는 먼저 `python -m pip install -r requirements.txt`로 의존성을 설치합니다. 화면에서 사용하는 주요 패키지는 Streamlit, Pandas, Plotly, Folium입니다.
+
+### 팀 개발 환경과 코드 규칙
+
+개발 환경은 Python 3.13을 기준으로 합니다. Python 코드는 **Ruff 0.16.8**, **스페이스 2칸**, **작성한 따옴표 유지**, **줄 길이 기준 88자**, **LF 줄바꿈**으로 정리합니다. `pyproject.toml`에는 Python 버전, 들여쓰기, 따옴표 유지, 줄바꿈과 검사할 규칙만 설정합니다. 줄 길이 88자와 스페이스 들여쓰기 방식은 Ruff 기본값을 사용합니다.
+
+파일 첫 줄의 `'''내용'''`은 Python에서 주석이 아닌 모듈 docstring입니다. Ruff는 `quote-style = "single"`이어도 docstring을 `"""내용"""`으로 정리하므로, 작은따옴표 세 개를 유지하려면 `"preserve"`가 필요합니다. 이 설정은 편집기 저장과 터미널에 공통으로 적용됩니다. 자세한 동작은 [Ruff의 quote-style 문서](https://docs.astral.sh/ruff/settings/#format_quote-style)를 참고하세요.
+
+프로젝트 루트에서 개발 도구를 설치합니다. `requirements.txt`는 앱 실행 패키지, `requirements-dev.txt`는 개발용 Ruff만 관리합니다. 개발 환경에서는 두 파일을 함께 설치할 수 있습니다.
+
+```bash
+conda activate streamlit
+python -m pip install -r requirements.txt -r requirements-dev.txt
+```
+
+- `pyproject.toml`이 팀 공통 규칙입니다. 기본 오류·미사용 변수 및 import를 검사하고 import 순서를 정리합니다. 프로젝트 내부 모듈은 Ruff가 자동으로 인식합니다.
+- VS Code에서는 Ruff 확장을 설치하고 위 도구를 설치한 Python 환경을 선택합니다. 프로젝트 설정이 Python 기본 포맷터를 Ruff로 지정하며, 저장 시 포맷과 수정 가능한 오류·import 순서 정리를 실행합니다.
+- 확장은 선택한 환경의 Ruff를 우선 사용하고 프로젝트 설정 파일을 우선 적용합니다. Ruff 버전은 `requirements-dev.txt`에서 관리합니다.
+- `.editorconfig`를 지원하는 편집기는 Python 입력 시에도 2칸 들여쓰기를 사용합니다. 다른 편집기를 사용해도 아래 터미널 명령으로 동일하게 검사할 수 있습니다.
+
+자동 정리와 수정 없는 검사는 다음 명령을 사용합니다.
+
+```bash
+# 자동 정리: 코드 오류와 import 순서를 먼저 수정한 뒤 포맷을 적용한다.
+python -m ruff check --fix .
+python -m ruff format .
+
+# 검사만 실행: 원본 파일을 수정하지 않는다.
+python -m ruff check .
+python -m ruff format --check .
+```
+
+Ruff 버전을 올릴 때는 `requirements-dev.txt`를 변경하고 전체 검사를 실행합니다.
+
+### 페이지 구성
+
+| 파일                             | 화면                                 |
+| -------------------------------- | ------------------------------------ |
+| `pages/00_overview.py` | 분쟁별 요약과 주요 범주별 상세 명칭 |
+| `pages/01_overview_map.py` | 지도와 분쟁별 주요 무기/기술 |
+| `pages/02_weapons_monthly.py`    | 방산 무기 월간 분석                  |
+| `pages/03_technology_monthly.py` | 방산 기술 월간 분석                  |
+
+`app.py`에서 위 네 페이지를 상단 메뉴에 등록하고 공통 필터를 연결합니다. 첫 화면은 상세 목록이 있는 보도 동향이며, 무기·기술 월간 화면은 같은 `render_monthly()` 함수를 사용합니다.
+
+Streamlit은 최초 실행 시 `pages` 폴더를 자동 탐색하며 숫자 접두사를 제외한 파일명으로 URL을 추론합니다. `00_overview.py`와 `01_overview.py`처럼 나머지 이름이 같으면 앱의 `st.navigation()` 설정이 실행되기 전에 충돌하므로, 지도 페이지는 `01_overview_map.py`로 구분합니다.
+
+- 기본 조건: 분쟁 전체, 2026-03-01~2026-08-31, 유형 전체.
+- 보도 동향의 지표 아래에는 분쟁별 요약과 통합 상세 목록을 1:2로 배치합니다. 상세 목록은 범주를 중복 제거하고 사전 명칭을 쉼표로 연결합니다. 지도 화면에서는 지도와 주요 무기·기술 영역을 2:1로 배치합니다. 오른쪽 카드는 러시아·우크라이나, 이란·이스라엘 순서로 세로 표시하며, 좁은 화면에서는 지도 아래로 이어집니다.
+- 좌우로 배치된 두 영역의 테두리는 같은 높이를 유지합니다. 오른쪽 제목은 유형 선택에 따라 `분쟁별 주요 무기/기술`, `분쟁별 주요 무기`, `분쟁별 주요 기술`로 바뀝니다.
+- 지도 초기 중심은 위도 41·경도 39, 줌은 3.4로 고정합니다. 여러 화면 크기에서 마커와 말풍선이 잘리지 않는지 직접 확인한 값이며, 선택한 분쟁에 따라 자동으로 범위를 계산하지 않습니다.
+- 분쟁·기간은 페이지 이동 시 유지됩니다. 범주 선택은 무기·기술 페이지별로 유지되며 검색으로 숨겨져도 해제되지 않습니다.
+- 월별 추이는 선택한 범주만 표시합니다. 최신 Top 3는 선택 기간 마지막 월의 보도 수로 선정하며 추이 범주 선택과 독립적입니다. 동률이면 이름 오름차순입니다.
+- 시작일·종료일을 모두 포함합니다. 월 일부만 선택하면 그 기간만 집계하고 `부분 기간`으로 표시합니다.
+- 초기화는 분쟁·기간·유형·범주 선택·범주 검색을 기본값으로 되돌립니다.
+- 보도 건수는 실제 사용 횟수나 성능을 의미하지 않습니다.
+
+### 샘플 값 수정 및 실제 데이터 교체
+
+`data/reference_data.py`에서 기준 테이블을 정의하고, `data/sample_data.py`에서 고정된 난수 시드로 기사와 판정 결과를 생성합니다. `load_sample_tables()`는 다음 7개 Pandas DataFrame을 테이블명으로 조회할 수 있는 사전으로 반환합니다.
+
+| 테이블 | 기본 샘플 행 수 | 내용 |
+| --- | ---: | --- |
+| `conflicts` | 2 | 분쟁 ID, 한국어 이름, 색상, 국기, 표시 순서 |
+| `articles` | 5,708 | 기사 ID, 분쟁 ID, 발행일, 가상 URL, 제목 |
+| `categories` | 13 | 무기(`wp`) 7개·기술(`tech`) 6개 범주와 한·영 이름 |
+| `sipri_dictionary` | 15 | 무기 범주에 연결된 예시 명칭·유의어 |
+| `nato_dictionary` | 12 | 기술 범주에 연결된 예시 명칭·유의어 |
+| `usage_patterns` | 6 | 사용 표현의 원형·활용형. 다른 테이블과 FK로 연결하지 않음 |
+| `result` | 9,849 | 기사 × 범주 복합키, 사용 여부 코드, 근거 문장 |
+
+```python
+from data.sample_data import load_sample_tables
+
+tables = load_sample_tables()
+print(tables['articles'].head())
+print(tables['result'].head())
+```
+
+- 기사는 2026-03-01~2026-08-31에 걸쳐 생성하며, URL은 `https://example.invalid/` 아래의 가상 주소입니다.
+- 한 기사에 여러 무기·기술 범주가 함께 등장할 수 있습니다. 같은 기사·범주의 결과는 한 행만 생성합니다.
+- `usage_code`는 `0`(사용 외 언급), `1`(사용 확인), `2`(확인 필요)를 모두 포함합니다. 사용 확인 결과에는 근거 문장이 반드시 있습니다.
+- 결과가 없는 기사 335건도 포함합니다. 이는 무기·기술 언급이 없는 수집 기사 예시이며 분석 기사 수에서 제외합니다.
+- 사용 판정은 완료된 상태를 가정한 가상 값입니다. `usage_patterns`의 단어가 문장에 있다는 이유만으로 사용 보도로 판정하는 분석기는 구현하지 않습니다.
+- 같은 기준 데이터·기간으로 다시 실행하면 같은 결과가 나옵니다. 캐시 입력에 기준 테이블과 기간을 전달하며, 호출자가 반환값을 수정해도 캐시 원본에는 영향을 주지 않습니다.
+
+`services/analysis_service.py`의 `build_dashboard_data()`가 원본 테이블을 조인하여 집계합니다.
+
+| 지표 | 집계 기준 |
+| --- | --- |
+| 분석 기사 수 | 선택한 유형의 `result`에 등장하는 고유 `article_id` 수. 코드 0·1·2 포함 |
+| 사용 보도 수 | 선택한 유형에서 `usage_code=1`인 고유 `article_id` 수 |
+| 전체 기사 수 | 무기·기술 기사 집합의 합집합. 유형별 숫자를 단순 합산하지 않음 |
+| 범주별 추이·Top 3 | 사용이 확인된 기사만 범주별로 중복 제거. 한 기사가 여러 범주에 기여할 수 있음 |
+| 샘플 분류 수 | `categories`의 범주 수. 사전의 명칭·유의어 수와 구분하며 기간·분쟁에 무관 |
+
+기본 전체 기간의 분석 기사는 **5,373건**, 사용 보도는 **3,700건**, 샘플 범주는 **13개**입니다. 이 숫자는 별도로 입력한 합계가 아니라 원본 기사·판정 결과에서 계산됩니다. 보도가 없는 날짜·범주도 0으로 채워 월별 그래프에서 선택한 범주가 누락되지 않게 합니다.
+
+| 파일 | 수정 대상 |
+| --- | --- |
+| `data/reference_data.py` | 분쟁·범주·명칭·사용 표현, 샘플 시작일과 종료일 |
+| `data/sample_data.py` | 일별 기사 수, 기사별 범주 조합, 사용 코드 분포와 가상 근거 문장 |
+| `services/analysis_service.py` | 원본 조인·중복 제거 집계, 기간 필터, 월별 추이와 순위 |
+| `config.py` | 지도 대표 좌표, 지도 초기 위치와 배율, 차트 색상 |
+
+분쟁 이름·색상·국기·표시 순서와 범주 목록·개수는 기준 테이블에서 읽습니다. 범주 기본 선택은 한국어 이름순 첫 3개입니다. 지도 대표 좌표는 ERD에 없으므로 `config.py`의 `CONFLICT_LOCATIONS`에서 별도로 관리합니다.
+
+`load_dashboard_data()`의 화면용 반환 형식은 유지합니다.
+
+- 기사 지표: `date`, `conflict`, `kind`(전체/무기/기술), `analysis_articles`, `usage_articles`.
+- 범주별 사용 보도 수: `date`, `conflict`, `kind`(무기/기술), `category`, `count`.
+
+실제 DB를 연결할 때는 `load_sample_tables()`의 기사·결과 공급부와 `load_reference_tables()`의 기준 정보 공급부를 함께 교체합니다. ERD 컬럼, PK/FK, 사용 코드와 근거 문장 제약을 지키면 같은 집계 함수를 사용할 수 있습니다. DB 연결과 뉴스 수집은 아직 구현하지 않았습니다.
+
+### 코드 수정 위치
+
+| 파일                           | 주요 함수와 역할                                                                                                                                                                             |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `services/analysis_service.py` | `filter_data()`는 기간·분쟁·유형 필터, `article_totals()`는 기사 지표 합계, `monthly_trend()`는 월별 합계, `ranked_categories()`·`latest_distribution()`는 Top 3와 분쟁별 분포를 계산합니다. |
+| `utils/state.py`               | `init_session_state()`는 없는 선택값만 기본값으로 채우고, `remember_kind()`·`remember_category()`는 변경한 선택을 저장합니다. `reset_filters()`는 선택과 검색을 초기화합니다.                |
+| `ui/components.py`             | `render_filters()`는 공통 필터, `render_category_picker()`는 검색 가능한 범주 목록, `conflict_card()`는 분쟁별 카드 HTML을 만듭니다.                                                         |
+| `pages/00_overview.py` | 분쟁별 요약과 무기·기술별 상세 명칭 목록을 표시합니다. |
+| `pages/01_overview_map.py` | 선택 조건에 맞게 집계하고 기사 지표, 왼쪽 지도, 오른쪽 분쟁별 카드를 직접 배치합니다.                                                                                                        |
+| `ui/maps.py`                   | `build_conflict_map()`은 분쟁별 보도 수와 주요 범주를 받아 Folium 지도를 만듭니다.                                                                                                           |
+| `ui/monthly_view.py`           | `render_monthly(kind)`는 유형을 받아 무기·기술 월간 화면을 구성합니다.                                                                                                                       |
+| `ui/charts.py`                 | `trend_chart()`는 선 그래프, `distribution_chart()`는 누적 가로 막대그래프를 만듭니다.                                                                                                       |
+| `assets/style.css`             | 공통 배경, 제목, 카드, 필터, 범주 태그, 좁은 화면의 여백을 수정합니다.                                                                                                                       |
+
+`ui/components.py`의 `apply_styles()`가 CSS 파일을 읽어 적용합니다. 지도는 별도 iframe 안에 표시되므로 지도 전용 스타일은 `ui/maps.py`에 있습니다. 이번 구현에는 DB 연결과 뉴스 수집을 포함하지 않습니다.
+
+지도는 API 키가 필요 없는 로컬 Natural Earth 경계 데이터와 Folium을 사용합니다. Leaflet JS/CSS를 CDN에서 불러오므로 최초 표시에는 인터넷 연결이 필요합니다. 지도 출처와 가공 내역은 [assets/README.md](assets/README.md)를 참고하세요.
+
+### 검증
+
+프로젝트 루트에서 문법 오류를 확인합니다. 이 명령은 화면 동작까지 검사하지는 않습니다.
+
+```bash
+python -m compileall -q app.py config.py pages data services ui utils
+```
+
+ERD 컬럼·기본키·외래키, 사전 유형, 사용 근거, 중복 제거, 빈 데이터와 월별 집계를 검사합니다. 실제 샘플 집계는 별도 SQLite 쿼리의 `COUNT(DISTINCT article_id)` 결과와 대조합니다.
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+Streamlit AppTest로 기본 지표와 네 페이지의 실행 오류를 확인할 수 있습니다.
+
+```bash
+python - <<'PY'
+from streamlit.testing.v1 import AppTest
+
+app = AppTest.from_file("app.py").run(timeout=20)
+assert not app.exception
+values = [int(metric.value.replace(",", "").rstrip("건개")) for metric in app.metric]
+assert values == [5373, 3700, 13]
+for page in [
+  "pages/02_weapons_monthly.py",
+  "pages/03_technology_monthly.py",
+  "pages/01_overview_map.py",
+  "pages/00_overview.py",
+]:
+  app.switch_page(page).run()
+  assert not app.exception
+print("기본 지표와 페이지 진입 확인 완료")
+PY
+```
+
+화면을 변경한 뒤에는 앱을 실행해 하루 선택, 월 경계를 넘는 부분 기간, 종료일 미선택, 범주 전체 해제, 검색 후 선택 유지, 페이지 왕복 이동과 초기화를 확인합니다. Top 3는 범주를 모두 해제해도 유지되어야 하며, 지도·차트·한글 표시와 카드 겹침 여부는 브라우저에서 확인합니다.
+
+지도 화면은 넓은 화면에서 지도 오른쪽에 카드가 세로로 놓이고 두 영역의 테두리 높이가 같은지, 분쟁·유형 선택에 따라 제목과 카드·범주가 바뀌는지 확인합니다. 좁은 화면에서는 카드가 지도 아래로 이어지고 고정 초기 줌에서도 마커·말풍선·태그가 잘리지 않는지 확인합니다.
+
+---
+
 ## 프로젝트 개요
 
 ### 배경
@@ -131,8 +394,8 @@
    - 사용 관련 보도 수(방산 무기/기술의 사용이 원문에 명시된 기사 수)
      : 분쟁관련 기사 중 방산 무기/기술의 사용 사례가 언급된 기사
    - 분석용 방산 무기/기술 분류 수
-     - SIPRI 기준 방산 무기 총 개수 (210)
-     - NATO 기준 방산 기술 총 개수 (114)
+     - 샘플에 등록된 방산 무기 범주 수 (현재 7개)
+     - 샘플에 등록된 방산 기술 범주 수 (현재 6개)
    - 분쟁별 방산 무기/기술 사용 보도 현황 지도
      - 분쟁별 사용 관련 보도 수
      - 분쟁별 주요 방산 무기/기술 Top 3

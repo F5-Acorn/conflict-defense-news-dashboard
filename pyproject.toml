@@ -1,0 +1,10 @@
+[tool.ruff]
+target-version = "py313"
+indent-width = 2
+
+[tool.ruff.format]
+quote-style = "preserve"
+line-ending = "lf"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]

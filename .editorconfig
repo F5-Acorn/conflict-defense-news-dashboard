@@ -1,0 +1,10 @@
+# 지원하는 편집기에서 Python 입력 방식도 Ruff 규칙에 맞춘다.
+root = true
+
+[*.py]
+charset = utf-8
+indent_style = space
+indent_size = 2
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
