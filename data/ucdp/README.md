@@ -1,71 +1,48 @@
-# UCDP 데이터 파일 안내
+# 국가 간 분쟁 보도 수집을 위한 UCDP 전처리
 
-UCDP 데이터는 원본(`raw`), 참조 자료(`references`), 가공 결과(`processed`)로
-구분한다. 가공 결과는 처리 단계와 관계없이 `processed` 바로 아래에 저장한다.
+## 수집 목적과 범위
 
-CSV에는 표준 주석 문법이 없어 설명 행을 넣으면 Pandas·Excel 등의 도구가
-헤더나 데이터로 해석할 수 있다. 원본과 기존 CSV 형식·인코딩을 유지하고,
-파일별 한글 설명은 이 문서와 생성 스크립트의 주석으로 제공한다.
+**모든 국가 간 분쟁에서 무기·기술이 사용되었다는 보도**를 2016~2026년
+기사 발행일 기준으로 수집한다. 내부 분쟁, 비국가 분쟁, 일방적 폭력과
+구매·개발·지원 계획만 다룬 보도는 최종 사용 보도 집계에서 제외한다.
+
+UCDP는 대상 분쟁·교전 당사자와 참고 사건을 제공한다. GDELT 기사에 대응하는
+개별 UCDP 사건이 있어야 한다는 조건은 적용하지 않는다. 무사망 요격·전자전 등도
+해당 국가 간 분쟁의 사용 보도이면 포함할 수 있다.
+
+수집 범위는 [`references/collection_scope.json`](references/collection_scope.json)에
+둔다. 기본 요청 기간은 `2016-01-01`~`2026-12-31`이며, 실제 조회 상한은 실행 시
+UTC 오늘 또는 `--as-of`와 요청 종료일 중 빠른 날이다. 미래 기사를 조회하지 않는다.
+분쟁별 전체 기간을 검색하는 것은 모든 달에 그 분쟁이 진행됐다고 주장하는 것이 아니다.
+
+현재 구현은 **UCDP 전처리·검색 계획 생성까지**이다. BigQuery 실행·본문 수집·기사
+분쟁 판정·DB 적재는 후속 단계다. 앱은 기존 가상 데이터를 사용한다.
 
 ## 원본 다운로드 및 배치
 
-UCDP 원본 CSV는 용량 때문에 GitHub에 포함하지 않는다. 저장소를 복제하거나
-ZIP으로 내려받은 뒤, [UCDP 공식 다운로드 센터](https://ucdp.uu.se/downloads/index.html)에서
-아래 두 자료의 **26.1 버전 CSV**를 직접 다운로드한다.
-현재 처리 코드와 국가코드 매핑은 26.1을 기준으로 하므로 같은 버전을 사용한다.
+[UCDP 공식 다운로드 센터](https://ucdp.uu.se/downloads/index.html)에서 다음 CSV를
+다운로드한다. 원본은 Git에 포함하지 않으며 기존 파일을 가공 결과로 덮어쓰지 않는다.
 
-| 자료 | 다운로드 | 압축 해제 후 저장할 경로 (프로젝트 루트 기준) |
+| 자료 | 공식 다운로드 | `data/ucdp/raw/`의 파일명 |
 | --- | --- | --- |
-| UCDP GED Global 26.1 | [GED CSV ZIP](https://ucdp.uu.se/downloads/ged/ged261-csv.zip) | `data/ucdp/raw/GEDEvent_v26_1.csv` |
-| UCDP Actor Dataset 26.1 | [Actor CSV ZIP](https://ucdp.uu.se/downloads/actor/ucdp-actor-261-csv.zip) | `data/ucdp/raw/Actor_v26_1.csv` |
+| GED Global 26.1 | [ZIP](https://ucdp.uu.se/downloads/ged/ged261-csv.zip) | `GEDEvent_v26_1.csv` |
+| Armed Conflict Dataset 26.1 | [ZIP](https://ucdp.uu.se/downloads/ucdpprio/ucdp-prio-acd-261-csv.zip) | `UcdpPrioConflict_v26_1.csv` |
+| Actor 26.1 | [ZIP](https://ucdp.uu.se/downloads/actor/ucdp-actor-261-csv.zip) | `Actor_v26_1.csv` |
+| Candidate 2026년 1~6월 | [CSV](https://ucdp.uu.se/downloads/candidateged/GEDEvent_v26_01_26_06.csv) | `GEDEvent_v26_01_26_06.csv` |
+| Candidate 2026년 7월 | [CSV](https://ucdp.uu.se/downloads/candidateged/GEDEvent_v26_0_7.csv) | `GEDEvent_v26_0_7.csv` |
+| Candidate 2026년 8월 | [CSV](https://ucdp.uu.se/downloads/candidateged/GEDEvent_v26_0_8.csv) | `GEDEvent_v26_0_8.csv` |
 
-프로젝트 루트에서 저장 폴더를 준비한다.
+2026-09-23 확인 기준으로 연간 확정 자료는 2025년까지, Candidate 공개분은
+2026년 8월까지다. 9월 이후의 신규 분쟁은 아직 UCDP 기반 목록에 없을 수 있다.
+검색 기간을 연장하는 것만으로 신규 분쟁이 자동 발견되는 것은 아니다.
+다음 공개분을 받으면 설정의 `candidate_sources`에 파일명·버전·실제 수록 기간을
+추가하거나 누적 공개분으로 교체하고 두 스크립트를 다시 실행한다.
 
-```bash
-mkdir -p data/ucdp/raw
-```
+설정에 지정한 파일이 없으면 중단한다. 누락된 월을 0건으로 간주하지 않는다.
+`candidate_coverage`에는 공개분의 기간, `candidate_missing_periods`에는 아직
+확보하지 않은 기간을 기록한다. GED 사건 유무와 자료 수록 여부는 구분한다.
 
-다운로드한 ZIP의 압축을 풀고 CSV 두 개를 위 경로에 복사한다. 압축 해제 시 별도
-폴더가 생겼더라도 CSV는 `raw` 바로 아래에 넣고, 파일명과 원본 내용·인코딩을 유지한다.
-
-```text
-data/ucdp/raw/
-├── README.md
-├── GEDEvent_v26_1.csv
-└── Actor_v26_1.csv
-```
-
-`.gitignore`에서 `data/ucdp/raw/`의 원본 파일과 하위 폴더를 제외하며,
-안내 문서인 `README.md`만 Git으로 관리한다.
-배치가 끝나면 아래 [실행 순서](#실행-순서)에 따라 두 가공 스크립트를 실행한다.
-
-## CSV별 역할
-
-| 파일 | 역할 | 사용 단계 |
-| --- | --- | --- |
-| [`raw/GEDEvent_v26_1.csv`](raw/GEDEvent_v26_1.csv) | 분쟁 사건의 날짜·위치·분쟁·교전 당사자 등을 담은 GED 26.1 원본. 기간·폭력 유형 필터링의 기준 | `prepare_ucdp.py` 입력 |
-| [`raw/Actor_v26_1.csv`](raw/Actor_v26_1.csv) | 행위자 ID별 정식 명칭·원어명·영문명·변경명을 담은 Actor 26.1 원본 | `build_ucdp_search_inputs.py`에서 행위자 검색어 생성 |
-| [`references/country_code_mapping.csv`](references/country_code_mapping.csv) | UCDP 발생 국가 ID를 GDELT 위치 검색용 FIPS 국가코드에 연결하는 프로젝트 매핑 | 사건별 국가 검색 조건 생성 |
-| [`processed/ucdp_state_events_2016_2025.csv`](processed/ucdp_state_events_2016_2025.csv) | 2016~2025년 국가 기반 분쟁(`type_of_violence=1`) 사건만 선택한 20개 컬럼의 추출 결과. 사건별 한 행 | 분쟁 목록·행위자 검색어·사건별 검색 조건 생성의 공통 입력 |
-| [`processed/conflicts.csv`](processed/conflicts.csv) | 분쟁별 ID·원문명·사건 수·첫/마지막 관측일·지도 대표 좌표. 분쟁별 한 행 | 분쟁 목록 확인과 지도용 대표 정보 준비 |
-| [`processed/actor_aliases.csv`](processed/actor_aliases.csv) | 추출 사건에 등장한 행위자의 기본 명칭·검색용 다른 이름·출처·검토 필요 여부·Actor 연결 여부 | GDELT 기사 후보의 행위자 명칭 검색과 검토 |
-| [`processed/event_search_conditions.csv`](processed/event_search_conditions.csv) | 추출 사건에 검색 기간·GDELT 국가코드·공간 검색 방식·반경을 추가한 검색 조건. 사건별 한 행 | 기사 후보 수집 조건 구성과 국가·월별 조회 계획 생성 |
-
-`conflicts.csv`의 관측 기간은 이번 추출 범위의 첫·마지막 사건 날짜이며,
-분쟁 자체의 시작·종료일을 의미하지 않는다. 가공 CSV는 후속 분석용 중간 자료이며
-현재 앱의 샘플 테이블이나 DB에 자동으로 적재되지 않는다.
-
-## 함께 사용하는 파일
-
-| 파일 | 역할 |
-| --- | --- |
-| [`references/gdelt_fips_countries.tsv`](references/gdelt_fips_countries.tsv) | GDELT 공식 위치 국가코드 확인본. 매핑 CSV의 FIPS 코드 유효성 검증 |
-| [`processed/ucdp_state_events_2016_2025.metadata.json`](processed/ucdp_state_events_2016_2025.metadata.json) | GED 원본·추출 CSV의 경로·해시, 필터·컬럼·건수·처리 시각 기록. 추출 CSV는 이 JSON과 같은 폴더에서 조회 |
-| [`processed/gdelt_search_plan.json`](processed/gdelt_search_plan.json) | 입력 파일의 경로·해시, 결과 CSV의 파일명·해시·건수, 국가·월별 GDELT 조회 계획. 결과 CSV는 이 JSON과 같은 폴더에 보관 |
-
-## 실행 순서
-
-프로젝트 루트에서 실행한다.
+## 실행
 
 ```bash
 conda activate streamlit
@@ -73,210 +50,179 @@ python scripts/prepare_ucdp.py
 python scripts/build_ucdp_search_inputs.py
 ```
 
-두 스크립트의 기본 출력 폴더는 모두 `data/ucdp/processed/`다.
-자세한 옵션과 검증 방법은 [원본·가공 안내](raw/README.md),
-국가코드의 의미는 [국가코드 연결 안내](references/README.md)를 참고한다.
+동일 시점으로 재현하려면 다음처럼 실행한다.
 
-## UCDP 데이터를 활용한 GDELT 기사 수집
-
-이 프로젝트에서는 UCDP 사건의 **기간·발생 국가·위치·교전 당사자**를 이용해
-GDELT에서 관련 기사 후보를 찾는다. UCDP 사건 ID와 GDELT의 `GLOBALEVENTID`는
-서로 다른 식별자이므로 직접 조인하지 않고, 검색 조건과 기사 내용으로 연결한다.
-
-아래는 2016~2025년 자료를 GDELT 2.0 BigQuery 공개 테이블에서 수집하는 절차다.
-현재 스크립트는 검색 입력 파일 생성까지 수행하며, BigQuery 조회·기사 본문 수집·DB
-적재는 아직 구현되지 않았다. 아래 SQL은 사용자가 BigQuery에서 실행할 예시다.
-
-### 1. 검색 입력과 GDELT 테이블 연결
-
-| UCDP 가공 파일 | 수집 시 사용하는 값과 역할 |
-| --- | --- |
-| `processed/gdelt_search_plan.json` | `batches`의 국가·월별 조회 범위로 BigQuery 작업을 나누고, `batch_id`로 실행·재시도·저장 결과를 관리 |
-| `processed/event_search_conditions.csv` | 배치 조회 후 각 UCDP 사건의 실제 검색 기간·공간 조건·교전 당사자를 대조 |
-| `processed/actor_aliases.csv` | `side_a_new_id`, `side_b_new_id`를 `actor_id`에 연결해 기사에서 확인할 행위자 명칭 후보 구성 |
-| `processed/conflicts.csv` | 일치 후보 사건의 `conflict_id`를 분쟁명에 연결. 대표 좌표는 개별 사건의 검색 좌표로 사용하지 않음 |
-
-GDELT에서는 다음 테이블을 사용한다.
-
-| BigQuery 테이블 | 역할과 연결 키 |
-| --- | --- |
-| `gdelt-bq.gdeltv2.events_partitioned` | 사건 날짜(`SQLDATE`), 발생 위치(`ActionGeo_*`), 행위자(`Actor1Name`, `Actor2Name`), 행동 코드(`EventCode`)로 후보 사건 조회 |
-| `gdelt-bq.gdeltv2.eventmentions_partitioned` | `GLOBALEVENTID`로 Events와 연결하고, `MentionType=1`인 웹 기사의 `MentionIdentifier` URL 수집 |
-| `gdelt-bq.gdeltv2.gkg_partitioned` | 필요하면 `DocumentIdentifier`를 기사 URL에 연결해 주제·인물·기관 등의 메타데이터 보강 |
-
-Events의 `SOURCEURL`은 최초 발견 보도에 해당하므로, 같은 사건을 다룬 여러 매체의
-기사를 모을 때는 EventMentions를 함께 조회한다.
-테이블 연결 방식은 [GDELT 공식 조인 예시](https://blog.gdeltproject.org/complex-queries-combining-events-eventmentions-and-gkg/),
-필드 의미는 [GDELT 2.0 Event 코드북](https://data.gdeltproject.org/documentation/GDELT-Event_Codebook-V2.0.pdf)을 참고한다.
-
-### 2. 국가·월별 배치 선택
-
-프로젝트 루트에서 다음 코드를 실행하면 첫 번째 배치의 조회 조건을 확인할 수 있다.
-전체 수집을 구현할 때는 `plan['batches']`를 순회하되, 먼저 한 배치로 결과를 확인한다.
-
-```python
-import json
-from pathlib import Path
-
-plan = json.loads(
-    Path('data/ucdp/processed/gdelt_search_plan.json').read_text(encoding='utf-8')
-)
-batch = plan['batches'][0]
-keys = [
-    'batch_id', 'country_name', 'gdelt_geo_country_codes',
-    'event_date_start', 'event_date_end_exclusive',
-    'partition_start', 'partition_end_exclusive',
-]
-print(json.dumps({key: batch[key] for key in keys}, ensure_ascii=False, indent=2))
+```bash
+python scripts/prepare_ucdp.py --as-of 2026-09-23
+python scripts/build_ucdp_search_inputs.py
 ```
 
-| 배치 값 | SQL에 적용하는 방법 |
+[원본·명령 옵션 안내](raw/README.md)에 다른 입력·출력 경로 지정 방법을 정리했다.
+
+## 국가 간 분쟁 선별 기준
+
+`GED.type_of_violence=1`은 국가 기반 분쟁이며 내전도 포함한다.
+`ACD.type_of_conflict=2`가 국가 간 분쟁이다. **GED 값을 2로 바꾸지 않는다.**
+
+1. GED와 Candidate에서 분석 기간에 걸치는 사건을 읽는다.
+2. 월 경계에서 중복된 Candidate 사건 ID는 수록 종료일이 늦은 공개분의 값을 채택한다.
+   폭력 유형이 수정된 최신본도 반영하며, 원본 파일·버전·교체 건수를 기록한다.
+3. `type_of_violence=1` 사건을 ACD의 **분쟁 ID + 사건 연도**로 확인한다.
+4. 해당 연도 분쟁 유형이 2이고, GED 양측 행위자가 ACD 양측에 대응하면 확정 분류로 둔다.
+   A/B 순서가 뒤바뀐 경우도 허용한다. 같은 국가 이름이 나온다는 이유로 연결하지 않는다.
+5. 연간 행이 없지만 다른 연도의 같은 분쟁·당사자가 국가 간 분쟁이면 참고 사건으로 보존한다.
+   `active_year=0`만으로 버리지 않는다. 해당 연도가 명시적으로 내전이면 제외한다.
+6. 연간 분류가 없고 Actor의 양측 `Org=4`(국가 정부)인 새 쌍은 잠정 검색 후보로 둔다.
+   이를 UCDP가 확정한 국가 간 분쟁으로 표시하지 않는다.
+7. 행위자 미등록·동일 행위자 양측 등장·ACD 당사자 불일치는 별도 검토 목록에 남긴다.
+   예를 들어 GED의 연합 행위자 ID와 ACD의 여러 개별 국가 ID가 다르면 자동으로 분해하지 않는다.
+
+| 사건의 `classification_status` | 의미 | 검색 계획에서의 역할 |
+| --- | --- | --- |
+| `interstate_confirmed` | 같은 연도 ACD 분류와 양측 ID 확인 | 분쟁 검색의 근거 |
+| `interstate_reference` | 다른 연도에서 분쟁과 당사자 확인 | 검토 표시를 유지한 참고 사건 |
+| `state_pair_candidate` | 국가 행위자 쌍이나 연간 분류 없음 | 신규 분쟁 발견을 위한 잠정 검색 대상 |
+| `review` | ID·당사자 대응을 확정하지 못함 | 별도 검토 CSV, 자동 검색 대상 추가에 사용하지 않음 |
+
+분쟁 목록은 분석 기간의 ACD 국가 간 분쟁과 위 참고·잠정 사건에서 구성한다.
+따라서 GED 사건이 0건인 ACD 국가 간 분쟁도 목록과 검색 배치를 갖는다.
+검토 CSV의 항목을 확정하려면 원본·공식 당사자 자료를 확인하여 분류 규칙 또는
+검증된 참조 자료를 보완한 후 재생성한다. 자동 판정 결과를 수동으로 덮어쓰지 않는다.
+
+공식 정의: [GED](https://ucdp.uu.se/downloads/ged/ged261.pdf),
+[ACD](https://ucdp.uu.se/downloads/ucdpprio/ucdp-prio-acd-261.pdf),
+[Actor](https://ucdp.uu.se/downloads/actor/ucdp-actor-codebook-261.pdf),
+[Candidate](https://ucdp.uu.se/downloads/candidateged/ucdp-candidate-codebook1.5.pdf).
+
+## 생성 파일과 역할
+
+모든 결과는 `data/ucdp/processed/`에 저장한다.
+
+| 파일 | 내용 |
 | --- | --- |
-| `gdelt_geo_country_codes` | `ActionGeo_CountryCode IN (...)`에 모든 코드 적용. 배열의 코드 중 하나라도 일치하면 포함 |
-| `event_date_start` | `YYYYMMDD` 정수로 바꿔 `SQLDATE >= 시작일`에 사용 |
-| `event_date_end_exclusive` | `YYYYMMDD` 정수로 바꿔 `SQLDATE < 종료일`에 사용 |
-| `partition_start` | 조회할 두 테이블의 `_PARTITIONTIME >= TIMESTAMP(시작일)`에 사용 |
-| `partition_end_exclusive` | 조회할 두 테이블의 `_PARTITIONTIME < TIMESTAMP(종료일)`에 사용 |
-| `ucdp_event_ids` | 조회 후 사건별 대조에 사용할 `event_search_conditions.csv`의 `id` 목록 |
+| `ucdp_interstate_events.csv` | 대상·참고·잠정 사건. 기존 식별·날짜·위치·행위자 컬럼과 활동연도·원문 검토 상태·국가 행위자 코드·출처·분류·검토 필요 여부 |
+| `ucdp_event_review_queue.csv` | 행위자 미등록 등 별도 검토가 필요한 사건. 제외 또는 확정 사건과 구분 |
+| `ucdp_interstate_events.metadata.json` | 입력 해시·버전·수록 기간·설정 스냅샷·분류별 건수·대상 분쟁 목록·출력 해시 |
+| `conflicts.csv` | 검색 대상 분쟁, 교전 당사자·교전국, 관측 발생 국가, 분석 기간, 분류 상태, 참고 사건 수 |
+| `actor_aliases.csv` | 대상 분쟁 행위자의 정식 명칭·다른 이름·출처·검토 필요 여부. 사건이 없는 분쟁의 행위자도 포함 |
+| `event_match_hints.csv` | 개별 사건의 날짜·반경·행정구역 참고값. 기사 채택의 필수 조건이 아님 |
+| `gdelt_search_plan.json` | 분쟁별 전체 분석 기간을 한 번에 조회하는 검색 배치·입력 및 결과 해시 |
 
-`*_end_exclusive`는 해당 날짜를 포함하지 않는다. 사건별 CSV의
-`search_end_date`는 포함 상한이므로 적용 방식이 다르다.
-현재 생성기는 보도 지연을 일부 고려해 파티션 종료일을 다음 달 1일에서 14일
-뒤로 잡는다. 이 기간 이후에 수록된 기사나 뒤늦은 회고 보도까지 포함하는 설정은 아니다.
-GDELT 위치 국가코드는 FIPS 코드이며, ISO 코드나 `Actor1CountryCode`의 국가코드로
-대체하지 않는다.
+`conflicts.csv`의 `participant_country_ids`(교전국)와 `observed_country_ids`(발생국)는
+분리한다. Actor의 `GWNOLoc`는 활동 국가 목록이므로 교전국 판정에 사용하지 않는다.
+여러 교전국이 있는 분쟁은 행위자 쌍을 보존한다. 국가코드는
+[참조 자료 안내](references/README.md)의 변환표로 연결한다.
 
-### 3. BigQuery에서 기사 후보 조회
+## GDELT 조회와 기사 채택
 
-Google Cloud 프로젝트의 BigQuery SQL 편집기에서 GoogleSQL을 사용한다.
-공개 프로젝트 `gdelt-bq`의 `gdeltv2` 데이터셋을 찾아 테이블 스키마와 데이터 위치를
-확인하고, 쿼리 실행 위치와 결과를 저장할 데이터셋 위치를 맞춘다.
+### 공통 SQL에 분쟁별 조건 전달
 
-아래는 현재 검색 계획의 첫 배치인 **`41_202402` — Haiti, 2024년 2월** 예시다.
-다른 배치를 조회할 때는 배치 ID, 국가코드, 사건 날짜 범위, 두 테이블의 파티션 범위,
-`MentionTimeDate` 범위를 함께 교체한다. 날짜·시간은 UTC 기준으로 취급한다.
+수집 단위는 **분쟁 × 전체 분석 기간**이며, 분쟁마다 공통 SQL을 한 번 실행하도록
+전체 기간의 시작일·종료일을 전달한다. 월 단위로 조회를 나누지 않는다.
+분쟁별 SQL 파일을 따로 만들거나, SQL 결과를 해당 분쟁의 확정 기사로 취급하지 않는다.
+각 분쟁의 조회 기간은 UCDP 사건의 최초·최종 날짜가 아닌 설정의 전체 분석 기간이다.
+따라서 UCDP 최신 공개분 이후도 실행 시점까지 검색하되, 아직 목록에 없는 신규 분쟁의
+누락 가능성은 별도로 관리한다.
+
+1. `gdelt_search_plan.json`의 `batches`에서 분쟁별 배치를 선택한다. 각 배치는 UCDP 사건 없는 구간도 포함한 전체 분석 기간을 조회한다.
+2. [`references/gdelt_candidates.sql`](references/gdelt_candidates.sql)의 GoogleSQL에
+   아래 표의 이름·자료형으로 배치 값을 전달한다. 실행 전 dry run으로 조회 바이트를 확인하고
+   `maximum_bytes_billed`를 설정한다. Events와 EventMentions는 `GLOBALEVENTID`로 연결한다.
+3. 웹 기사(`MentionType=1`)의 URL과 사건·행위자·위치·품질 정보를 확보한다.
+   `batch_id`와 `candidate_conflict_id`를 함께 저장하여 검색 시점의 후보 분쟁 연결을 보존한다.
+4. URL 정규화로 본문 중복 수집을 줄이되, 기사–GDELT 사건–후보 분쟁 연결은 별도 보존한다.
+5. 원문에서 실제 발행일·언어·제목·본문을 확보하고 해당 국가 간 분쟁의 직접 군사행동인지 검토한다.
+6. 해당 행동에 연결되는 무기·기술, 사용 여부와 근거 문장을 추출한다.
+7. 실제 발행일로 월을 정하고, **분쟁 × 발행월 × 무기·기술 분류별 고유 기사 ID**를 센다.
+
+SQL에 전달하는 파라미터는 다음 8개이다. 이름은 `batches`의 필드명과 같다.
+
+| 파라미터 이름 | BigQuery 자료형 |
+| --- | --- |
+| `mention_start`, `mention_end_exclusive` | 각각 `DATE` |
+| `event_partition_start`, `event_partition_end_exclusive` | 각각 `DATE` |
+| `gdelt_geo_country_codes`, `actor_terms` | 각각 `ARRAY<STRING>` |
+| `candidate_conflict_id`, `batch_id` | 각각 `STRING` |
+
+`bq` CLI나 BigQuery 클라이언트 라이브러리로 이름 있는 파라미터를 전달하고 GoogleSQL을
+사용한다. BigQuery 콘솔의 쿼리 파라미터 설정은 배열 자료형을 지원하지 않으므로 이 SQL의
+국가코드·행위자 배열을 해당 UI에 그대로 등록할 수는 없다.
+[공식 파라미터 안내](https://docs.cloud.google.com/bigquery/docs/parameterized-queries)를 참고한다.
+
+공통 SQL의 후보 조건은 다음과 같다. 기간 조건에 아래 조건을 `AND`로 결합한다.
 
 ```sql
--- GoogleSQL: 국가·월 단위의 기사 후보 조회
-WITH candidate_events AS (
-  SELECT
-    GLOBALEVENTID, SQLDATE, DATEADDED,
-    Actor1Name, Actor2Name, EventCode,
-    ActionGeo_CountryCode, ActionGeo_FullName, ActionGeo_Type,
-    ActionGeo_Lat, ActionGeo_Long
-  FROM `gdelt-bq.gdeltv2.events_partitioned`
-  WHERE _PARTITIONTIME >= TIMESTAMP('2024-02-01')
-    AND _PARTITIONTIME < TIMESTAMP('2024-03-15')
-    AND SQLDATE >= 20240201
-    AND SQLDATE < 20240301
-    AND ActionGeo_CountryCode IN ('HA')
-), candidate_mentions AS (
-  SELECT
-    GLOBALEVENTID, MentionIdentifier, MentionSourceName,
-    MentionTimeDate, Confidence, MentionDocTranslationInfo
-  FROM `gdelt-bq.gdeltv2.eventmentions_partitioned`
-  WHERE _PARTITIONTIME >= TIMESTAMP('2024-02-01')
-    AND _PARTITIONTIME < TIMESTAMP('2024-03-15')
-    AND MentionTimeDate >= 20240201000000
-    AND MentionTimeDate < 20240315000000
-    AND MentionType = 1
-    AND MentionIdentifier IS NOT NULL
-    AND MentionIdentifier != ''
+AND (
+  ActionGeo_CountryCode IN UNNEST(@gdelt_geo_country_codes)
+  OR LOWER(Actor1Name) IN UNNEST(@actor_terms)
+  OR LOWER(Actor2Name) IN UNNEST(@actor_terms)
 )
-SELECT DISTINCT
-  '41_202402' AS batch_id,
-  e.GLOBALEVENTID AS gdelt_event_id,
-  e.SQLDATE AS gdelt_event_date,
-  e.DATEADDED AS gdelt_added_at,
-  e.Actor1Name, e.Actor2Name, e.EventCode,
-  e.ActionGeo_CountryCode, e.ActionGeo_FullName, e.ActionGeo_Type,
-  e.ActionGeo_Lat, e.ActionGeo_Long,
-  m.MentionIdentifier AS source_url,
-  m.MentionSourceName AS source_name,
-  m.MentionTimeDate AS gdelt_mention_time,
-  m.Confidence AS extraction_confidence,
-  m.MentionDocTranslationInfo AS translation_info
-FROM candidate_events AS e
-JOIN candidate_mentions AS m USING (GLOBALEVENTID);
 ```
 
-이 SQL의 결과는 GDELT 사건과 기사의 조합이며, UCDP 사건과의 일치는 아직 확정되지 않는다.
-`SELECT DISTINCT`를 적용해도 같은 URL의 다른 사건·시각 행은 남으므로,
-결과 행 수를 기사 수로 바로 집계하지 않는다.
+이는 **기간 AND (관련 지역 OR 행위자 1 OR 행위자 2)**이며,
+국가코드와 양쪽 행위자의 동시 일치를 요구하는 조건이 아니다.
+국가코드는 발생 위치용 FIPS 코드, 행위자는 GDELT의 행위자 이름 필드에서 찾는 값이다.
+기사 본문에 국가명이 있다는 사실만으로 SQL이 일치하는 것은 아니다.
 
-각 테이블에 `_PARTITIONTIME` 조건을 적용해 읽는 날짜 범위를 제한한다.
-실행 전 편집기의 예상 처리량 또는 dry run으로 조회량을 확인하고,
-쿼리 설정의 `Maximum bytes billed`로 허용 조회량을 지정한다.
-`LIMIT`만 추가하는 방식은 스캔 비용 제한을 보장하지 않는다.
-[GDELT 파티션 테이블 안내](https://blog.gdeltproject.org/announcing-partitioned-gdelt-bigquery-tables/)와
-[BigQuery 조회량·비용 제어](https://docs.cloud.google.com/bigquery/docs/best-practices-costs)를 참고한다.
+전체 수집 시에는 모든 분쟁의 전체 기간 배치를 대상으로 하되, 같은 기간의 조회 결과와 과거 Events
+인덱스는 재사용한다. 분쟁별 결과를 얻기 위해 같은 데이터를 매번 다시 스캔할 필요는 없다.
+반환되는 후보가 줄어드는 것과 BigQuery 스캔 바이트가 줄어드는 것은 구분하여 확인한다.
 
-### 4. UCDP 사건별로 관련성 대조
+### 후보 연결과 최종 판정
 
-배치의 `ucdp_event_ids`에 포함된 사건만 `event_search_conditions.csv`에서 선택한 뒤,
-조회 결과를 다음 순서로 대조한다. 배치의 `conflict_ids` 전체를 모든 기사에 일괄
-부여하지 않고, 일치 후보인 개별 UCDP 사건을 거쳐 분쟁에 연결한다.
-
-1. **날짜**: `gdelt_event_date`를 날짜로 변환해 사건의
-   `search_start_date <= 날짜 <= search_end_date` 범위와 비교한다.
-2. **국가**: 사건의 `gdelt_geo_country_codes`를 `|`로 분리하고
-   `ActionGeo_CountryCode`가 그중 하나인지 확인한다.
-3. **위치**: `spatial_match_mode=radius`이면 사건 좌표와 GDELT 좌표의 거리를
-   `radius_km`와 비교한다. 좌표가 비어 있거나 GDELT 위치가 국가·행정구역 중심점인
-   경우에는 정밀 좌표로 간주하지 않고 검토 대상으로 남긴다.
-   `administrative_area`는 `adm_1`, `adm_2`와 기사 지명을 확인하며,
-   `country`는 국가 단위의 넓은 후보로 관리한다. 행정구역명·코드는 별도 정규화 없이
-   같은 값이라고 가정하지 않는다.
-4. **행위자**: 사건 양측 ID에 해당하는 `actor_aliases.csv`의 검색 명칭을
-   `Actor1Name`, `Actor2Name`과 기사 제목·본문에서 확인한다.
-   UCDP의 A/B와 GDELT의 Actor1/Actor2 순서는 같다고 가정하지 않는다.
-   `needs_review=True`인 약칭·변경명과 한쪽 행위자가 누락된 기사는 검토 대상으로 남긴다.
-5. **내용**: 실제 같은 사건·분쟁을 다루는지 확인한 뒤 무기·방산기술과 사용 근거
-   문장을 추출한다. 특정 `EventCode`나 높은 `extraction_confidence`만으로
-   무기 사용을 확정하지 않는다.
-
-현재 검색 기간은 사건 시작 하루 전부터 종료 3일 후까지이며, 반경 25·50km는
-프로젝트의 초기 검색값이다. 표본 기사를 검토해 조건을 조정한다.
-행위자 이름의 완전 일치를 최초 SQL의 필수 조건으로 걸면 표기 차이·생략으로
-후보가 빠질 수 있으므로, 예시 SQL은 국가·기간으로 먼저 수집하고 후속 검토에 사용한다.
-
-### 5. 결과 저장·기사 중복 제거·본문 수집
-
-수집 결과는 UCDP 원본과 구분해 별도의 `data/gdelt/` 아래에 저장한다.
-아래는 향후 수집기를 구현할 때 사용할 권장 경로이며, 현재 생성된 파일은 아니다.
-
-| 권장 경로 | 저장 내용 |
+| 배치 값 | 용도 |
 | --- | --- |
-| `data/gdelt/raw/{batch_id}_mentions.csv` | BigQuery에서 받은 배치별 사건·기사 후보 결과 |
-| `data/gdelt/references/{batch_id}.sql` | 실행한 SQL과 적용 조건 |
-| `data/gdelt/references/{batch_id}.metadata.json` | 배치 ID, UCDP 검색 계획의 SHA-256, 실행 시각, BigQuery 작업 ID, 처리 바이트, 행 수, 결과 해시 |
-| `data/gdelt/processed/articles.csv` | 정규화한 URL별 기사 ID·원래 URL·매체·제목·본문·발행일·언어·수집 상태 |
-| `data/gdelt/processed/article_event_links.csv` | 기사 ID·GDELT 사건 ID·UCDP 사건 ID·분쟁 ID·관련성 판정·판정 근거 연결 |
+| `candidate_conflict_id` | 후보를 찾은 분쟁. 기사 본문 판정 전에는 확정 분쟁 ID가 아님 |
+| `batch_id` | 분쟁 ID와 분석 시작일·종료일로 구성한 후보 조회 식별자 |
+| `shared_period_query_id` | 여러 분쟁에서 공통 조회 결과를 재사용할 수 있는 전체 기간 식별자 |
+| `article_published_start/end_exclusive` | 본문에서 확인한 실제 발행일에 적용할 전체 기간. 종료값은 분석 종료일 다음 날 |
+| `mention_start/end_exclusive` | EventMentions 처리 시각·파티션 조회 범위. 보도 지연 14일을 고려하되 기준일 다음 날을 넘지 않음 |
+| `event_partition_start/end_exclusive` | 과거 사건에 대한 새 보도를 연결할 Events 파티션 범위 |
+| `gdelt_geo_country_codes` | 발생 위치 검색용 FIPS 코드 목록 |
+| `actor_terms` | 행위자 정식 명칭·변형의 소문자 목록. 지리 범위 밖 후보를 보완 |
+| `actor_pairs` | 본문에서 직접 교전 관계를 검토할 양측 행위자 쌍 |
+| `ucdp_hint_event_count` | 전체 조회 기간에 참고할 사건 수. 0이어도 조회 배치 유지 |
 
-BigQuery 결과는 CSV로 내려받거나 결과 테이블에 저장해 내보낸다. 배치별 CSV를
-합친 뒤 URL을 정규화해 기사 단위 중복을 제거하되, 같은 기사가 여러 사건·분쟁에
-연결된 관계는 `article_event_links.csv`에 별도로 유지한다. 본문이 같은 재게시
-기사의 대표본 선정은 URL 중복 제거 다음 단계에서 처리한다.
+최초 조회는 **관련 지역 또는 행위자** 조건으로 후보를 얻는다. 지역·국가명만으로는
+국가 간 분쟁을 판별할 수 없으므로 내부 분쟁 등이 후보에 섞일 수 있다.
+두 국가명이 함께 나온다는 이유만으로 채택하지 않으며, 무기 키워드·행동 코드·높은
+추출 신뢰도만으로도 사용 보도를 확정하지 않는다. 잠정 후보는 분쟁 자체의 성격부터 검토한다.
 
-위 SQL은 기사 URL과 사건 메타데이터를 반환한다. 제목·본문·실제 발행일은 해당
-URL의 기사에서 별도로 수집하고, 원문을 확보하지 못하면 실패 상태와 원인을 기록한다.
-`gdelt_event_date`는 사건 날짜이고 `gdelt_mention_time`은 GDELT 처리 시각이므로,
-둘 중 하나를 실제 기사 발행일로 대신 저장하지 않는다.
+예를 들어 A–B 분쟁을 조회할 때 A국 내전 기사도 지역 조건에 걸릴 수 있다. 또한 같은 기사가
+A–B 분쟁과 A–C 분쟁의 검색 결과에 모두 나타날 수 있다. 검색 단계의 후보 연결을 출발점으로
+본문의 당사자·직접 군사행동·무기 사용 근거를 확인하고, 각 후보를 채택·제외·확인 필요로
+구분해야 한다. **후보 분쟁을 미리 연결하는 것이 후속 정제나 최종 분쟁 판정을 없애지는 않는다.**
+사용 근거는 기사–분쟁–무기·기술 항목별로 보존하여 다른 분쟁의 문장을 잘못 집계하지 않는다.
 
-영문 기사만 분석할 때도 원문 언어를 확인한다. `translation_info`가 비어 있는 것은
-원래 영문이거나 사람이 영어로 번역해 제공한 경우 등을 포함하므로, 빈 값만으로
-원문 언어를 확정하지 않는다. 날짜·번역 정보의 의미는
-[GDELT 2.0 Event 코드북](https://data.gdeltproject.org/documentation/GDELT-Event_Codebook-V2.0.pdf)에 정의되어 있다.
+사건 날짜 `SQLDATE`, GDELT 처리 시각 `MentionTimeDate`, 실제 기사 발행일은 서로 다르다.
+SQLDATE를 기사 검색 기간으로 제한하면 과거 사건의 새 보도를 놓치므로 SQL 예시는 그런 제한을 두지 않는다.
+원문 발행일을 확인하지 못한 기사는 확인 필요 상태로 남기고 월간 확정 지표에서 제외한다.
+늦게 수집된 기사, GDELT Events에 없는 기사, 행위자·위치가 모두 누락된 기사는 이 경로에서
+누락될 수 있다. GKG의 주제·기관·지명 후보나 분쟁별 원문 검색을 보완 경로로 관리한다.
 
-### 6. 수집 범위 보완과 완료 확인
+### 비용과 저장
 
-현재 계획은 UCDP에 기록된 국가 기반 분쟁 사건 주변을 찾는 방식이다.
-UCDP 사건이 없는 기간의 방공·전자전·기술 운용 보도와 GDELT Events에 잡히지 않은
-기사를 보완하려면, 별도의 분쟁별 기간·지역·행위자·무기/기술 명칭 조건으로 GKG의
-`DocumentIdentifier` 후보를 조회하고 원문을 검토한다. 이 보완 수집은 현재 배치
-생성기에 포함되지 않으므로 조건과 수집 출처를 따로 기록한다.
+SQL은 수집 설계의 예시이며 자동 실행하지 않는다. 과거 Events를 매 배치마다 다시 읽으면
+비용이 커지므로 필요한 Events 인덱스를 한 번 저장·갱신하고 재사용하는 구성이 적합하다.
+같은 `shared_period_query_id`의 분쟁들은 전체 기간의 Mentions 조회 결과를 공유할 수 있다.
+물리 조회를 합쳐도 각 후보 분쟁 연결과 적용 조건은 보존해야 한다.
 
-수집 완료 시 배치별 성공·실패·0건을 구분하고, 실패 배치만 재실행할 수 있게 한다.
-최종적으로 후보 URL 수, 중복 제거 기사 수, 본문 확보 수, 분쟁 연결 수를 확인한다.
-대시보드의 사용 보도 수는 관련성·무기 사용 판정을 통과한 기사 ID를 중복 없이
-집계하며, GDELT 조회 행 수나 UCDP 사건 수를 기사 수로 사용하지 않는다.
+실행 전 dry run으로 처리량을 확인하고 `maximum_bytes_billed`를 설정한다. `LIMIT`은
+스캔 비용 상한이 아니다. 파티션·지연 기간과 원문 언어 범위를 기록한다.
+관련 문서: [GDELT 조인](https://blog.gdeltproject.org/complex-queries-combining-events-eventmentions-and-gkg/),
+[파티션 안내](https://blog.gdeltproject.org/announcing-partitioned-gdelt-bigquery-tables/).
+
+후속 수집 결과는 `data/gdelt/`에 원본 후보, 실행 SQL·작업 ID·조회 바이트·실패 상태,
+기사 목록, 사건–기사–분쟁 연결, 사용 판정과 근거를 나누어 저장한다.
+기사 하나가 여러 사건·분쟁을 다룰 수 있으므로 연결을 삭제하지 않는다.
+앱의 기존 단일 분쟁 기사 DB 명세에 실제 자료를 연결할 때에는 별도 연결 테이블 설계가 필요하다.
+
+## 검증
+
+```bash
+python -m unittest tests.test_prepare_ucdp tests.test_build_ucdp_search_inputs -v
+ruff check scripts tests
+```
+
+검증 항목은 내부 분쟁·다른 폭력 유형 제외, 연간 분류 누락 보존, 잠정 자료 중복·수정 반영,
+사건 없는 분쟁과 월의 배치 생성, 미래 조회 제한, 교전국·발생국 구분, 원본·해시 보존이다.

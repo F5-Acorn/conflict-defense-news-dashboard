@@ -1,4 +1,5 @@
 ﻿ucdp_country_id,ucdp_country_name,gdelt_geo_country_code,gdelt_geo_country_name,mapping_note
+2,United States of America,US,United States,교전국과 발생 위치 검색을 위한 추가 매핑. 행위자 국적 코드와 구분
 41,Haiti,HA,Haiti,
 100,Colombia,CO,Colombia,
 101,Venezuela,VE,Venezuela,

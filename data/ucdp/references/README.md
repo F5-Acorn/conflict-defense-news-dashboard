@@ -1,20 +1,26 @@
-# UCDP와 GDELT의 발생 위치 코드 연결
+# 수집 범위와 국가코드 참조 자료
 
+- `collection_scope.json`: 모든 국가 간 분쟁, 기사 발행일 2016~2026년, Candidate 공개분 목록과 GDELT 지연 조회 일수.
+- `country_code_mapping.csv`: UCDP 국가 ID를 GDELT 발생 위치 FIPS 코드에 연결한다. 교전국의 지리 검색 범위와 사건 발생 지역을 모두 지원한다.
 - `gdelt_fips_countries.tsv`: [GDELT 공식 Geo 국가코드](https://gdeltproject.org/data/lookups/FIPS.country.txt)의 2026-09-22 확인본.
-- `country_code_mapping.csv`: GED 26.1의 2016~2025년 국가 기반 분쟁에 등장하는 68개 발생 국가를 위 코드표에 연결한 프로젝트 매핑.
+- `gdelt_candidates.sql`: 검색 계획 한 배치를 실행할 파라미터 기반 GoogleSQL 예시. 실제 조회는 자동 실행하지 않는다.
 
-UCDP `country_id`는 Gleditsch–Ward 숫자 코드이고, GDELT의
-`ActionGeo_CountryCode`는 두 글자 FIPS 코드다. 이 매핑은 발생 위치 검색용이며
-세 글자 `Actor1CountryCode`·`Actor2CountryCode`에 넣으면 안 된다.
-Actor 자료의 `GWNOLoc` 역시 활동 국가 목록이므로 행위자의 국적으로 사용하지 않는다.
+UCDP `country_id`와 ACD `gwno_a/gwno_b`는 Gleditsch–Ward 국가 코드이다.
+행위자 ID인 `side_a_id/side_b_id`와 다르다. Actor `GWNOLoc`는 활동 국가 목록이므로
+행위자의 국적을 추정하는 데 쓰지 않는다.
 
-UCDP의 Israel 묶음에는 Gaza Strip·West Bank 사건이 있고, Morocco 묶음에는
-서사하라 지역 사건이 있다. 후보 누락을 줄이도록 각각 `IS/GZ/WE`, `MO/WI`를
-검색 코드로 등록했다. 이후 개별 사건의 날짜·행정구역·좌표·행위자로 관련성을 확인한다.
-매핑되지 않은 국가가 추가되면 스크립트는 해당 ID를 알려주고 중단한다.
+GDELT `ActionGeo_CountryCode`는 두 글자 FIPS 코드다. ISO 코드나
+`Actor1CountryCode/Actor2CountryCode`의 코드와 혼용하지 않는다.
+Israel 묶음에는 `IS/GZ/WE`, Morocco 묶음에는 `MO/WI`를 연결하여 후보 누락을 줄인다.
+이처럼 넓게 얻은 지역 후보가 실제 해당 국가 간 분쟁 기사인지는 본문으로 확인한다.
+매핑에 없는 교전국·발생국이 추가되면 생성기는 해당 ID를 알려주고 중단한다.
 
-관련 문서:
+2026-09-23부터 미국(국가 ID `2`, FIPS `US`)을 교전국 조회용 매핑에 포함한다.
+국가코드·행위자 검색어만으로 직접 교전 관계를 확정하지 않는다.
 
-- [GDELT 코드 체계 안내](https://gdeltproject.org/data.html)
-- [UCDP GED 코드북](https://ucdp.uu.se/downloads/ged/ged261.pdf)
-- [UCDP Actor 코드북](https://ucdp.uu.se/downloads/actor/ucdp-actor-codebook-261.pdf)
+수집 범위 변경 후에는 `prepare_ucdp.py`와 `build_ucdp_search_inputs.py`를 순서대로
+다시 실행한다. 출력 파일을 손으로 수정하면 해시 검증에서 거부된다.
+
+공식 정의: [ACD](https://ucdp.uu.se/downloads/ucdpprio/ucdp-prio-acd-261.pdf),
+[GED](https://ucdp.uu.se/downloads/ged/ged261.pdf),
+[Actor](https://ucdp.uu.se/downloads/actor/ucdp-actor-codebook-261.pdf).

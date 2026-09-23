@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "dataset_version": "26.1",
+  "selection": "all_interstate",
+  "analysis_start": "2016-01-01",
+  "analysis_end": "2026-12-31",
+  "partition_extra_days": 14,
+  "candidate_sources": [
+    {
+      "filename": "GEDEvent_v26_01_26_06.csv",
+      "version": "26.01.26.06",
+      "coverage_start": "2026-01-01",
+      "coverage_end": "2026-06-30"
+    },
+    {
+      "filename": "GEDEvent_v26_0_7.csv",
+      "version": "26.0.7",
+      "coverage_start": "2026-07-01",
+      "coverage_end": "2026-07-31"
+    },
+    {
+      "filename": "GEDEvent_v26_0_8.csv",
+      "version": "26.0.8",
+      "coverage_start": "2026-08-01",
+      "coverage_end": "2026-08-31"
+    }
+  ]
+}
