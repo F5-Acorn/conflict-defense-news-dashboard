@@ -8,3 +8,7 @@ __pycache__/
 .venv/
 .pytest_cache/
 .ruff_cache/
+
+# UCDP 원본은 직접 다운로드하며, 안내 문서만 Git으로 관리한다.
+/data/ucdp/raw/*
+!/data/ucdp/raw/README.md

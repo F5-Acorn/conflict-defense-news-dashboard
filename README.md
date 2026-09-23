@@ -59,6 +59,20 @@ UCDP GED 26.1에서 **2016~2025년 국가 기반 분쟁(`type_of_violence=1`)**�
 `data/ucdp/raw/`에 보관하며, 실행하면 필요한 20개 컬럼의 사건 CSV와
 버전·필터·건수를 기록한 JSON을 `data/ucdp/processed/`에 생성한다.
 
+원본 데이터는 용량 때문에 GitHub에 포함하지 않는다. 저장소를 내려받은 뒤
+[UCDP 공식 다운로드 센터](https://ucdp.uu.se/downloads/index.html)에서
+**GED Global 26.1**과 **Actor Dataset 26.1**의 CSV 압축 파일을 직접 다운로드하고,
+압축을 풀어 아래 위치에 넣는다. 경로는 프로젝트 루트를 기준으로 한다.
+
+| 원본 파일 | 저장 위치 |
+| --- | --- |
+| `GEDEvent_v26_1.csv` | `data/ucdp/raw/GEDEvent_v26_1.csv` |
+| `Actor_v26_1.csv` | `data/ucdp/raw/Actor_v26_1.csv` |
+
+폴더 생성과 파일별 다운로드 링크는
+[UCDP 원본 다운로드 안내](data/ucdp/README.md#원본-다운로드-및-배치)를 참고한다.
+두 파일을 배치한 뒤 다음 명령을 실행한다.
+
 ```bash
 conda activate streamlit
 python scripts/prepare_ucdp.py

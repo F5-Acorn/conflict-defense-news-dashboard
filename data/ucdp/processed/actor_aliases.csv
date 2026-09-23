@@ -1,0 +1,619 @@
+﻿actor_id,canonical_name,alias,sources,needs_review,actor_dataset_matched
+3,Government of United States of America,Government of United States of America,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+3,Government of United States of America,United States of America,derived_government_name,True,True
+6,Government of Haiti,Government of Haiti,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+6,Government of Haiti,Haiti,derived_government_name,True,True
+17,Government of Colombia,Colombia,derived_government_name,True,True
+17,Government of Colombia,Government of Colombia,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+21,Government of Peru,Government of Peru,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+21,Government of Peru,Peru,derived_government_name,True,True
+28,Government of United Kingdom,Government of United Kingdom,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+28,Government of United Kingdom,United Kingdom,derived_government_name,True,True
+57,Government of Russia (Soviet Union),Government of Russia (Soviet Union),Actor.NameData|Actor.NewName|Actor.NewNameFullEng|Actor.NewNameFullMotherTongue|GED.side_a,False,True
+57,Government of Russia (Soviet Union),Government of Soviet Union,Actor.NameOrig|Actor.NameOrigFullEng,False,True
+57,Government of Russia (Soviet Union),Russia,derived_government_name,True,True
+61,Government of Ukraine,Government of Ukraine,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a|GED.side_b,False,True
+61,Government of Ukraine,Ukraine,derived_government_name,True,True
+64,Government of Azerbaijan,Azerbaijan,derived_government_name,True,True
+64,Government of Azerbaijan,Government of Azerbaijan,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+72,Government of Mali,Government of Mali,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+72,Government of Mali,Mali,derived_government_name,True,True
+73,Government of Senegal,Government of Senegal,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+73,Government of Senegal,Senegal,derived_government_name,True,True
+74,Government of Mauritania,Government of Mauritania,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+74,Government of Mauritania,Mauritania,derived_government_name,True,True
+75,Government of Niger,Government of Niger,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+75,Government of Niger,Niger,derived_government_name,True,True
+78,Government of Burkina Faso,Burkina Faso,derived_government_name,True,True
+78,Government of Burkina Faso,Government of Burkina Faso,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+82,Government of Togo,Government of Togo,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+82,Government of Togo,Togo,derived_government_name,True,True
+83,Government of Cameroon,Cameroon,derived_government_name,True,True
+83,Government of Cameroon,Government of Cameroon,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+84,Government of Nigeria,Government of Nigeria,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+84,Government of Nigeria,Nigeria,derived_government_name,True,True
+86,Government of Central African Republic,Central African Republic,derived_government_name,True,True
+86,Government of Central African Republic,Government of Central African Republic,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+87,Government of Chad,Chad,derived_government_name,True,True
+87,Government of Chad,Government of Chad,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+88,Government of Congo,Congo,derived_government_name,True,True
+88,Government of Congo,Government of Congo,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+89,Government of DR Congo (Zaire),DR Congo,derived_government_name,True,True
+89,Government of DR Congo (Zaire),Government of Democratic Republic of the Congo (Zaire),Actor.NameOrigFullEng,False,True
+89,Government of DR Congo (Zaire),Government of DR Congo (Zaire),Actor.NameData|Actor.NameOrig|GED.side_a,False,True
+89,Government of DR Congo (Zaire),Government of République démocratique du Congo (Zaïre),Actor.NameOrigFull,False,True
+90,Government of Uganda,Government of Uganda,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+90,Government of Uganda,Uganda,derived_government_name,True,True
+91,Government of Kenya,Government of Kenya,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+91,Government of Kenya,Kenya,derived_government_name,True,True
+92,Government of Tanzania,Government of Tanzania,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+92,Government of Tanzania,Tanzania,derived_government_name,True,True
+93,Government of Burundi,Burundi,derived_government_name,True,True
+93,Government of Burundi,Government of Burundi,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+94,Government of Rwanda,Government of Rwanda,Actor.NameData|Actor.NameOrig|Actor.NameOrigFull|Actor.NameOrigFullEng|GED.side_a,False,True
+94,Government of Rwanda,Rwanda,derived_government_name,True,True
+95,Government of Somalia,Government of Somalia,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+95,Government of Somalia,Somalia,derived_government_name,True,True
+97,Government of Ethiopia,Ethiopia,derived_government_name,True,True
+97,Government of Ethiopia,Government of Ethiopia,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a|GED.side_b,False,True
+98,Government of Eritrea,Eritrea,derived_government_name,True,True
+98,Government of Eritrea,Government of Eritrea,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+99,Government of Angola,Angola,derived_government_name,True,True
+99,Government of Angola,Government of Angola,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+100,Government of Mozambique,Government of Mozambique,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+100,Government of Mozambique,Mozambique,derived_government_name,True,True
+108,Government of Morocco,Government of Morocco,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+108,Government of Morocco,Morocco,derived_government_name,True,True
+109,Government of Algeria,Algeria,derived_government_name,True,True
+109,Government of Algeria,Government of Algeria,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+110,Government of Tunisia,Government of Tunisia,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+110,Government of Tunisia,Tunisia,derived_government_name,True,True
+111,Government of Libya,Government of Libya,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+111,Government of Libya,Libya,derived_government_name,True,True
+112,Government of Sudan,Government of Sudan,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+112,Government of Sudan,Sudan,derived_government_name,True,True
+113,Government of South Sudan,Government of South Sudan,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+113,Government of South Sudan,South Sudan,derived_government_name,True,True
+114,Government of Iran,Government of Iran,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+114,Government of Iran,Iran,derived_government_name,True,True
+115,Government of Turkey,Government of Turkey,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+115,Government of Turkey,Turkey,derived_government_name,True,True
+116,Government of Iraq,Government of Iraq,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+116,Government of Iraq,Iraq,derived_government_name,True,True
+117,Government of Egypt,Egypt,derived_government_name,True,True
+117,Government of Egypt,Government of Egypt,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+118,Government of Syria,Government of Syria,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a|GED.side_b,False,True
+118,Government of Syria,Syria,derived_government_name,True,True
+119,Government of Lebanon,Government of Lebanon,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+119,Government of Lebanon,Lebanon,derived_government_name,True,True
+120,Government of Jordan,Government of Jordan,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+120,Government of Jordan,Jordan,derived_government_name,True,True
+121,Government of Israel,Government of Israel,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a|GED.side_b,False,True
+121,Government of Israel,Israel,derived_government_name,True,True
+123,Government of Yemen (North Yemen),Government of North Yemen,Actor.NameOrigFullEng,False,True
+123,Government of Yemen (North Yemen),Government of Yemen (North Yemen),Actor.NameData|Actor.NameOrig|GED.side_a|GED.side_b,False,True
+123,Government of Yemen (North Yemen),Yemen,derived_government_name,True,True
+130,Government of Afghanistan,Afghanistan,derived_government_name,True,True
+130,Government of Afghanistan,Government of Afghanistan,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+131,Government of Tajikistan,Government of Tajikistan,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a|GED.side_b,False,True
+131,Government of Tajikistan,Tajikistan,derived_government_name,True,True
+132,Government of Kyrgyzstan,Government of Kyrgyzstan,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+132,Government of Kyrgyzstan,Kyrgyzstan,derived_government_name,True,True
+135,Government of China,China,derived_government_name,True,True
+135,Government of China,Government of China,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+141,Government of India,Government of India,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a|GED.side_b,False,True
+141,Government of India,India,derived_government_name,True,True
+142,Government of Pakistan,Government of Pakistan,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a|GED.side_b,False,True
+142,Government of Pakistan,Pakistan,derived_government_name,True,True
+143,Government of Bangladesh,Bangladesh,derived_government_name,True,True
+143,Government of Bangladesh,Government of Bangladesh,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+144,Government of Myanmar (Burma),Government of Myanmar (Burma),Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+144,Government of Myanmar (Burma),Myanmar,derived_government_name,True,True
+147,Government of Thailand,Government of Thailand,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a|GED.side_b,False,True
+147,Government of Thailand,Thailand,derived_government_name,True,True
+148,Government of Cambodia (Kampuchea),Cambodia,derived_government_name,True,True
+148,Government of Cambodia (Kampuchea),Government of Cambodia,Actor.NameOrigFullEng,False,True
+148,Government of Cambodia (Kampuchea),Government of Cambodia (Kampuchea),Actor.NameData|Actor.NameOrig|GED.side_a,False,True
+154,Government of Philippines,Government of Philippines,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+154,Government of Philippines,Philippines,derived_government_name,True,True
+155,Government of Indonesia,Government of Indonesia,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+155,Government of Indonesia,Indonesia,derived_government_name,True,True
+164,KDPI,KDPI,Actor.NameData|Actor.NewName|GED.side_b,False,True
+164,KDPI,Kurdish Democratic Party of Iran,Actor.NewNameFullEng,False,True
+164,KDPI,Partî Dêmokiratî Kurdistanî Êran,Actor.NewNameFullMotherTongue,False,True
+164,KDPI,Republic of Kurdistan,Actor.NameOrig|Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+169,CPP,Communist Party of the Philippines,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+169,CPP,CPP,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+180,KNU,Karen National Union,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+180,KNU,KNU,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+185,ABSDF,???????????????????????? ?????????????? ???????????? ?????,Actor.NameOrigFull,False,True
+185,ABSDF,ABSDF,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+185,ABSDF,All-Burma Students Democratic Front,Actor.NameOrigFullEng,False,True
+190,NMSP,New Mon State Party,Actor.NameOrigFullEng,False,True
+190,NMSP,NMSP,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+195,CPI-Maoist,Communist Party of India-Maoist,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+195,CPI-Maoist,CPI-Maoist,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+201,KIO,??????????????? ??????????,Actor.NameOrigFull,False,True
+201,KIO,Kachin Independence Organization,Actor.NameOrigFullEng,False,True
+201,KIO,KIO,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+205,PFLP,Al-Jabna Al-Shabiyya li-Tahrir Filastin,Actor.NameOrigFull,False,True
+205,PFLP,PFLP,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+205,PFLP,Popular Front for the Liberation of Palestine,Actor.NameOrigFullEng,False,True
+207,Fatah,Fatah,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+207,Fatah,Harakat al-Tahrir al-Watani al-Filastini,Actor.NameOrigFull,False,True
+207,Fatah,Palestinian National Liberation Movement,Actor.NameOrigFullEng,False,True
+208,PIJ,Harakat al-Jihad al-Islami fi Filastin,Actor.NameOrigFull,False,True
+208,PIJ,Palestinian Islamic Jihad,Actor.NameOrigFullEng,False,True
+208,PIJ,PIJ,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+209,Hamas,Hamas,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+209,Hamas,Harakat al-Muqawarna al-Islamiyya,Actor.NameOrigFull,False,True
+209,Hamas,Islamic Resistance Movement,Actor.NameOrigFullEng,False,True
+210,PNA,Palestinian National Authority,Actor.NameOrigFullEng,False,True
+210,PNA,PNA,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+212,PRC,Popular Resistance Committees,Actor.NameOrigFullEng,False,True
+212,PRC,PRC,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+223,NSCN-IM,National Socialist Council of Nagaland,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+223,NSCN-IM,National Socialist Council of Nagaland – Isaac-Muivah faction,Actor.NewNameFullEng|Actor.NewNameFullMotherTongue,False,True
+223,NSCN-IM,NSCN,Actor.NameOrig,False,True
+223,NSCN-IM,NSCN-IM,Actor.NameData|Actor.NewName|GED.side_b,False,True
+225,KNPP,Karenni National Progressive Party,Actor.NameOrigFullEng,False,True
+225,KNPP,KNPP,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+234,IS,al-Dawla al-Islamiya fi al-Iraq wa al-Sham,Actor.NewNameFullMotherTongue.list_candidate,True,True
+234,IS,al-Dawla al-Islamiyya,Actor.NewNameFullMotherTongue.list_candidate,True,True
+234,IS,Dawlat al-’Iraq al-Islamiyya,Actor.NewNameFullMotherTongue.list_candidate,True,True
+234,IS,IS,Actor.NameData|Actor.NewName.list_candidate|GED.side_b,True,True
+234,IS,ISI,Actor.NewName.list_candidate,True,True
+234,IS,ISIS,Actor.NewName.list_candidate,True,True
+234,IS,Islamic State,Actor.NewNameFullEng.list_candidate,True,True
+234,IS,Islamic State in Iraq and al-Sham,Actor.NewNameFullEng.list_candidate,True,True
+234,IS,Islamic State of Iraq,Actor.NewNameFullEng.list_candidate,True,True
+234,IS,Jama’at Al-Tawhid wa Al-Jihad,Actor.NameOrig|Actor.NameOrigFull,False,True
+234,IS,Organization of of Jihad’s Base in the Country of the Two Rivers,Actor.NewNameFullEng.list_candidate,True,True
+234,IS,"Organization of of Jihad’s Base in the Country of the Two Rivers, Islamic State of Iraq, Islamic State in Iraq and al-Sham, Islamic State",Actor.NewNameFullEng,False,True
+234,IS,Tanzim Qa’idat al Jihad fi Bilad al Rafidayn,Actor.NewNameFullMotherTongue.list_candidate,True,True
+234,IS,"Tanzim Qa’idat al Jihad fi Bilad al Rafidayn, Dawlat al-’Iraq al-Islamiyya, al-Dawla al-Islamiya fi al-Iraq wa al-Sham, al-Dawla al-Islamiyya",Actor.NewNameFullMotherTongue,False,True
+234,IS,The Monotheism and Jihad Group,Actor.NameOrigFullEng,False,True
+234,IS,TQJBR,Actor.NewName.list_candidate,True,True
+234,IS,"TQJBR, ISI, ISIS, IS",Actor.NewName,False,True
+256,RCSS,RCSS,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+256,RCSS,Restoration Council of Shan States,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+266,OPM,OPM,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+266,OPM,Organisasi Papua merdeka,Actor.NameOrigFull,False,True
+266,OPM,Organization for a Free Papua,Actor.NameOrigFullEng,False,True
+276,MILF,Jabhat tahrir muru al'iislamiati?,Actor.NameOrigFull,False,True
+276,MILF,MILF,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+276,MILF,Moro Islamic Liberation Front,Actor.NameOrigFullEng,False,True
+277,ASG,Abu Sayyaf Group,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+277,ASG,ASG,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+283,RIRA,Real Irish Republican Army,Actor.NameOrigFullEng,False,True
+283,RIRA,RIRA,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+283,RIRA,Óglaigh na hÉireann,Actor.NameOrigFull,False,True
+285,PCJSS,Chittagong Hill Tracts Peoples Solidarity Association,Actor.NameOrigFullEng,False,True
+285,PCJSS,Parbattya Chattagram Jana Samhati Samiti,Actor.NameOrigFull,False,True
+285,PCJSS,PCJSS,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+287,BLA,???????? ?????? ????,Actor.NameOrigFull,False,True
+287,BLA,Balochistan Liberation Army,Actor.NameOrigFullEng,False,True
+287,BLA,BLA,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+289,BRA,Baloch Republican Army,Actor.NameOrigFullEng,False,True
+289,BRA,BRA,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+299,Hizb-i Islami-yi Afghanistan,Hizb-i Islami-yi Afghanistan,Actor.NameData|Actor.NameOrig|Actor.NameOrigFull|GED.side_b,False,True
+299,Hizb-i Islami-yi Afghanistan,Islamic Party of Afghanistan,Actor.NameOrigFullEng,False,True
+303,Taleban,Taleban,Actor.NameData|Actor.NameOrig|Actor.NameOrigFull|Actor.NameOrigFullEng|GED.side_b,False,True
+309,PJAK,Partî Jiyanî Azadî Kurdistan,Actor.NameOrigFull,False,True
+309,PJAK,PJAK,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+309,PJAK,The Free Life Party of Kurdistan,Actor.NameOrigFullEng,False,True
+314,PLA,People’s Liberation Army,Actor.NameOrigFullEng,False,True
+314,PLA,PLA,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+323,PKK,KADEK,Actor.NewName.list_candidate,True,True
+323,PKK,"KADEK, KONGRA-GEL , PKK",Actor.NewName,False,True
+323,PKK,Kongra Gele Kurdistan,Actor.NewNameFullMotherTongue.list_candidate,True,True
+323,PKK,KONGRA-GEL,Actor.NewName.list_candidate,True,True
+323,PKK,Kongreya Azadi u Demokrasiya Kurdistan,Actor.NewNameFullMotherTongue.list_candidate,True,True
+323,PKK,"Kongreya Azadi u Demokrasiya Kurdistan, Kongra Gele Kurdistan, Partiya karkeren Kurdistan",Actor.NewNameFullMotherTongue,False,True
+323,PKK,Kurdistan Freedom and Democracy Congress,Actor.NewNameFullEng.list_candidate,True,True
+323,PKK,"Kurdistan Freedom and Democracy Congress, People’s Congress of Kurdistan, Kurdistan Worker’s Party",Actor.NewNameFullEng,False,True
+323,PKK,Kurdistan Worker’s Party,Actor.NameOrigFullEng|Actor.NewNameFullEng.list_candidate,True,True
+323,PKK,Partiya karkeren Kurdistan,Actor.NameOrigFull|Actor.NewNameFullMotherTongue.list_candidate,True,True
+323,PKK,People’s Congress of Kurdistan,Actor.NewNameFullEng.list_candidate,True,True
+323,PKK,PKK,Actor.NameData|Actor.NameOrig|Actor.NewName.list_candidate|GED.side_b,True,True
+325,Kashmir insurgents,Kashmir insurgents,Actor.NameData|Actor.NameOrig|Actor.NameOrigFull|Actor.NameOrigFullEng|GED.side_b,False,True
+326,ULFA,ULFA,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+326,ULFA,United Liberation Front of Assam,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+334,DHKP-C,Devrimci Halk Kurtulu? Partisi-Cephesi,Actor.NewNameFullMotherTongue,False,True
+334,DHKP-C,Devrimci Sol,Actor.NameOrig|Actor.NameOrigFull,False,True
+334,DHKP-C,DHKP-C,Actor.NameData|Actor.NewName|GED.side_b,False,True
+334,DHKP-C,Revolutionary Left,Actor.NameOrigFullEng,False,True
+334,DHKP-C,Revolutionary People's Liberation Party/Front,Actor.NewNameFullEng,False,True
+335,MKP,Maoist Communist Party,Actor.NameOrigFullEng,False,True
+335,MKP,Maoist Komünist Partisi,Actor.NameOrigFull,False,True
+335,MKP,MKP,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+338,Republic of Artsakh,Artsakhi Hanrapetut’yun,Actor.NewNameFullMotherTongue,False,True
+338,Republic of Artsakh,Republic of Artsakh,Actor.NameData|Actor.NewName|Actor.NewNameFullEng|GED.side_b,False,True
+338,Republic of Artsakh,Republic of Nagorno-Karabakh,Actor.NameOrig|Actor.NameOrigFullEng,False,True
+352,Chechen Republic of Ichkeria,??????? ????????? ??????,Actor.NameOrigFull,False,True
+352,Chechen Republic of Ichkeria,Chechen Republic of Ichkeria,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_b,False,True
+354,MQM,Mohajir National Movement,Actor.NameOrigFullEng,False,True
+354,MQM,Mohajir Qaumi Mahaz,Actor.NameOrigFull,False,True
+354,MQM,MQM,Actor.NameData|Actor.NameOrig|Actor.NewName|GED.side_b,True,True
+354,MQM,Muttahida Qaumi Mahaz,Actor.NewNameFullMotherTongue,False,True
+354,MQM,United National Movement,Actor.NewNameFullEng,False,True
+356,TTP,Taleban Movement of Pakistan,Actor.NameOrigFullEng,False,True
+356,TTP,Tehrik-i-Taliban Pakistan,Actor.NameOrigFull,False,True
+356,TTP,TTP,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+363,NDFB,BdSF,Actor.NameOrig,False,True
+363,NDFB,Bodo Security Force,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+363,NDFB,National Democratic Front for Bodoland,Actor.NewNameFullEng|Actor.NewNameFullMotherTongue,False,True
+363,NDFB,NDFB,Actor.NameData|Actor.NewName|GED.side_b,False,True
+365,Patani insurgents,Patani insurgents,Actor.NameData|Actor.NameOrig|Actor.NameOrigFull|Actor.NameOrigFullEng|GED.side_b,False,True
+366,Hezbollah,Hezbollah,Actor.NameData|Actor.NameOrig|Actor.NameOrigFull|GED.side_b,False,True
+366,Hezbollah,Party of God,Actor.NameOrigFullEng,False,True
+367,Forces of the Caucasus Emirate,?????? ?????? / ???? ??????/ ?????????? ??????,Actor.NameOrigFull,False,True
+367,Forces of the Caucasus Emirate,Forces of the Caucasus Emirate,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_b,False,True
+410,TPLF,Tigrean People’s Liberation Front,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+410,TPLF,TPLF,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+469,SLM/A,SLM/A,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+469,SLM/A,Sudan Liberation Movement/Army,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+488,LRA,Lord's Resistance Army,Actor.NewNameFullEng|Actor.NewNameFullMotherTongue,False,True
+488,LRA,LRA,Actor.NameData|Actor.NewName|GED.side_b,True,True
+488,LRA,UDCA,Actor.NameOrig,False,True
+488,LRA,Uganda Democratic Christian Army,Actor.NameOrigFullEng,False,True
+489,ADF,ADF,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+489,ADF,Alliance of Democratic Forces,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+497,ONLF,Jabhadda Wadaniga Xoreynta Ogaadeenya,Actor.NameOrigFull,False,True
+497,ONLF,Ogaden National Liberation Front,Actor.NameOrigFullEng,False,True
+497,ONLF,ONLF,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+498,Renamo,Mozambican National Resistance,Actor.NameOrigFullEng,False,True
+498,Renamo,Renamo,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+498,Renamo,Resistência nacional moçambicana,Actor.NameOrigFull,False,True
+528,FDLR-FOCA,Democratic Liberation Forces of Rwanda,Actor.NameOrigFullEng,False,True
+528,FDLR-FOCA,Democratic Liberation Forces of Rwanda-Abacunzi Fighting Forces,Actor.NewNameFullEng,False,True
+528,FDLR-FOCA,FDLR,Actor.NameOrig,False,True
+528,FDLR-FOCA,FDLR-FOCA,Actor.NameData|Actor.NewName|GED.side_b,False,True
+528,FDLR-FOCA,Forces démocratiques de libération du Rwanda,Actor.NameOrigFull,False,True
+528,FDLR-FOCA,Forces démocratiques de libération du Rwanda-Forces combattantes Abacunguzi,Actor.NewNameFullMotherTongue,False,True
+529,MFDC,MFDC,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+529,MFDC,Mouvement des forces démocratiques de Casamance,Actor.NameOrigFull,False,True
+529,MFDC,Movement of the Democratic Forces of the Casamance,Actor.NameOrigFullEng,False,True
+539,AQIM,al-Qaida Organization in the Islamic Maghreb,Actor.NewNameFullEng,False,True
+539,AQIM,AQIM,Actor.NameData|Actor.NewName|GED.side_b,False,True
+539,AQIM,Groupe salafiste pour la prédication et le combat,Actor.NameOrigFull,False,True
+539,AQIM,GSPC,Actor.NameOrig,False,True
+539,AQIM,Qaida al-Jihad fi Bilad al-Maghrib al-Islami,Actor.NewNameFullMotherTongue,False,True
+539,AQIM,Salafist Group for Preaching and Combat,Actor.NameOrigFullEng,False,True
+541,FLEC-FAC,FLEC-FAC,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+541,FLEC-FAC,Frente da libertação do enclave de Cabinda-Forças armadas de Cabinda,Actor.NameOrigFull,False,True
+541,FLEC-FAC,Front for the Liberation of the Enclave of Cabinda-Armed Forces of Cabinda,Actor.NameOrigFullEng,False,True
+548,Ntsiloulous,Ntsiloulous,Actor.NameData|Actor.NameOrig|Actor.NameOrigFull|Actor.NameOrigFullEng|GED.side_b,False,True
+551,OLF,OLF,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+551,OLF,Oromo Liberation Front,Actor.NameOrigFullEng,False,True
+561,BDK,BDK,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+561,BDK,Bundu dia Kongo,Actor.NameOrigFull,False,True
+561,BDK,Kingdom of Kongo,Actor.NameOrigFullEng,False,True
+563,POLISARIO,Frente popular de liberación de Saguia el Hamra y Rio de Oro,Actor.NameOrigFull,False,True
+563,POLISARIO,POLISARIO,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+563,POLISARIO,Popular Front for the Liberation of Saguia el Hamra and Rio de Oro,Actor.NameOrigFullEng,False,True
+675,Republic of Somaliland,Jamhuuriyadda Soomaaliland,Actor.NameOrigFull,False,True
+675,Republic of Somaliland,Republic of Somaliland,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_b,False,True
+717,Al-Shabaab,Al-Shabaab,Actor.NameData|Actor.NameOrig|Actor.NameOrigFull|Actor.NameOrigFullEng|GED.side_b,False,True
+743,FARC,FARC,Actor.NameData|Actor.NewName|GED.side_b,False,True
+743,FARC,Fuerzas armadas revolucionarias colombianas,Actor.NameOrigFull|Actor.NewNameFullMotherTongue,False,True
+743,FARC,Revolutionary Armed Forces of Colombia,Actor.NameOrigFullEng|Actor.NewNameFullEng,False,True
+743,FARC,Southern Bloc,Actor.NameOrig,False,True
+744,ELN,Ejército de Liberación Nacional,Actor.NameOrigFull,False,True
+744,ELN,ELN,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+744,ELN,National Liberation Army,Actor.NameOrigFullEng,False,True
+750,Sendero Luminoso,Sendero Luminoso,Actor.NameData|Actor.NameOrig|Actor.NameOrigFull|GED.side_b,False,True
+750,Sendero Luminoso,Shining Path,Actor.NameOrigFullEng,False,True
+769,al-Qaida,al-Qaida,Actor.NameData|Actor.NameOrig|Actor.NameOrigFull|GED.side_b,False,True
+769,al-Qaida,The Base,Actor.NameOrigFullEng,False,True
+805,PBCP,East Bengal Communist Party,Actor.NameOrigFullEng,False,True
+805,PBCP,PBCP,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+805,PBCP,Purbo Banglar Communist Party,Actor.NameOrigFull,False,True
+880,MNDAA,MNDAA,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+880,MNDAA,Myanmar National Democratic Alliance Army,Actor.NameOrigFullEng,False,True
+881,AQAP,al-Qaida in the Arabian Peninsula,Actor.NameOrigFullEng,False,True
+881,AQAP,AQAP,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+881,AQAP,Tanzim al-Qa'idah fi Jazirat al-'Arab,Actor.NameOrigFull,False,True
+1051,JAS,Jama'atu Ahlis Sunna Lidda'awati wal-Jihad,Actor.NameOrigFull,False,True
+1051,JAS,JAS,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+1051,JAS,People Committed to Propagating the Prophet's Teachings and Jihad,Actor.NameOrigFullEng,False,True
+1066,NDFB - RD,National Democratic Front for Bodoland - Ranjan Daimary faction,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+1066,NDFB - RD,NDFB - RD,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+1069,UFR,UFR,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+1069,UFR,Union des Forces de la Résistance,Actor.NameOrigFull,False,True
+1069,UFR,Union of Forces for the Resistance,Actor.NameOrigFullEng,False,True
+1122,SSPP,Shan State Progress Party,Actor.NameOrigFullEng,False,True
+1122,SSPP,SSPP,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+1123,SPLM/A-North,Harakat Al-Sha’abi Li-Tahrir Al-Sudan-Al-Shamal,Actor.NameOrigFull,False,True
+1123,SPLM/A-North,SPLM/A-North,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+1123,SPLM/A-North,Sudan People's Liberation Movement/Army-North,Actor.NameOrigFullEng,False,True
+1146,BIFM,Bangsamoro Islamic Freedom Fighters,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+1146,BIFM,Bangsamoro Islamic Freedom Movement,Actor.NewNameFullEng|Actor.NewNameFullMotherTongue,False,True
+1146,BIFM,BIFF,Actor.NameOrig,False,True
+1146,BIFM,BIFM,Actor.NameData|Actor.NewName|GED.side_b,False,True
+1156,ETIM,East Turkistan Islamic Movement,Actor.NameOrigFullEng,False,True
+1156,ETIM,ETIM,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+1156,ETIM,Hizbul Islam Li-Turkistan Ash-Sharqiyah,Actor.NameOrigFull,False,True
+1157,Ansar Dine,Ansar Dine,Actor.NameData|Actor.NameOrig|Actor.NameOrigFull|GED.side_b,False,True
+1157,Ansar Dine,Defenders of the Faith,Actor.NameOrigFullEng,False,True
+1158,CMA,CMA,Actor.NameData|Actor.NewName|GED.side_b,True,True
+1158,CMA,Coordination des Mouvements de l’Azawad,Actor.NewNameFullMotherTongue,False,True
+1158,CMA,Coordination of Azawad Movements,Actor.NewNameFullEng,False,True
+1158,CMA,MNLA,Actor.NameOrig,False,True
+1158,CMA,Mouvement national pour la libération de l'Azawad,Actor.NameOrigFull,False,True
+1158,CMA,National Movement for the Liberation of Azawad,Actor.NameOrigFullEng,False,True
+1160,M23,M23,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+1160,M23,March 23 Movement,Actor.NameOrigFullEng,False,True
+1160,M23,Mouvement du 23-Mars,Actor.NameOrigFull,False,True
+1162,SRF,Al-Jabhat Al-Thawriyat Al-Sudan,Actor.NameOrigFull,False,True
+1162,SRF,SRF,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+1162,SRF,Sudan Revolutionary Front,Actor.NameOrigFullEng,False,True
+1163,GNLA,Garo National Liberation Army,Actor.NameOrigFullEng,False,True
+1163,GNLA,GNLA,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+1165,PBCP-J,PBCP-J,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+1165,PBCP-J,Purba Banglar Communist Party - Janajudhha faction,Actor.NameOrigFullEng,False,True
+1166,BLF,Baloch Liberation Front,Actor.NameOrigFullEng,False,True
+1166,BLF,BLF,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+1200,APCLS,Alliance des patriotes pour un Congo libre et souverain,Actor.NameOrigFull,False,True
+1200,APCLS,Alliance of the People for a Free and Sovereign Congo,Actor.NameOrigFullEng,False,True
+1200,APCLS,APCLS,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+1209,Government of Benin,Benin,derived_government_name,True,True
+1209,Government of Benin,Government of Benin,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_a,False,True
+2034,TAK,Kurdistan Freedom Falcons,Actor.NameOrigFullEng,False,True
+2034,TAK,TAK,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+2034,TAK,Teyrêbazên Azadiya Kurdistan,Actor.NameOrigFull,False,True
+2649,CNF,Chin National Front,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+2649,CNF,CNF,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+2939,NLFT-B,National Liberation Front of Tripura - Biswamohan faction,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+2939,NLFT-B,NLFT-B,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+3043,CNPSC,CNPSC,Actor.NameData|Actor.NewName.list_candidate|GED.side_b,True,True
+3043,CNPSC,Coalition nationale du peuple pour la souveraineté du Congo,Actor.NewNameFullMotherTongue.list_candidate,True,True
+3043,CNPSC,Mayi Mayi Réformé,Actor.NameOrig,False,True
+3043,CNPSC,Maï Maï Réformé,Actor.NameOrigFull,False,True
+3043,CNPSC,National Coalition of the People for the Sovereignty of the Congo,Actor.NewNameFullEng.list_candidate,True,True
+3043,CNPSC,PARC-FAAL,Actor.NewName.list_candidate,True,True
+3043,CNPSC,"PARC-FAAL, CNPSC",Actor.NewName,False,True
+3043,CNPSC,Parti pour l’action et la reconstruction du Congo-Forces armées alléluia,Actor.NewNameFullMotherTongue.list_candidate,True,True
+3043,CNPSC,"Parti pour l’action et la reconstruction du Congo-Forces armées alléluia, Coalition nationale du peuple pour la souveraineté du Congo",Actor.NewNameFullMotherTongue,False,True
+3043,CNPSC,Party for Action and the Reconstruction of the Congo-Allelujah Armed Forces,Actor.NewNameFullEng.list_candidate,True,True
+3043,CNPSC,"Party for Action and the Reconstruction of the Congo-Allelujah Armed Forces, National Coalition of the People for the Sovereignty of the Congo",Actor.NewNameFullEng,False,True
+3043,CNPSC,Reformed Mayi Mayi,Actor.NameOrigFullEng,False,True
+3051,ULA,ULA,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+3051,ULA,United League of Arakan,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+3192,UBA,???????? ???? ????,Actor.NameOrigFull,False,True
+3192,UBA,UBA,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+3192,UBA,United Baloch Army,Actor.NameOrigFullEng,False,True
+3553,FNL-Ubugabo-Burihabwa,FNL-Ubugabo-Burihabwa,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+3553,FNL-Ubugabo-Burihabwa,Forces for National Liberation-Ubugabo-Burihabwa,Actor.NameOrigFullEng,False,True
+3553,FNL-Ubugabo-Burihabwa,Forces nationales de libération-Ubugabo-Burihabwa,Actor.NameOrigFull,False,True
+3967,Kata Katanga,Kata Katanga,Actor.NameData|Actor.NameOrig|Actor.NameOrigFull|Actor.NameOrigFullEng|GED.side_b,False,True
+4007,FPRC,ex-Seleka,Actor.NameOrig|Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+4007,FPRC,FPRC,Actor.NameData|Actor.NewName|GED.side_b,False,True
+4007,FPRC,Front populaire pour la renaissance de centrafrique,Actor.NewNameFullMotherTongue,False,True
+4007,FPRC,Popular Front for the Rebirth of the Central African Republic,Actor.NewNameFullEng,False,True
+4102,HGB,Forces of Hafiz Gul Bahadur,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+4102,HGB,HGB,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+4201,anti-Balaka,anti-Balaka,Actor.NameData|Actor.NameOrig|Actor.NameOrigFull|Actor.NameOrigFullEng|GED.side_b,False,True
+4226,SPLM/A - IO,SPLM/A - IO,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+4226,SPLM/A - IO,Sudan People´s Liberation Army/Movement in Opposition,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+4364,Jaish al-Adl,Army of Justice,Actor.NameOrigFullEng,False,True
+4364,Jaish al-Adl,Jaish al-Adl,Actor.NameData|Actor.NameOrig|Actor.NameOrigFull|GED.side_b,False,True
+4456,Syrian insurgents,Syrian insurgents,Actor.NameData|Actor.NameOrig|Actor.NameOrigFull|Actor.NameOrigFullEng|GED.side_b,False,True
+5801,FDLR-RUD,Democratic Forces for the Liberation of Rwanda - Rally for Unity and Democracy,Actor.NameOrigFullEng,False,True
+5801,FDLR-RUD,FDLR-RUD,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+5801,FDLR-RUD,Forces Démocratiques pour la Libération du Rwanda - Rassemblement Uni Pour la Démocratie,Actor.NameOrigFull,False,True
+5802,Forces of the House of Representatives,Forces of the House of Representatives,Actor.NameData|Actor.NameOrig|Actor.NameOrigFull|Actor.NameOrigFullEng|GED.side_b,False,True
+5849,SARC,SARC,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+5849,SARC,Sudanese Awakening Revolutionary Council,Actor.NameOrigFullEng,False,True
+5965,PSLF,Palaung State Liberation Front,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+5965,PSLF,PSLF,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+5999,UPC,Union for Peace in the Central African Republic,Actor.NameOrigFullEng,False,True
+5999,UPC,Union pour la Paix en Centrafrique,Actor.NameOrigFull,False,True
+5999,UPC,UPC,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+6252,High Council of Afghanistan Islamic Emirate,High Council of Afghanistan Islamic Emirate,Actor.NameData|Actor.NewName|Actor.NewNameFullEng|GED.side_b,False,True
+6252,High Council of Afghanistan Islamic Emirate,Taleban - Mohamed Rasool faction,Actor.NameOrig|Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+6254,Forces of the Presidential Leadership Council,???? ??????? ???????,Actor.NewNameFullMotherTongue,False,True
+6254,Forces of the Presidential Leadership Council,Forces of Hadi,Actor.NameOrig|Actor.NameOrigFullEng,False,True
+6254,Forces of the Presidential Leadership Council,Forces of the Presidential Leadership Council,Actor.NameData|Actor.NewName|Actor.NewNameFullEng|GED.side_b,False,True
+6267,FLM,FLM,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+6267,FLM,Front de Libération du Macina,Actor.NameOrigFull,False,True
+6267,FLM,Macina Liberation Front,Actor.NameOrigFullEng,False,True
+6287,IPOB,Indigenous People of Biafra,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+6287,IPOB,IPOB,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+6288,SDF,Hêzên Sûriya Demokratîk,Actor.NameOrigFull,False,True
+6288,SDF,SDF,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+6288,SDF,Syrian Democratic Forces,Actor.NameOrigFullEng,False,True
+6297,FPB,Forces Populaires du Burundi,Actor.NewNameFullMotherTongue,False,True
+6297,FPB,Forebu,Actor.NameOrig,False,True
+6297,FPB,FPB,Actor.NameData|Actor.NewName|GED.side_b,True,True
+6297,FPB,Les Forces Republicaines du Burundi,Actor.NameOrigFull,False,True
+6297,FPB,Popular Forces of Burundi,Actor.NewNameFullEng,False,True
+6297,FPB,Republican Forces of Burundi,Actor.NameOrigFullEng,False,True
+6320,UNLFW,United Liberation Front of Western South East Asia,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+6320,UNLFW,UNLFW,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+6354,MPC,Mouvement patriotique de Centrafrique,Actor.NameOrigFull,False,True
+6354,MPC,MPC,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+6354,MPC,Patriotic Movement for the Central African Republic,Actor.NameOrigFullEng,False,True
+6356,"Government of United Kingdom, Government of United States of America","Government of United Kingdom, Government of United States of America",GED.side_a,True,False
+6359,JAK-T,JAK-T,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+6359,JAK-T,Jund al-Khilafah-Tunisia,Actor.NameOrigFull,False,True
+6359,JAK-T,Soldiers of the Caliphate,Actor.NameOrigFullEng,False,True
+6513,RED-TABARA,'the Saviours' (FPM-Abatabazi),Actor.NewNameFullEng.list_candidate,True,True
+6513,RED-TABARA,Burundi National Front,Actor.NameOrigFullEng,False,True
+6513,RED-TABARA,FPM/ADN,Actor.NewName.list_candidate,True,True
+6513,RED-TABARA,"FPM/ADN, RED-TABARA",Actor.NewName,False,True
+6513,RED-TABARA,FRONABU Tabara,Actor.NameOrig,False,True
+6513,RED-TABARA,Front du peuple murundi/alliance divine pur la nation,Actor.NewNameFullMotherTongue.list_candidate,True,True
+6513,RED-TABARA,"Front du peuple murundi/alliance divine pur la nation, Résistance pour un Etat de Droit au Burundi / Umuhari Uharanira Iteka n'Itekane",Actor.NewNameFullMotherTongue,False,True
+6513,RED-TABARA,Front National pour la Révolution au Burundi,Actor.NameOrigFull,False,True
+6513,RED-TABARA,Murundi People's Front,Actor.NewNameFullEng.list_candidate,True,True
+6513,RED-TABARA,"Murundi People's Front, 'the Saviours' (FPM-Abatabazi) , Resistance for the Rule of Law in Burundi",Actor.NewNameFullEng,False,True
+6513,RED-TABARA,RED-TABARA,Actor.NameData|Actor.NewName.list_candidate|GED.side_b,True,True
+6513,RED-TABARA,Resistance for the Rule of Law in Burundi,Actor.NewNameFullEng.list_candidate,True,True
+6513,RED-TABARA,Résistance pour un Etat de Droit au Burundi / Umuhari Uharanira Iteka n'Itekane,Actor.NewNameFullMotherTongue.list_candidate,True,True
+6578,Maute group,Islamic State Mindanao,Actor.NameOrigFullEng,False,True
+6578,Maute group,Khalifah Islamiyah Mindanao,Actor.NameOrigFull,False,True
+6578,Maute group,KIM,Actor.NameOrig,True,True
+6578,Maute group,Maute group,Actor.NameData|Actor.NewName|Actor.NewNameFullEng|Actor.NewNameFullMotherTongue|GED.side_b,False,True
+6590,Kamuina Nsapu,Kamuina Nsapu,Actor.NameData|Actor.NameOrig|Actor.NameOrigFull|Actor.NameOrigFullEng|GED.side_b,False,True
+6616,Harakit Sawa'id Misr,Harakit Sawa'id Misr,Actor.NameData|Actor.NameOrig|Actor.NameOrigFull|Actor.NameOrigFullEng|GED.side_b,False,True
+6684,RMDC,CNRD,Actor.NameOrig,False,True
+6684,RMDC,Conseil national pour le renouveau et la démocratie-Ubwiyunge,Actor.NameOrigFull,False,True
+6684,RMDC,Mouvement Rwandais pour le Changement Démocratie,Actor.NewNameFullMotherTongue,False,True
+6684,RMDC,National Council for Renewal and Democracy,Actor.NameOrigFullEng,False,True
+6684,RMDC,RMDC,Actor.NameData|Actor.NewName|GED.side_b,False,True
+6684,RMDC,Rwandan Movement for Democratic Change,Actor.NewNameFullEng,False,True
+6689,Yurtta Sulh Konseyi,Yurtta Sulh Konseyi,Actor.NameData|Actor.NameOrig|Actor.NameOrigFull|Actor.NameOrigFullEng|GED.side_b,False,True
+6692,ARSA,Arakan Rohingya Salvation Army,Actor.NewNameFullEng|Actor.NewNameFullMotherTongue,False,True
+6692,ARSA,ARSA,Actor.NameData|Actor.NewName|GED.side_b,False,True
+6692,ARSA,Faith Movement of Arakan,Actor.NameOrigFullEng,False,True
+6692,ARSA,Harakah al-Yaqin,Actor.NameOrigFull,False,True
+6692,ARSA,HaY,Actor.NameOrig,True,True
+6711,DPR,???????? ???????? ?????????? / Donetskaya narodnaya respublika,Actor.NameOrigFull,False,True
+6711,DPR,Donetsk People's Republic,Actor.NameOrigFullEng,False,True
+6711,DPR,DPR,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+6712,LPR,????????? ???????? ?????????? / Luganskaya narodnaya respublika,Actor.NameOrigFull,False,True
+6712,LPR,LPR,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+6712,LPR,Lugansk People's Republic,Actor.NameOrigFullEng,False,True
+6716,JNIM,Group for the Support of Islam and Muslims,Actor.NameOrigFullEng,False,True
+6716,JNIM,Jamaat Nusrat al-Islam wal-Muslimin,Actor.NameOrigFull,False,True
+6716,JNIM,JNIM,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+6740,MNR,MNR,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+6740,MNR,Mouvement National des Révolutionnaires,Actor.NameOrigFull,False,True
+6740,MNR,National Movement for the Revolution,Actor.NameOrigFullEng,False,True
+6794,NAS,NAS,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+6794,NAS,National Salvation Front,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+6814,Forces of Khalifa al-Ghawil,Forces of Khalifa al-Ghawil,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_b,False,True
+6844,Jama'at Ansar al-Islam,Jama'at Ansar al-Islam,Actor.NameData|Actor.NameOrig|Actor.NameOrigFull|Actor.NameOrigFullEng|GED.side_b,False,True
+6868,GPC,Al-Mo'tamar Ash-Sha'abiy Al-'Aam,Actor.NameOrigFull,False,True
+6868,GPC,General People's Congress,Actor.NameOrigFullEng,False,True
+6868,GPC,GPC,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+6893,PFLL,PFLL,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+6893,PFLL,Popular Front for the Liberation of Libya,Actor.NameOrigFullEng,False,True
+6894,UPLC,Union des Patriotes pour la Libération du Congo,Actor.NameOrigFull,False,True
+6894,UPLC,Union of Patriots for the Liberation of Congo,Actor.NameOrigFullEng,False,True
+6894,UPLC,UPLC,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+6896,Mayi Mayi Kyandenga,Mayi Mayi Kyandenga,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_b,False,True
+6896,Mayi Mayi Kyandenga,Maï Maï Kyandenga,Actor.NameOrigFull,False,True
+6920,CMC,CMC,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+6920,CMC,Coalition for movements of change,Actor.NameOrigFullEng,False,True
+6920,CMC,Collectif des mouvements pour le changement,Actor.NameOrigFull,False,True
+6998,al-Harakat al-Islamiyah,al-Harakat al-Islamiyah,Actor.NameData|Actor.NameOrig|Actor.NameOrigFull|Actor.NameOrigFullEng|GED.side_b,False,True
+6999,BIFM-K,Bangsamoro Islamic Freedom Movement - Karialan faction,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+6999,BIFM-K,BIFM-K,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+7032,ASWJ,Ahlu al-Sunna wa'l Jama'a,Actor.NameOrigFull,False,True
+7032,ASWJ,ASWJ,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+7032,ASWJ,Followers of the Prophetic Tradition,Actor.NameOrigFullEng,False,True
+7074,EPL–Los Pelusos,Ejército popular de liberación - Francisco Caraballo,Actor.NameOrigFull,False,True
+7074,EPL–Los Pelusos,Ejército Popular de Liberación – Los Pelusos,Actor.NewNameFullMotherTongue,False,True
+7074,EPL–Los Pelusos,EPL - FC,Actor.NameOrig,False,True
+7074,EPL–Los Pelusos,EPL–Los Pelusos,Actor.NameData|Actor.NewName|GED.side_b,False,True
+7074,EPL–Los Pelusos,People's Liberation Army - Francisco Caraballo,Actor.NameOrigFullEng,False,True
+7074,EPL–Los Pelusos,People’s Liberation Army – Los Pelusos,Actor.NewNameFullEng,False,True
+7098,RNL,Baraka group,Actor.NewName.list_candidate|Actor.NewNameFullEng.list_candidate|Actor.NewNameFullMotherTongue.list_candidate,True,True
+7098,RNL,"Baraka group, Corps du Christ, National Lumumbist Resistance",Actor.NewNameFullEng,False,True
+7098,RNL,"Baraka group, Corps du Christ, Resistance Nationale Lumumbiste",Actor.NewNameFullMotherTongue,False,True
+7098,RNL,"Baraka group, Corps du Christ, RNL",Actor.NewName,False,True
+7098,RNL,Corps du Christ,Actor.NewName.list_candidate|Actor.NewNameFullEng.list_candidate|Actor.NewNameFullMotherTongue.list_candidate,True,True
+7098,RNL,National Lumumbist Resistance,Actor.NewNameFullEng.list_candidate,True,True
+7098,RNL,Resistance Nationale Lumumbiste,Actor.NewNameFullMotherTongue.list_candidate,True,True
+7098,RNL,RNL,Actor.NameData|Actor.NameOrig|Actor.NewName.list_candidate|GED.side_b,True,True
+7098,RNL,Résistants nationalistes Lumumbistes,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+7107,FABB,Biloze Bishambuke Self-Defence Force,Actor.NameOrigFullEng,False,True
+7107,FABB,FABB,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+7107,FABB,Force d'autodéfense Biloze Bishambuke,Actor.NameOrigFull,False,True
+7151,CCMSR,CCMSR,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+7151,CCMSR,Conseil de Commandement Militaire pour le Salut de la République,Actor.NameOrigFull,False,True
+7151,CCMSR,Military Command Council for the Salvation of the Republic,Actor.NameOrigFullEng,False,True
+7255,FACT,FACT,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+7255,FACT,Front for Change and Concord in Chad,Actor.NameOrigFull,False,True
+7255,FACT,Front pour l’alternance et la concorde au Tchad,Actor.NameOrigFullEng,False,True
+7332,Ambazonia insurgents,Ambazonia insurgents,Actor.NameData|Actor.NameOrig|Actor.NameOrigFull|Actor.NameOrigFullEng|GED.side_b,False,True
+7344,STC,al-Majlis al-Intiq?l? l-Jan?biyy,Actor.NameOrigFull,False,True
+7344,STC,Southern Transitional Council,Actor.NameOrigFullEng,False,True
+7344,STC,STC,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+7412,FLEC-FAC-TN,FLEC-FAC-TN,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+7412,FLEC-FAC-TN,Frente da Libertação do Enclave de Cabinda - Forças Armadas de Cabinda - Tiago Nzita faction,Actor.NameOrigFull,False,True
+7412,FLEC-FAC-TN,Front for the Liberation of the Enclave of Cabinda - Armed Forces of Cabinda - Tiago Nzita faction,Actor.NameOrigFullEng,False,True
+7438,Military faction (forces of Asaminew Tsige),Military faction (forces of Asaminew Tsige),Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_b,False,True
+7542,BRAS,Baloch National Freedom Movement,Actor.NameOrigFullEng,False,True
+7542,BRAS,Baloch Raji Aajoi Sangar,Actor.NameOrigFull,False,True
+7542,BRAS,BRAS,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+7595,OLA,OLA,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+7595,OLA,Oromo Liberation Army,Actor.NameOrigFullEng,False,True
+7595,OLA,Waraana Bilisummaa Oromoo,Actor.NameOrigFull,False,True
+7870,CPC,Coalition des patriotes pour le changement,Actor.NameOrigFull,False,True
+7870,CPC,Coalition of Patriots for Change,Actor.NameOrigFullEng,False,True
+7870,CPC,CPC,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+8060,NUG,National Unity Government,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+8060,NUG,NUG,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+8114,NRF,??????? ???? ?????? ??? ???? ???? ?????????,Actor.NameOrigFull,False,True
+8114,NRF,National Resistance Front of Afghanistan,Actor.NameOrigFullEng,False,True
+8114,NRF,NRF,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+8118,Fano,Fano,Actor.NameData|Actor.NameOrig|Actor.NameOrigFull|Actor.NameOrigFullEng|GED.side_b,False,True
+8179,TKP-ML,Communist Party of Turkey/Marxist-Leninist,Actor.NameOrigFullEng,False,True
+8179,TKP-ML,TKP-ML,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+8179,TKP-ML,Türkiye Komünist Partisi/Marksist-Leninist,Actor.NameOrigFull,False,True
+8196,GLF,Gambella Liberation Front,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+8196,GLF,GLF,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+8201,SPLM/A - IO - Kitgwang,SPLM/A - IO - Kitgwang,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+8201,SPLM/A - IO - Kitgwang,Sudan People´s Liberation Army/Movement in Opposition - Kitgwang faction,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+8343,AFF,????? ????? ?????????,Actor.NameOrigFull,False,True
+8343,AFF,AFF,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+8343,AFF,Afghanistan Freedom Front,Actor.NameOrigFullEng,False,True
+8449,PNLO,Pa-O National Liberation Organisation,Actor.NameOrigFullEng,False,True
+8449,PNLO,PNLO,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+8468,FARC-EMC,FARC-EMC,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+8468,FARC-EMC,Fuerzas Armadas Revolucionarias de Colombia - Estado Mayor Central,Actor.NameOrigFull,False,True
+8468,FARC-EMC,Revolutionary Armed Forces of Colombia - Central General Staff,Actor.NameOrigFullEng,False,True
+8469,FARC - Segunda Marquetalia,FARC - Segunda Marquetalia,Actor.NameData|Actor.NameOrig|Actor.NameOrigFull|Actor.NameOrigFullEng|GED.side_b,False,True
+8577,Naparama,Naparama,Actor.NameData|Actor.NameOrig|Actor.NameOrigFull|Actor.NameOrigFullEng|GED.side_b,False,True
+8635,RSF,Quww?t ad-da?m as-sar??,Actor.NameOrigFull,False,True
+8635,RSF,Rapid Support Forces,Actor.NameOrigFullEng,False,True
+8635,RSF,RSF,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+8639,RDK,RDK,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+8639,RDK,Russian Volunteer Corps,Actor.NameOrigFullEng,False,True
+8639,RDK,Russkiy dobrovolcheskiy korpus,Actor.NameOrigFull,False,True
+8640,LSR,Freedom of Russia Legion,Actor.NameOrigFullEng,False,True
+8640,LSR,Legion Svoboda Rossii,Actor.NameOrigFull,False,True
+8640,LSR,LSR,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+8650,Wagner,ChVK Vagner,Actor.NameOrigFull,False,True
+8650,Wagner,PMC Wagner,Actor.NameOrigFullEng,False,True
+8650,Wagner,Wagner,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+8789,TJP,Tehreek-e-Jihad Pakistan,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+8789,TJP,TJP,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+8822,FLA,Azawad Liberation Front,Actor.NewNameFullEng.list_candidate,True,True
+8822,FLA,"Cadre stratégique permanent pour la paix, la sécurité et le développement",Actor.NameOrigFull,False,True
+8822,FLA,Cadre stratégique pour la défense du peuple de l’Azawad,Actor.NewNameFullMotherTongue.list_candidate,True,True
+8822,FLA,"Cadre stratégique pour la défense du peuple de l’Azawad, Front de libération de l'Azawad",Actor.NewNameFullMotherTongue,False,True
+8822,FLA,CSP-DPA,Actor.NewName.list_candidate,True,True
+8822,FLA,"CSP-DPA, FLA",Actor.NewName,False,True
+8822,FLA,CSP-PSD,Actor.NameOrig,False,True
+8822,FLA,FLA,Actor.NameData|Actor.NewName.list_candidate|GED.side_b,True,True
+8822,FLA,Front de libération de l'Azawad,Actor.NewNameFullMotherTongue.list_candidate,True,True
+8822,FLA,"Permanent Strategic Framework for Peace, Security, and Development",Actor.NameOrigFullEng,False,True
+8822,FLA,Strategic Framework for the Defense of the People of Azawad,Actor.NewNameFullEng.list_candidate,True,True
+8822,FLA,"Strategic Framework for the Defense of the People of Azawad, Azawad Liberation Front",Actor.NewNameFullEng,False,True
+8885,AFC,AFC,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+8885,AFC,Alliance Fleuve Congo,Actor.NameOrigFull,False,True
+8885,AFC,Congo River Alliance,Actor.NameOrigFullEng,False,True
+9067,Viv Ansanm,Viv Ansanm,Actor.NameData|Actor.NameOrig|Actor.NameOrigFull|Actor.NameOrigFullEng|GED.side_b,False,True
+9191,EMBF,EMBF,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+9191,EMBF,Estado Mayor de los Bloques y Frente,Actor.NameOrigFull,False,True
+9191,EMBF,General Staff of the Blocs and Front,Actor.NameOrigFullEng,False,True
+9360,CMSPR,CMSPR,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+9360,CMSPR,Coalition Militaire de Salut du Peuple et de Redressement,Actor.NameOrigFull,False,True
+9360,CMSPR,Military Coalition for People’s Salvation and Recovery,Actor.NameOrigFullEng,False,True
+9371,CPC-F,Coalition for Fundamental Change,Actor.NameOrigFullEng,False,True
+9371,CPC-F,CPC-F,Actor.NameData|Actor.NameOrig|GED.side_b,False,True
+9371,CPC-F,la Coalition pour le changement fondamental,Actor.NameOrigFull,False,True
+9449,Military Council for the Liberation of Syria,Military Council for the Liberation of Syria,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_b,False,True
+9505,IMP,IMP,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+9505,IMP,Ittihad-ul-Mujahideen Pakistan,Actor.NameOrigFull|Actor.NameOrigFullEng,False,True
+9529,CRP,Convention for the Popular Revolution,Actor.NameOrigFullEng,False,True
+9529,CRP,Convention pour la Révolution Populaire,Actor.NameOrigFull,False,True
+9529,CRP,CRP,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+9645,SFA,SFA,Actor.NameData|Actor.NameOrig|GED.side_b,True,True
+9645,SFA,Sudan Founding Alliance,Actor.NameOrigFullEng,False,True
+9806,Palestinian Mujahideen Movement,Harakat al-Mujahidin al-Filastinia,Actor.NameOrigFull,False,True
+9806,Palestinian Mujahideen Movement,Palestinian Mujahideen Movement,Actor.NameData|Actor.NameOrig|Actor.NameOrigFullEng|GED.side_b,False,True
