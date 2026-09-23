@@ -23,14 +23,14 @@ UTC 오늘 또는 `--as-of`와 요청 종료일 중 빠른 날이다. 미래 기
 [UCDP 공식 다운로드 센터](https://ucdp.uu.se/downloads/index.html)에서 다음 CSV를
 다운로드한다. 원본은 Git에 포함하지 않으며 기존 파일을 가공 결과로 덮어쓰지 않는다.
 
-| 자료 | 공식 다운로드 | `data/ucdp/raw/`의 파일명 |
-| --- | --- | --- |
-| GED Global 26.1 | [ZIP](https://ucdp.uu.se/downloads/ged/ged261-csv.zip) | `GEDEvent_v26_1.csv` |
-| Armed Conflict Dataset 26.1 | [ZIP](https://ucdp.uu.se/downloads/ucdpprio/ucdp-prio-acd-261-csv.zip) | `UcdpPrioConflict_v26_1.csv` |
-| Actor 26.1 | [ZIP](https://ucdp.uu.se/downloads/actor/ucdp-actor-261-csv.zip) | `Actor_v26_1.csv` |
-| Candidate 2026년 1~6월 | [CSV](https://ucdp.uu.se/downloads/candidateged/GEDEvent_v26_01_26_06.csv) | `GEDEvent_v26_01_26_06.csv` |
-| Candidate 2026년 7월 | [CSV](https://ucdp.uu.se/downloads/candidateged/GEDEvent_v26_0_7.csv) | `GEDEvent_v26_0_7.csv` |
-| Candidate 2026년 8월 | [CSV](https://ucdp.uu.se/downloads/candidateged/GEDEvent_v26_0_8.csv) | `GEDEvent_v26_0_8.csv` |
+| 자료                        | 공식 다운로드                                                              | `data/ucdp/raw/`의 파일명    |
+| --------------------------- | -------------------------------------------------------------------------- | ---------------------------- |
+| GED Global 26.1             | [ZIP](https://ucdp.uu.se/downloads/ged/ged261-csv.zip)                     | `GEDEvent_v26_1.csv`         |
+| Armed Conflict Dataset 26.1 | [ZIP](https://ucdp.uu.se/downloads/ucdpprio/ucdp-prio-acd-261-csv.zip)     | `UcdpPrioConflict_v26_1.csv` |
+| Actor 26.1                  | [ZIP](https://ucdp.uu.se/downloads/actor/ucdp-actor-261-csv.zip)           | `Actor_v26_1.csv`            |
+| Candidate 2026년 1~6월      | [CSV](https://ucdp.uu.se/downloads/candidateged/GEDEvent_v26_01_26_06.csv) | `GEDEvent_v26_01_26_06.csv`  |
+| Candidate 2026년 7월        | [CSV](https://ucdp.uu.se/downloads/candidateged/GEDEvent_v26_0_7.csv)      | `GEDEvent_v26_0_7.csv`       |
+| Candidate 2026년 8월        | [CSV](https://ucdp.uu.se/downloads/candidateged/GEDEvent_v26_0_8.csv)      | `GEDEvent_v26_0_8.csv`       |
 
 2026-09-23 확인 기준으로 연간 확정 자료는 2025년까지, Candidate 공개분은
 2026년 8월까지다. 9월 이후의 신규 분쟁은 아직 UCDP 기반 목록에 없을 수 있다.
@@ -77,12 +77,12 @@ python scripts/build_ucdp_search_inputs.py
 7. 행위자 미등록·동일 행위자 양측 등장·ACD 당사자 불일치는 별도 검토 목록에 남긴다.
    예를 들어 GED의 연합 행위자 ID와 ACD의 여러 개별 국가 ID가 다르면 자동으로 분해하지 않는다.
 
-| 사건의 `classification_status` | 의미 | 검색 계획에서의 역할 |
-| --- | --- | --- |
-| `interstate_confirmed` | 같은 연도 ACD 분류와 양측 ID 확인 | 분쟁 검색의 근거 |
-| `interstate_reference` | 다른 연도에서 분쟁과 당사자 확인 | 검토 표시를 유지한 참고 사건 |
-| `state_pair_candidate` | 국가 행위자 쌍이나 연간 분류 없음 | 신규 분쟁 발견을 위한 잠정 검색 대상 |
-| `review` | ID·당사자 대응을 확정하지 못함 | 별도 검토 CSV, 자동 검색 대상 추가에 사용하지 않음 |
+| 사건의 `classification_status` | 의미                              | 검색 계획에서의 역할                               |
+| ------------------------------ | --------------------------------- | -------------------------------------------------- |
+| `interstate_confirmed`         | 같은 연도 ACD 분류와 양측 ID 확인 | 분쟁 검색의 근거                                   |
+| `interstate_reference`         | 다른 연도에서 분쟁과 당사자 확인  | 검토 표시를 유지한 참고 사건                       |
+| `state_pair_candidate`         | 국가 행위자 쌍이나 연간 분류 없음 | 신규 분쟁 발견을 위한 잠정 검색 대상               |
+| `review`                       | ID·당사자 대응을 확정하지 못함    | 별도 검토 CSV, 자동 검색 대상 추가에 사용하지 않음 |
 
 분쟁 목록은 분석 기간의 ACD 국가 간 분쟁과 위 참고·잠정 사건에서 구성한다.
 따라서 GED 사건이 0건인 ACD 국가 간 분쟁도 목록과 검색 배치를 갖는다.
@@ -98,15 +98,20 @@ python scripts/build_ucdp_search_inputs.py
 
 모든 결과는 `data/ucdp/processed/`에 저장한다.
 
-| 파일 | 내용 |
-| --- | --- |
-| `ucdp_interstate_events.csv` | 대상·참고·잠정 사건. 기존 식별·날짜·위치·행위자 컬럼과 활동연도·원문 검토 상태·국가 행위자 코드·출처·분류·검토 필요 여부 |
-| `ucdp_event_review_queue.csv` | 행위자 미등록 등 별도 검토가 필요한 사건. 제외 또는 확정 사건과 구분 |
-| `ucdp_interstate_events.metadata.json` | 입력 해시·버전·수록 기간·설정 스냅샷·분류별 건수·대상 분쟁 목록·출력 해시 |
-| `conflicts.csv` | 검색 대상 분쟁, 교전 당사자·교전국, 관측 발생 국가, 분석 기간, 분류 상태, 참고 사건 수 |
-| `actor_aliases.csv` | 대상 분쟁 행위자의 정식 명칭·다른 이름·출처·검토 필요 여부. 사건이 없는 분쟁의 행위자도 포함 |
-| `event_match_hints.csv` | 개별 사건의 날짜·반경·행정구역 참고값. 기사 채택의 필수 조건이 아님 |
-| `gdelt_search_plan.json` | 분쟁별 전체 분석 기간을 한 번에 조회하는 검색 배치·입력 및 결과 해시 |
+위 경로는 **검색 준비용 출력**이다. 사용자가 확정한 12개 분쟁의 최종 DB 적재용
+7컬럼 데이터는 별도 [../final/conflicts.csv](../final/conflicts.csv)에 저장한다.
+잠정 후보 3개 제외, 대표 좌표 선정과 재생성 방법은
+[최종 데이터 안내](../final/README.md)를 참고한다.
+
+| 파일                                   | 내용                                                                                                                     |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `ucdp_interstate_events.csv`           | 대상·참고·잠정 사건. 기존 식별·날짜·위치·행위자 컬럼과 활동연도·원문 검토 상태·국가 행위자 코드·출처·분류·검토 필요 여부 |
+| `ucdp_event_review_queue.csv`          | 행위자 미등록 등 별도 검토가 필요한 사건. 제외 또는 확정 사건과 구분                                                     |
+| `ucdp_interstate_events.metadata.json` | 입력 해시·버전·수록 기간·설정 스냅샷·분류별 건수·대상 분쟁 목록·출력 해시                                                |
+| `conflicts.csv`                        | 검색 대상 분쟁, 교전 당사자·교전국, 관측 발생 국가, 분석 기간, 분류 상태, 참고 사건 수                                   |
+| `actor_aliases.csv`                    | 대상 분쟁 행위자의 정식 명칭·다른 이름·출처·검토 필요 여부. 사건이 없는 분쟁의 행위자도 포함                             |
+| `event_match_hints.csv`                | 개별 사건의 날짜·반경·행정구역 참고값. 기사 채택의 필수 조건이 아님                                                      |
+| `gdelt_search_plan.json`               | 분쟁별 전체 분석 기간을 한 번에 조회하는 검색 배치·입력 및 결과 해시                                                     |
 
 `conflicts.csv`의 `participant_country_ids`(교전국)와 `observed_country_ids`(발생국)는
 분리한다. Actor의 `GWNOLoc`는 활동 국가 목록이므로 교전국 판정에 사용하지 않는다.
@@ -137,12 +142,12 @@ python scripts/build_ucdp_search_inputs.py
 
 SQL에 전달하는 파라미터는 다음 8개이다. 이름은 `batches`의 필드명과 같다.
 
-| 파라미터 이름 | BigQuery 자료형 |
-| --- | --- |
-| `mention_start`, `mention_end_exclusive` | 각각 `DATE` |
-| `event_partition_start`, `event_partition_end_exclusive` | 각각 `DATE` |
-| `gdelt_geo_country_codes`, `actor_terms` | 각각 `ARRAY<STRING>` |
-| `candidate_conflict_id`, `batch_id` | 각각 `STRING` |
+| 파라미터 이름                                            | BigQuery 자료형      |
+| -------------------------------------------------------- | -------------------- |
+| `mention_start`, `mention_end_exclusive`                 | 각각 `DATE`          |
+| `event_partition_start`, `event_partition_end_exclusive` | 각각 `DATE`          |
+| `gdelt_geo_country_codes`, `actor_terms`                 | 각각 `ARRAY<STRING>` |
+| `candidate_conflict_id`, `batch_id`                      | 각각 `STRING`        |
 
 `bq` CLI나 BigQuery 클라이언트 라이브러리로 이름 있는 파라미터를 전달하고 GoogleSQL을
 사용한다. BigQuery 콘솔의 쿼리 파라미터 설정은 배열 자료형을 지원하지 않으므로 이 SQL의
@@ -170,18 +175,18 @@ AND (
 
 ### 후보 연결과 최종 판정
 
-| 배치 값 | 용도 |
-| --- | --- |
-| `candidate_conflict_id` | 후보를 찾은 분쟁. 기사 본문 판정 전에는 확정 분쟁 ID가 아님 |
-| `batch_id` | 분쟁 ID와 분석 시작일·종료일로 구성한 후보 조회 식별자 |
-| `shared_period_query_id` | 여러 분쟁에서 공통 조회 결과를 재사용할 수 있는 전체 기간 식별자 |
-| `article_published_start/end_exclusive` | 본문에서 확인한 실제 발행일에 적용할 전체 기간. 종료값은 분석 종료일 다음 날 |
-| `mention_start/end_exclusive` | EventMentions 처리 시각·파티션 조회 범위. 보도 지연 14일을 고려하되 기준일 다음 날을 넘지 않음 |
-| `event_partition_start/end_exclusive` | 과거 사건에 대한 새 보도를 연결할 Events 파티션 범위 |
-| `gdelt_geo_country_codes` | 발생 위치 검색용 FIPS 코드 목록 |
-| `actor_terms` | 행위자 정식 명칭·변형의 소문자 목록. 지리 범위 밖 후보를 보완 |
-| `actor_pairs` | 본문에서 직접 교전 관계를 검토할 양측 행위자 쌍 |
-| `ucdp_hint_event_count` | 전체 조회 기간에 참고할 사건 수. 0이어도 조회 배치 유지 |
+| 배치 값                                 | 용도                                                                                           |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `candidate_conflict_id`                 | 후보를 찾은 분쟁. 기사 본문 판정 전에는 확정 분쟁 ID가 아님                                    |
+| `batch_id`                              | 분쟁 ID와 분석 시작일·종료일로 구성한 후보 조회 식별자                                         |
+| `shared_period_query_id`                | 여러 분쟁에서 공통 조회 결과를 재사용할 수 있는 전체 기간 식별자                               |
+| `article_published_start/end_exclusive` | 본문에서 확인한 실제 발행일에 적용할 전체 기간. 종료값은 분석 종료일 다음 날                   |
+| `mention_start/end_exclusive`           | EventMentions 처리 시각·파티션 조회 범위. 보도 지연 14일을 고려하되 기준일 다음 날을 넘지 않음 |
+| `event_partition_start/end_exclusive`   | 과거 사건에 대한 새 보도를 연결할 Events 파티션 범위                                           |
+| `gdelt_geo_country_codes`               | 발생 위치 검색용 FIPS 코드 목록                                                                |
+| `actor_terms`                           | 행위자 정식 명칭·변형의 소문자 목록. 지리 범위 밖 후보를 보완                                  |
+| `actor_pairs`                           | 본문에서 직접 교전 관계를 검토할 양측 행위자 쌍                                                |
+| `ucdp_hint_event_count`                 | 전체 조회 기간에 참고할 사건 수. 0이어도 조회 배치 유지                                        |
 
 최초 조회는 **관련 지역 또는 행위자** 조건으로 후보를 얻는다. 지역·국가명만으로는
 국가 간 분쟁을 판별할 수 없으므로 내부 분쟁 등이 후보에 섞일 수 있다.

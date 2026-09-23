@@ -4,6 +4,7 @@
 - `country_code_mapping.csv`: UCDP 국가 ID를 GDELT 발생 위치 FIPS 코드에 연결한다. 교전국의 지리 검색 범위와 사건 발생 지역을 모두 지원한다.
 - `gdelt_fips_countries.tsv`: [GDELT 공식 Geo 국가코드](https://gdeltproject.org/data/lookups/FIPS.country.txt)의 2026-09-22 확인본.
 - `gdelt_candidates.sql`: 검색 계획 한 배치를 실행할 파라미터 기반 GoogleSQL 예시. 실제 조회는 자동 실행하지 않는다.
+- `conflicts_table.json`: 최종 DB 적재 대상 12개 분쟁의 고정 ID 목록, 한국어명·색상·국기와 지도 대표 좌표의 근거 사건. `python scripts/build_conflicts_table.py`가 이 설정과 가공 데이터를 결합해 `data/final/conflicts.csv`를 만든다. 검색용 15개 목록과 구분한다.
 
 UCDP `country_id`와 ACD `gwno_a/gwno_b`는 Gleditsch–Ward 국가 코드이다.
 행위자 ID인 `side_a_id/side_b_id`와 다르다. Actor `GWNOLoc`는 활동 국가 목록이므로

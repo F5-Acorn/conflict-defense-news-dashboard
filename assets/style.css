@@ -1,0 +1,237 @@
+/* 전체 배경, 상단 메뉴와 본문 폭 */
+.stApp {
+	background: #08141e;
+}
+[data-testid="stHeader"] {
+	background: #08141e;
+	border-bottom: 1px solid #233c50;
+}
+.stMainBlockContainer {
+	max-width: 1740px;
+	padding: 4.5rem 1.8rem 1rem;
+}
+
+/* 화면 제목과 설명 글자 */
+h1 {
+	font-size: clamp(1.45rem, 2.4vw, 2.15rem) !important;
+	letter-spacing: -0.035em;
+	padding-top: 0.25rem !important;
+}
+h3 {
+	font-size: 1.2rem !important;
+	letter-spacing: -0.025em;
+}
+[data-testid="stCaptionContainer"] {
+	color: #a6bfd7;
+}
+
+/* 섹션 테두리와 지표 카드: 사용 관련 보도 수만 주황색으로 강조 */
+[data-testid="stVerticalBlockBorderWrapper"] > div {
+	border-color: #233e52 !important;
+	border-radius: 7px;
+}
+[data-testid="stMetric"] {
+	background: linear-gradient(120deg, #102230, #0b1a24);
+	border-color: #233e52;
+	min-height: 135px;
+}
+[data-testid="stMetricLabel"] {
+	color: #b4cbe1;
+}
+[data-testid="stMetricValue"] {
+	color: #3296ff;
+	font-size: 2.8rem;
+	font-weight: 750;
+}
+.st-key-usage_metric [data-testid="stMetricValue"] {
+	color: #ff7953;
+}
+
+/* 대시보드 이름, 샘플 표시와 공통 필터 간격 */
+.dashboard-brand {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 0.3rem;
+}
+.dashboard-brand strong {
+	font-size: 1.05rem;
+	letter-spacing: -0.03em;
+}
+.sample-badge {
+	border: 1px solid #ab8121;
+	border-radius: 5px;
+	color: #ffd052;
+	padding: 0.3rem 0.6rem;
+	font-size: 0.76rem;
+	white-space: nowrap;
+}
+.st-key-filters {
+	margin-bottom: 0.3rem;
+}
+
+/* 지도는 열 높이를 채우되, 고정 줌에서 마커·말풍선이 들어갈 최소 높이를 확보한다. */
+.st-key-conflict_map iframe {
+	min-height: 390px;
+}
+
+/* 지도 오른쪽에 세로로 표시하는 분쟁별 카드와 무기·기술 범주 태그 */
+.conflict-card {
+	border: 1px solid #233e52;
+	border-radius: 6px;
+	padding: 1rem 1.1rem;
+	background: #0d1e2a;
+	min-height: 140px;
+}
+.conflict-card .card-heading {
+	display: flex;
+	align-items: center;
+	gap: 0.65rem;
+	font-size: 1rem;
+	font-weight: 650;
+}
+.conflict-card .report-count {
+	font-size: 1.85rem;
+	font-weight: 750;
+	margin: 0.25rem 0 0.7rem;
+}
+.tag-row {
+	display: flex;
+	gap: 0.4rem;
+	align-items: center;
+	flex-wrap: wrap;
+	margin-top: 0.5rem;
+}
+.tag-label {
+	font-size: 0.82rem;
+	color: #a6bfd7;
+	min-width: 4rem;
+}
+.category-tag {
+	border: 1px solid #296498;
+	border-radius: 20px;
+	color: #d9ecff;
+	padding: 0.2rem 0.55rem;
+	font-size: 0.79rem;
+	background: #102c46;
+}
+.technology-tag {
+	border-color: #238580;
+	background: #0c302f;
+}
+
+/* 주요 범주의 사전 명칭: 무기·기술 카드 안에 분류와 전체 명칭을 두 열로 표시한다. */
+.category-details-card {
+	--details-accent: #3296ff;
+	background: #0d1e2a;
+	border: 1px solid #233e52;
+	border-radius: 6px;
+	padding: 1rem 1.1rem;
+}
+.technology-details-card {
+	--details-accent: #20d6cf;
+}
+.category-details-heading {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.7rem;
+	margin-bottom: 0.85rem;
+	border-left: 5px solid var(--details-accent);
+	padding-left: 0.75rem;
+}
+.category-details-heading h4 {
+	margin: 0;
+	padding: 0;
+	font-size: 1.2rem;
+	font-weight: 700;
+}
+.category-details-count {
+	color: #a6bfd7;
+	font-size: 0.8rem;
+}
+.category-details-table {
+	width: 100%;
+	table-layout: fixed;
+	border-collapse: collapse;
+}
+.dictionary-names {
+	max-height: 240px;
+	overflow-y: auto;
+	padding-right: 0.5rem;
+}
+.category-details-table .category-name-column {
+	width: 22%;
+}
+.category-details-table th,
+.category-details-table td {
+	padding: 0.65rem 0.85rem;
+	text-align: left;
+	vertical-align: top;
+	border-bottom: 1px solid #233e52;
+	white-space: normal;
+	overflow-wrap: anywhere;
+	line-height: 1.7;
+}
+.category-details-table thead th {
+	background: #102c3d;
+	color: #b4cbe1;
+	font-size: 0.82rem;
+	font-weight: 500;
+}
+.category-details-table tbody th {
+	color: var(--details-accent);
+	font-size: 0.95rem;
+	font-weight: 650;
+}
+.category-details-table tbody td {
+	color: #d9e6f2;
+	font-size: 0.9rem;
+}
+.category-details-table th:first-child {
+	border-right: 1px solid #233e52;
+}
+.category-details-table tbody tr:last-child > * {
+	border-bottom: 0;
+}
+.category-details-empty {
+	margin: 0;
+	padding: 0.6rem 0;
+	color: #a6bfd7;
+}
+
+/* 하단 데이터 해석 안내와 좁은 화면에서의 여백·글자 크기 */
+.dashboard-footer {
+	text-align: right;
+	color: #8aa9c5;
+	font-size: 0.78rem;
+	padding: 1rem 0 0.3rem;
+}
+@media (max-width: 760px) {
+	.stMainBlockContainer {
+		padding: 4.5rem 1rem 1rem;
+	}
+	.dashboard-brand {
+		align-items: flex-start;
+	}
+	.dashboard-brand strong {
+		font-size: 0.9rem;
+	}
+	.sample-badge {
+		font-size: 0.66rem;
+	}
+	[data-testid="stMetricValue"] {
+		font-size: 2rem;
+	}
+	.category-details-card {
+		padding: 0.8rem;
+	}
+	.category-details-table .category-name-column {
+		width: 30%;
+	}
+	.category-details-table th,
+	.category-details-table td {
+		padding: 0.55rem;
+	}
+}

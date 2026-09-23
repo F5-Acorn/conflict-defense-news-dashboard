@@ -1,0 +1,558 @@
+{
+  "schema_version": 1,
+  "table": "conflicts",
+  "columns": [
+    "conflict_id",
+    "conflict_name_en",
+    "conflict_name_ko",
+    "color",
+    "flag",
+    "latitude",
+    "longitude"
+  ],
+  "row_count": 12,
+  "as_of": "2026-09-23",
+  "dataset_version": "26.1",
+  "analysis_start": "2016-01-01",
+  "analysis_end": "2026-09-23",
+  "annual_coverage_end": "2025-12-31",
+  "candidate_coverage": [
+    {
+      "start": "2026-01-01",
+      "end": "2026-06-30",
+      "version": "26.01.26.06"
+    },
+    {
+      "start": "2026-07-01",
+      "end": "2026-07-31",
+      "version": "26.0.7"
+    },
+    {
+      "start": "2026-08-01",
+      "end": "2026-08-31",
+      "version": "26.0.8"
+    }
+  ],
+  "candidate_missing_periods": [
+    {
+      "start": "2026-09-01",
+      "end": "2026-09-23"
+    }
+  ],
+  "selection": "fixed_acd_interstate_ids",
+  "location_semantics": "분쟁당 지도 마커 하나를 위한 대표 위치. 개별 사건 위치나 분쟁 전체의 지리적 중심을 뜻하지 않는다.",
+  "location_selection_policy": "동일 분쟁의 interstate_confirmed 사건을 우선하고 없으면 interstate_reference 사건을 사용한다. 가장 최근 연도에서 where_prec 1·2를 우선한 좌표 최빈값을 선택한다. 동률이면 위도·경도 오름차순, 같은 좌표의 근거 사건은 ID 오름차순으로 정한다. 사건이 없는 분쟁은 교전국의 지역 대표점을 별도로 지정한다.",
+  "sources": {
+    "conflicts": {
+      "filename": "conflicts.csv",
+      "sha256": "2b306bfbb69acc22ec66213b7e43a0d05998649d83e9328340537a34f1da73f3"
+    },
+    "events": {
+      "filename": "ucdp_interstate_events.csv",
+      "sha256": "45eca29171545322284f1c9786429f32112cd83f39b5f87bd3eb4a408bad3785"
+    },
+    "event_metadata": {
+      "filename": "ucdp_interstate_events.metadata.json",
+      "sha256": "40209f69ffed94f4abdd5604e5569cf0436de0c904266f22f6a34d0285898d0e"
+    },
+    "search_plan": {
+      "filename": "gdelt_search_plan.json",
+      "sha256": "3a6b286135203d6fb640935650feb318dd5a5ac9adb3260e6b282225db769de6"
+    },
+    "display_reference": {
+      "filename": "conflicts_table.json",
+      "sha256": "6d3204678fcf683a14e95f3348571242f320a3211cd1e7e3c619d9c348e8c6e8"
+    }
+  },
+  "excluded": [
+    {
+      "conflict_id": "ucdp_164",
+      "conflict_name_en": "XXX2",
+      "scope_status": "state_pair_candidate",
+      "reason": "사용자가 최종 테이블을 ACD 대상 12개로 한정하여 제외"
+    },
+    {
+      "conflict_id": "ucdp_10383",
+      "conflict_name_en": "Bangladesh - Myanmar (Burma)",
+      "scope_status": "state_pair_candidate",
+      "reason": "사용자가 최종 테이블을 ACD 대상 12개로 한정하여 제외"
+    },
+    {
+      "conflict_id": "ucdp_10771",
+      "conflict_name_en": "DR Congo (Zaire) - Rwanda",
+      "scope_status": "state_pair_candidate",
+      "reason": "사용자가 최종 테이블을 ACD 대상 12개로 한정하여 제외"
+    }
+  ],
+  "records": [
+    {
+      "conflict_id": "ucdp_218",
+      "conflict_name_en": "India - Pakistan",
+      "conflict_name_ko": "인도·파키스탄",
+      "color": "#20D6CF",
+      "flag": "🇮🇳 🇵🇰",
+      "latitude": "34.665198",
+      "longitude": "73.961036",
+      "scope_status": "acd_interstate",
+      "annual_interstate_years": [
+        "1948",
+        "1964",
+        "1965",
+        "1971",
+        "1984",
+        "1987",
+        "1989",
+        "1990",
+        "1991",
+        "1992",
+        "1994",
+        "1996",
+        "1997",
+        "1998",
+        "1999",
+        "2000",
+        "2001",
+        "2002",
+        "2003",
+        "2013",
+        "2014",
+        "2015",
+        "2016",
+        "2017",
+        "2018",
+        "2019",
+        "2020",
+        "2025"
+      ],
+      "source_event_count": 389,
+      "participant_country_ids": [
+        "750",
+        "770"
+      ],
+      "location_mode": "conflict_event_reference",
+      "location_label": "카슈미르 쿠프와라 지역",
+      "location_note": "2025년 확정 분류 사건의 정밀도 1·2 좌표 중 최빈값. 동률은 위도·경도 오름차순으로 선정.",
+      "location_event": {
+        "id": "597633",
+        "conflict_id": "ucdp_218",
+        "year": "2025",
+        "country_id": "750",
+        "country": "India",
+        "adm_1": "Jammu and Kashmir state",
+        "adm_2": "Kupwara district",
+        "where_prec": "1",
+        "classification_status": "interstate_confirmed",
+        "source_kind": "annual",
+        "source_version": "26.1"
+      }
+    },
+    {
+      "conflict_id": "ucdp_274",
+      "conflict_name_en": "China - India",
+      "conflict_name_ko": "중국·인도",
+      "color": "#FFD052",
+      "flag": "🇨🇳 🇮🇳",
+      "latitude": "33.599399",
+      "longitude": "78.646328",
+      "scope_status": "acd_interstate",
+      "annual_interstate_years": [
+        "1962",
+        "1967",
+        "2020"
+      ],
+      "source_event_count": 2,
+      "participant_country_ids": [
+        "710",
+        "750"
+      ],
+      "location_mode": "conflict_event_reference",
+      "location_label": "라다크 지역",
+      "location_note": "2020년 확정 분류 사건 중 정밀도 1·2인 좌표.",
+      "location_event": {
+        "id": "353676",
+        "conflict_id": "ucdp_274",
+        "year": "2020",
+        "country_id": "750",
+        "country": "India",
+        "adm_1": "Jammu and Kashmir state",
+        "adm_2": "Ladakh district",
+        "where_prec": "2",
+        "classification_status": "interstate_confirmed",
+        "source_kind": "annual",
+        "source_version": "26.1"
+      }
+    },
+    {
+      "conflict_id": "ucdp_294",
+      "conflict_name_en": "Cambodia (Kampuchea) - Thailand",
+      "conflict_name_ko": "캄보디아·태국",
+      "color": "#AB8DFF",
+      "flag": "🇰🇭 🇹🇭",
+      "latitude": "14.400000",
+      "longitude": "104.933330",
+      "scope_status": "acd_interstate",
+      "annual_interstate_years": [
+        "1977",
+        "1978",
+        "2011",
+        "2025"
+      ],
+      "source_event_count": 55,
+      "participant_country_ids": [
+        "800",
+        "811"
+      ],
+      "location_mode": "conflict_event_reference",
+      "location_label": "태국 우본랏차타니주 남유엔 지역",
+      "location_note": "2025년 확정 분류 사건의 정밀도 1·2 좌표 중 최빈값.",
+      "location_event": {
+        "id": "588262",
+        "conflict_id": "ucdp_294",
+        "year": "2025",
+        "country_id": "800",
+        "country": "Thailand",
+        "adm_1": "Ubon Ratchathani province",
+        "adm_2": "Nam Yuen district",
+        "where_prec": "1",
+        "classification_status": "interstate_confirmed",
+        "source_kind": "annual",
+        "source_version": "26.1"
+      }
+    },
+    {
+      "conflict_id": "ucdp_302",
+      "conflict_name_en": "Israel - Syria",
+      "conflict_name_ko": "이스라엘·시리아",
+      "color": "#FF8AB4",
+      "flag": "🇮🇱 🇸🇾",
+      "latitude": "32.711796",
+      "longitude": "36.567370",
+      "scope_status": "acd_interstate",
+      "annual_interstate_years": [
+        "1967",
+        "1973",
+        "2025"
+      ],
+      "source_event_count": 36,
+      "participant_country_ids": [
+        "652",
+        "666"
+      ],
+      "location_mode": "conflict_event_reference",
+      "location_label": "시리아 수와이다 지역",
+      "location_note": "2025년 확정 분류 사건의 정밀도 1·2 좌표 중 최빈값. 동률은 위도·경도 오름차순으로 선정.",
+      "location_event": {
+        "id": "589597",
+        "conflict_id": "ucdp_302",
+        "year": "2025",
+        "country_id": "652",
+        "country": "Syria",
+        "adm_1": "As Suwayda governorate",
+        "adm_2": "Markaz as Suwayda district",
+        "where_prec": "1",
+        "classification_status": "interstate_confirmed",
+        "source_kind": "annual",
+        "source_version": "26.1"
+      }
+    },
+    {
+      "conflict_id": "ucdp_324",
+      "conflict_name_en": "Iran - Iraq",
+      "conflict_name_ko": "이란·이라크",
+      "color": "#7FD28C",
+      "flag": "🇮🇷 🇮🇶",
+      "latitude": "36.650000",
+      "longitude": "44.530000",
+      "scope_status": "acd_interstate",
+      "annual_interstate_years": [
+        "1974",
+        "1980",
+        "1981",
+        "1982",
+        "1983",
+        "1984",
+        "1985",
+        "1986",
+        "1987",
+        "1988"
+      ],
+      "source_event_count": 1,
+      "participant_country_ids": [
+        "630",
+        "645"
+      ],
+      "location_mode": "conflict_event_reference",
+      "location_label": "이라크 아르빌주 소란 지역",
+      "location_note": "분석 기간에 확정 분류 사건이 없어 2026년 Candidate의 interstate_reference 사건 좌표를 대표점으로 사용. where_prec=3이며 사건의 확정 분류를 의미하지 않음.",
+      "location_event": {
+        "id": "626786",
+        "conflict_id": "ucdp_324",
+        "year": "2026",
+        "country_id": "645",
+        "country": "Iraq",
+        "adm_1": "Arbīl province",
+        "adm_2": "Soran district",
+        "where_prec": "3",
+        "classification_status": "interstate_reference",
+        "source_kind": "candidate",
+        "source_version": "26.01.26.06"
+      }
+    },
+    {
+      "conflict_id": "ucdp_409",
+      "conflict_name_en": "Eritrea - Ethiopia",
+      "conflict_name_ko": "에리트레아·에티오피아",
+      "color": "#EFAB68",
+      "flag": "🇪🇷 🇪🇹",
+      "latitude": "14.416790",
+      "longitude": "39.278382",
+      "scope_status": "acd_interstate",
+      "annual_interstate_years": [
+        "1998",
+        "1999",
+        "2000",
+        "2016"
+      ],
+      "source_event_count": 1,
+      "participant_country_ids": [
+        "530",
+        "531"
+      ],
+      "location_mode": "conflict_event_reference",
+      "location_label": "에리트레아 데부브주 초로나 지역",
+      "location_note": "2016년 확정 분류 사건 1건의 좌표. where_prec=5인 원본 대표점이며 정밀 사건 위치로 해석하지 않음.",
+      "location_event": {
+        "id": "229161",
+        "conflict_id": "ucdp_409",
+        "year": "2016",
+        "country_id": "531",
+        "country": "Eritrea",
+        "adm_1": "Debub region",
+        "adm_2": "Tsorona subregion",
+        "where_prec": "5",
+        "classification_status": "interstate_confirmed",
+        "source_kind": "annual",
+        "source_version": "26.1"
+      }
+    },
+    {
+      "conflict_id": "ucdp_11639",
+      "conflict_name_en": "Afghanistan - Pakistan",
+      "conflict_name_ko": "아프가니스탄·파키스탄",
+      "color": "#82C9FF",
+      "flag": "🇦🇫 🇵🇰",
+      "latitude": "30.955233",
+      "longitude": "66.437581",
+      "scope_status": "acd_interstate",
+      "annual_interstate_years": [
+        "2024",
+        "2025"
+      ],
+      "source_event_count": 157,
+      "participant_country_ids": [
+        "700",
+        "770"
+      ],
+      "location_mode": "conflict_event_reference",
+      "location_label": "아프가니스탄 칸다하르주 스핀볼다크 지역",
+      "location_note": "2025년 확정 분류 사건의 정밀도 1·2 좌표 중 최빈값. 동률은 위도·경도 오름차순으로 선정.",
+      "location_event": {
+        "id": "600380",
+        "conflict_id": "ucdp_11639",
+        "year": "2025",
+        "country_id": "700",
+        "country": "Afghanistan",
+        "adm_1": "Kandahar province",
+        "adm_2": "Spin Boldak district",
+        "where_prec": "2",
+        "classification_status": "interstate_confirmed",
+        "source_kind": "annual",
+        "source_version": "26.1"
+      }
+    },
+    {
+      "conflict_id": "ucdp_13243",
+      "conflict_name_en": "Russia - Ukraine",
+      "conflict_name_ko": "러시아·우크라이나",
+      "color": "#3296FF",
+      "flag": "🇷🇺 🇺🇦",
+      "latitude": "48.520114",
+      "longitude": "37.704963",
+      "scope_status": "acd_interstate",
+      "annual_interstate_years": [
+        "2022",
+        "2023",
+        "2024",
+        "2025"
+      ],
+      "source_event_count": 40184,
+      "participant_country_ids": [
+        "365",
+        "369"
+      ],
+      "location_mode": "conflict_event_reference",
+      "location_label": "우크라이나 도네츠크주 크라마토르스크구",
+      "location_note": "2025년 확정 분류 사건의 정밀도 1·2 좌표 중 최빈값.",
+      "location_event": {
+        "id": "563005",
+        "conflict_id": "ucdp_13243",
+        "year": "2025",
+        "country_id": "369",
+        "country": "Ukraine",
+        "adm_1": "Donetsk oblast",
+        "adm_2": "Kramatorsk raion",
+        "where_prec": "1",
+        "classification_status": "interstate_confirmed",
+        "source_kind": "annual",
+        "source_version": "26.1"
+      }
+    },
+    {
+      "conflict_id": "ucdp_13324",
+      "conflict_name_en": "Kyrgyzstan - Tajikistan",
+      "conflict_name_ko": "키르기스스탄·타지키스탄",
+      "color": "#D4E66A",
+      "flag": "🇰🇬 🇹🇯",
+      "latitude": "39.876000",
+      "longitude": "70.520000",
+      "scope_status": "acd_interstate",
+      "annual_interstate_years": [
+        "2021",
+        "2022"
+      ],
+      "source_event_count": 62,
+      "participant_country_ids": [
+        "702",
+        "703"
+      ],
+      "location_mode": "conflict_event_reference",
+      "location_label": "키르기스스탄 바트켄 지역",
+      "location_note": "2022년 확정 분류 사건의 정밀도 1·2 좌표 중 최빈값.",
+      "location_event": {
+        "id": "453445",
+        "conflict_id": "ucdp_13324",
+        "year": "2022",
+        "country_id": "703",
+        "country": "Kyrgyzstan",
+        "adm_1": "Batken oblast",
+        "adm_2": "Batken rayon",
+        "where_prec": "1",
+        "classification_status": "interstate_confirmed",
+        "source_kind": "annual",
+        "source_version": "26.1"
+      }
+    },
+    {
+      "conflict_id": "ucdp_14609",
+      "conflict_name_en": "Iran - Israel",
+      "conflict_name_ko": "이란·이스라엘",
+      "color": "#FF7953",
+      "flag": "🇮🇷 🇮🇱",
+      "latitude": "35.696111",
+      "longitude": "51.423056",
+      "scope_status": "acd_interstate",
+      "annual_interstate_years": [
+        "2018",
+        "2019",
+        "2020",
+        "2021",
+        "2022",
+        "2023",
+        "2024",
+        "2025"
+      ],
+      "source_event_count": 297,
+      "participant_country_ids": [
+        "630",
+        "666"
+      ],
+      "location_mode": "conflict_event_reference",
+      "location_label": "이란 테헤란",
+      "location_note": "2025년 확정 분류 사건의 정밀도 1·2 좌표 중 최빈값.",
+      "location_event": {
+        "id": "584790",
+        "conflict_id": "ucdp_14609",
+        "year": "2025",
+        "country_id": "630",
+        "country": "Iran",
+        "adm_1": "Tehran province",
+        "adm_2": "Tehran county",
+        "where_prec": "1",
+        "classification_status": "interstate_confirmed",
+        "source_kind": "annual",
+        "source_version": "26.1"
+      }
+    },
+    {
+      "conflict_id": "ucdp_16099",
+      "conflict_name_en": "United Kingdom, United States of America, Yemen (North Yemen)",
+      "conflict_name_ko": "영국·미국·예멘",
+      "color": "#D9A0DE",
+      "flag": "🇬🇧 🇺🇸 🇾🇪",
+      "latitude": "14.797812",
+      "longitude": "42.954516",
+      "scope_status": "acd_interstate",
+      "annual_interstate_years": [
+        "2024",
+        "2025"
+      ],
+      "source_event_count": 0,
+      "participant_country_ids": [
+        "2",
+        "200",
+        "678"
+      ],
+      "location_mode": "regional_reference",
+      "location_label": "예멘 후다이다 지역",
+      "location_note": "해당 분쟁의 추출 사건이 0건이므로 예멘 후다이다를 지도 대표점으로 지정. 좌표 출처는 이스라엘·예멘 분쟁의 사건 580798이며 이 사건을 영국·미국·예멘 사건으로 재분류하거나 집계하지 않음.",
+      "location_event": {
+        "id": "580798",
+        "conflict_id": "ucdp_16470",
+        "year": "2025",
+        "country_id": "678",
+        "country": "Yemen (North Yemen)",
+        "adm_1": "Hudaydah governorate",
+        "adm_2": "",
+        "where_prec": "1",
+        "classification_status": "interstate_confirmed",
+        "source_kind": "annual",
+        "source_version": "26.1"
+      }
+    },
+    {
+      "conflict_id": "ucdp_16470",
+      "conflict_name_en": "Israel - Yemen",
+      "conflict_name_ko": "이스라엘·예멘",
+      "color": "#B6BFCB",
+      "flag": "🇮🇱 🇾🇪",
+      "latitude": "15.354722",
+      "longitude": "44.206667",
+      "scope_status": "acd_interstate",
+      "annual_interstate_years": [
+        "2025"
+      ],
+      "source_event_count": 21,
+      "participant_country_ids": [
+        "666",
+        "678"
+      ],
+      "location_mode": "conflict_event_reference",
+      "location_label": "예멘 사나 지역",
+      "location_note": "2025년 확정 분류 사건의 정밀도 1·2 좌표 중 최빈값.",
+      "location_event": {
+        "id": "584418",
+        "conflict_id": "ucdp_16470",
+        "year": "2025",
+        "country_id": "678",
+        "country": "Yemen (North Yemen)",
+        "adm_1": "Amānat al ‘Āşimah governorate",
+        "adm_2": "",
+        "where_prec": "1",
+        "classification_status": "interstate_confirmed",
+        "source_kind": "annual",
+        "source_version": "26.1"
+      }
+    }
+  ],
+  "output_sha256": "3d4d8188266974face4e9ad02c3c5c0cf361f6bdf559b0be0b605de15c7ee87b"
+}
