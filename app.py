@@ -33,15 +33,10 @@ init_session_state(settings)
 page = st.navigation(
   [
     st.Page(
-      'pages/00_overview.py',
+      'pages/01_overview.py',
       title='분쟁별 방산 무기/기술 사용 보도 동향',
-      url_path='conflict-overview',
+      url_path='overview',
       default=True,
-    ),
-    st.Page(
-      'pages/01_overview_map.py',
-      title='분쟁별 방산 무기/기술 사용 보도 동향(지도)',
-      url_path='conflict-overview-map',
     ),
     st.Page(
       'pages/02_weapons_monthly.py',
@@ -57,12 +52,10 @@ page = st.navigation(
   position='top',
 )
 
-st.title(page.title)
+# st.title(page.title)
 # 공통 위젯은 진입점에서 생성해 페이지 이동 시 선택값을 유지한다.
 # 기본 페이지의 url_path는 Streamlit에서 빈 문자열로 제공한다.
-period = render_filters(
-  settings, is_overview=page.url_path in ('', 'conflict-overview-map')
-)
+period = render_filters(settings, is_overview=page.url_path in ('', 'overview'))
 if period is not None:
   # 시작일과 종료일을 모두 선택한 경우에만 화면의 집계를 실행한다.
   page.run()
