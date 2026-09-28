@@ -5,7 +5,13 @@ from pathlib import Path
 
 import streamlit as st
 
-from utils.state import remember_category, remember_kind, reset_filters
+from utils.state import (
+  filter_widget_key,
+  get_page_filters,
+  remember_category,
+  remember_filter,
+  reset_filters,
+)
 
 
 def apply_styles():
@@ -15,69 +21,94 @@ def apply_styles():
   st.html(f'<style>{styles}</style>')
 
 
-def render_footer():
-  '''보도 건수의 해석 범위를 화면 아래에 표시한다.'''
-  st.html(
-    '<div class="dashboard-footer">현재 화면은 가상 기사와 판정 결과를 집계한 샘플입니다. '
-    '보도 건수는 실제 사용 횟수나 성능을 의미하지 않습니다.</div>'
-  )
-
-
-def format_conflict_name(value):
-  '''분쟁 선택값은 그대로 두고 '전체'의 표시 이름만 바꾼다.'''
-  if value == '전체':
-    return '분쟁 전체'
-  return value
-
-
-def render_filters(settings, is_overview):
+def render_filters(settings, page_key):
   '''공통 필터를 표시하고 완성된 날짜 쌍을 반환한다. 미완성이면 None을 반환한다.'''
+  is_overview = page_key == 'overview'
+  filters = get_page_filters(page_key)
   with st.container(key='filters'):
-    conflict_col, date_col, kind_col, reset_col = st.columns(
-      [2.1, 3.1, 2.1, 1], vertical_alignment='bottom'
+    # 월간 화면은 유형 열을 제외하고 전체 폭도 줄여 초기화를 종료일 옆에 둔다.
+    columns = st.columns(
+      5 if is_overview else 4,
+      width=1250 if is_overview else 1000,
+      gap='small',
+      vertical_alignment='center',
     )
+    conflict_col, start_col, end_col = columns[:3]
+    reset_col = columns[-1]
     conflict_options = ['전체'] + list(settings['conflicts'])
     conflict_col.selectbox(
-      '분쟁', conflict_options, key='conflict', format_func=format_conflict_name
+      '분쟁',
+      conflict_options,
+      key=filter_widget_key(page_key, 'conflict'),
+      on_change=remember_filter,
+      args=(page_key, 'conflict'),
     )
-    period = date_col.date_input(
-      '기간',
-      key='period',
+    # 범위 달력은 월·연도 이동 후 종료일 선택이 새 시작일 선택으로 바뀔 수 있다.
+    # 두 날짜를 독립적으로 입력받고, 유효한 쌍만 집계용 기간에 반영한다.
+    start = start_col.date_input(
+      '시작일',
+      key=filter_widget_key(page_key, 'start'),
       min_value=settings['start'],
       max_value=settings['end'],
       format='YYYY.MM.DD',
+      on_change=remember_filter,
+      args=(page_key, 'start'),
+    )
+    end = end_col.date_input(
+      '종료일',
+      key=filter_widget_key(page_key, 'end'),
+      min_value=settings['start'],
+      max_value=settings['end'],
+      format='YYYY.MM.DD',
+      on_change=remember_filter,
+      args=(page_key, 'end'),
     )
     if is_overview:
-      # 유형 위젯이 없는 월간 화면을 거쳐도 이전 선택을 복원한다.
-      st.session_state['_overview_kind'] = st.session_state['overview_kind']
+      kind_col = columns[3]
       kind_col.selectbox(
         '무기/기술 유형',
         ['전체', '무기', '기술'],
-        key='_overview_kind',
-        on_change=remember_kind,
+        key=filter_widget_key(page_key, 'overview_kind'),
+        on_change=remember_filter,
+        args=(page_key, 'overview_kind'),
       )
-    reset_col.button('초기화', on_click=reset_filters, width='stretch')
+    reset_col.button(
+      '초기화',
+      key=filter_widget_key(page_key, 'reset'),
+      on_click=reset_filters,
+      args=(page_key,),
+      width=100,
+    )
   # 종료일을 고르는 중에는 페이지 집계를 실행하지 않도록 진입점에 알린다.
-  if len(period) != 2:
+  if start is None or end is None:
     st.info('조회할 시작일과 종료일을 모두 선택해주세요.')
     return None
-  if period[0] > period[1]:
+  if start > end:
     st.info('종료일은 시작일 이후로 선택해주세요.')
     return None
-  return period
+  filters['period'] = (start, end)
+  return start, end
 
 
 def render_category_picker(kind, settings):
   '''무기 또는 기술 범주를 검색·선택하는 목록을 표시하고 선택한 이름 목록을 반환한다.'''
-  selection_key = f'selected_{kind}'
+  page_key = st.session_state['_filter_page']
+  filters = get_page_filters(page_key)
   with st.container(border=True, height=428, key=f'picker_{kind}'):
-    st.subheader(f'방산 {kind} 범주 선택')
-    st.caption(f'{len(st.session_state[selection_key])}개 선택 · 선택 개수 제한 없음')
+    with st.container(
+      horizontal=True,
+      horizontal_alignment='left',
+      vertical_alignment='bottom',
+    ):
+      st.subheader(f'방산 {kind} 범주 선택', width='content')
+      st.caption(f'({len(filters["selected_categories"])}개 선택됨)', width='content')
     query = st.text_input(
       '범주 이름 검색',
-      key=f'_search_{kind}',
+      key=filter_widget_key(page_key, 'category_search'),
       placeholder='이름 검색',
       label_visibility='collapsed',
+      on_change=remember_filter,
+      args=(page_key, 'category_search'),
     )
     query = query.strip().casefold()
     visible = []
@@ -87,17 +118,16 @@ def render_category_picker(kind, settings):
     if not visible:
       st.info('검색 결과가 없습니다.')
     for category in visible:
-      widget_key = f'_category_{kind}_{category}'
+      widget_key = filter_widget_key(page_key, f'category_{category}')
       # 검색으로 숨겨진 위젯은 삭제될 수 있으므로 별도 저장한 선택 목록에서 복원한다.
-      st.session_state[widget_key] = category in st.session_state[selection_key]
+      st.session_state[widget_key] = category in filters['selected_categories']
       st.checkbox(
         category,
         key=widget_key,
         on_change=remember_category,
-        args=(kind, category, widget_key),
+        args=(page_key, category, widget_key),
       )
-    st.caption('이름 오름차순 · 기본값: 첫 3개')
-  return st.session_state[selection_key]
+  return filters['selected_categories']
 
 
 def conflict_card(conflict, count, top_categories, conflicts):

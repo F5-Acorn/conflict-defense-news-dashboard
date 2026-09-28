@@ -4,18 +4,20 @@ import streamlit as st
 
 from services.analysis_service import (
   filter_data,
-  is_partial_month,
   latest_distribution,
   monthly_trend,
 )
 from ui.charts import distribution_chart, trend_chart
 from ui.components import render_category_picker
+from utils.state import get_page_filters
 
 
 def render_monthly(kind):
   '''유형('무기' 또는 '기술')과 현재 분쟁·기간 선택으로 월간 분석 화면을 표시한다.'''
-  start, end = st.session_state['period']
-  conflict = st.session_state['conflict']
+  filters = get_page_filters()
+  start, end = filters['period']
+  conflict = filters['conflict']
+
   # 월간 분석은 기사 전체 지표가 아닌 범주별 보도 수를 사용한다.
   snapshot = st.session_state['_dashboard']
   settings = snapshot['settings']
@@ -29,8 +31,8 @@ def render_monthly(kind):
     selected = render_category_picker(kind, settings)
   trend = monthly_trend(filtered_categories, selected, start, end)
   with trend_column, st.container(border=True, key=f'trend_{kind}'):
-    st.subheader(f'분쟁/기간별 방산 {kind} 월간 사용 보도 추이')
-    st.caption('선택한 범주의 월별 기사 수')
+    conflict_text = '' if conflict == '전체' else f'{conflict} 분쟁 '
+    st.subheader(f'{conflict_text}방산 {kind} 사용 보도 추이 ({start}-{end})')
     if not selected:
       st.info('추이를 확인할 범주를 하나 이상 선택해주세요.')
     else:
@@ -46,12 +48,12 @@ def render_monthly(kind):
       )
 
   # Top 3는 위의 체크박스 선택과 무관하므로 범주를 모두 해제해도 계속 표시한다.
-  with st.container(border=True, key=f'distribution_{kind}'):
-    st.subheader(f'분쟁별 사용 방산 {kind} 최신 Top 3 보도 사례 분포')
-    partial = ' · 부분 기간' if is_partial_month(end, start, end) else ''
-    st.caption(
-      f'최신 월: {end:%Y.%m}{partial} · 선택 기간의 마지막 월 보도 수 순 · 추이 범주 선택과 별도'
-    )
+  with st.container(
+    border=True,
+    key=f'distribution_{kind}',
+  ):
+    conflict_text = '분쟁별' if conflict == '전체' else f'{conflict} 분쟁에서 '
+    st.subheader(f'{end:%Y년 %m월} {conflict_text} 사용된 방산 {kind} Top 3')
     if ranking.empty:
       st.info('선택한 조건의 최신 월 보도가 없습니다.')
     else:

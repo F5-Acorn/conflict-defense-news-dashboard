@@ -5,11 +5,13 @@ import streamlit as st
 from services.analysis_service import article_totals, filter_data, ranked_categories
 from ui.components import category_details_card, conflict_card
 from ui.maps import build_conflict_map
+from utils.state import get_page_filters
 
 # app.py에서 시작일과 종료일이 모두 선택된 것을 확인한 뒤 이 페이지를 실행한다.
-start, end = st.session_state['period']
-conflict = st.session_state['conflict']
-kind = st.session_state['overview_kind']
+filters = get_page_filters()
+start, end = filters['period']
+conflict = filters['conflict']
+kind = filters['overview_kind']
 
 snapshot = st.session_state['_dashboard']
 settings = snapshot['settings']

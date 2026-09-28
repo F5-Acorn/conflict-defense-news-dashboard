@@ -70,6 +70,32 @@ h3 {
 .st-key-filters {
 	margin-bottom: 0.3rem;
 }
+.st-key-filters [data-testid="stSelectbox"],
+.st-key-filters [data-testid="stDateInput"] {
+	display: grid;
+	grid-template-columns: max-content minmax(0, 1fr);
+	align-items: center;
+	column-gap: 0.65rem;
+}
+.st-key-filters [data-testid="stWidgetLabel"] {
+	margin-bottom: 0;
+	white-space: nowrap;
+}
+.st-key-filters [data-testid="stButton"] button {
+	padding-inline: 0.3rem;
+}
+
+/* 필터를 여러 줄로 배치할 때도 각 라벨과 입력창은 수평으로 유지한다. */
+@media (max-width: 1400px) {
+	.st-key-filters [data-testid="stHorizontalBlock"] {
+		flex-wrap: wrap;
+		row-gap: 1rem;
+	}
+	.st-key-filters [data-testid="stColumn"] {
+		flex: 1 1 18rem;
+		min-width: min(100%, 18rem);
+	}
+}
 
 /* 지도는 열 높이를 채우되, 고정 줌에서 마커·말풍선이 들어갈 최소 높이를 확보한다. */
 .st-key-conflict_map iframe {
