@@ -1,6 +1,6 @@
 '''화면 디자인 상수와 현재 데이터에서 계산하는 조회 설정.'''
 
-from data.reference_data import KIND_LABELS
+from data.constants import KIND_LABELS
 
 CATEGORY_PALETTE = (
   '#3296ff',
@@ -17,13 +17,15 @@ TEXT_COLOR = '#b8d0e8'
 
 
 def build_settings(tables):
-  '''모듈 import 시 값을 고정하지 않고, 현재 엑셀 스냅샷에서 설정을 계산한다.'''
-  categories = {
-    label: sorted(
-      tables['categories'].loc[tables['categories']['kind'].eq(code), 'category_name']
-    )
+  '''현재 입력 스냅샷에서 범주·분쟁·기간과 화면 색상을 계산한다.'''
+  category_ids = {
+    label: tables['categories']
+    .loc[tables['categories']['kind'].eq(code)]
+    .set_index('category_name')['category_id']
+    .to_dict()
     for code, label in KIND_LABELS.items()
   }
+  categories = {label: sorted(names) for label, names in category_ids.items()}
   conflicts = {
     row.conflict_name_ko: {
       'color': row.color,
@@ -35,7 +37,10 @@ def build_settings(tables):
   dates = tables['articles']['published_date']
   return {
     'categories': categories,
-    'default_categories': {kind: names[:3] for kind, names in categories.items()},
+    'conflict_names_by_id': dict(
+      zip(tables['conflicts']['conflict_id'], tables['conflicts']['conflict_name_ko'])
+    ),
+    'category_ids': category_ids,
     'classification_counts': {kind: len(names) for kind, names in categories.items()},
     'conflicts': conflicts,
     'start': dates.min().date() if not dates.empty else None,
