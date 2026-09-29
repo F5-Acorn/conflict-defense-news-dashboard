@@ -14,14 +14,14 @@ map_component = components.component(
   'conflict_map',
   html='<iframe class="dashboard-map" title="분쟁별 사용 보도 지도"></iframe>',
   css='.dashboard-map { border:0; width:100%; height:650px; display:block; }',
-  js=(FRONTEND / 'map.js').read_text(),
+  js=(FRONTEND / 'map.js').read_text(encoding='utf-8'),
 )
 trend_component = components.component(
   'monthly_trend',
   html='<div class="monthly-interactive"><div class="monthly-plot" tabindex="0" aria-label="월별 사용 확인 기사 추이"></div></div>'
   + BUBBLE_TEMPLATE,
-  css=(FRONTEND / 'monthly.css').read_text(),
-  js=get_plotlyjs() + '\n' + (FRONTEND / 'monthly.js').read_text(),
+  css=(FRONTEND / 'monthly.css').read_text(encoding='utf-8'),
+  js=get_plotlyjs() + '\n' + (FRONTEND / 'monthly.js').read_text(encoding='utf-8'),
   isolate_styles=False,
 )
 
