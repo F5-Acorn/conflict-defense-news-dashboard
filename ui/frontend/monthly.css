@@ -1,0 +1,24 @@
+.monthly-interactive { position:relative; width:100%; min-height:340px; }
+.monthly-plot { width:100%; }
+.monthly-overlay-root { color:#edf4fc; font:14px/1.6 Arial,'Apple SD Gothic Neo',sans-serif; }
+.monthly-overlay-root button, .monthly-overlay-root a { font:inherit; }
+.monthly-overlay-root button { cursor:pointer; border:1px solid #45627d; border-radius:7px; padding:7px 12px; background:#193448; color:#edf4fc; }
+.monthly-overlay-root button:hover { background:#264b66; }
+.monthly-overlay-root button:focus-visible, .monthly-overlay-root a:focus-visible { outline:2px solid #60b2ff; outline-offset:3px; }
+.monthly-overlay-root button:disabled { opacity:.45; cursor:default; }
+.monthly-bubble { position:fixed; z-index:2147483000; width:280px; max-width:calc(100vw - 24px); padding:16px; border:1px solid #45627d; border-radius:10px; background:#102331; box-shadow:0 8px 30px #0008; }
+.monthly-bubble h4 { margin:0 28px 8px 0; color:#edf4fc; font-size:16px; }
+.monthly-bubble p { margin:4px 0 12px; }
+.monthly-close { position:absolute; right:10px; top:10px; padding:0 7px !important; font-size:20px !important; }
+.monthly-backdrop { position:fixed; inset:0; z-index:2147483001; background:#0007; }
+.monthly-drawer { position:fixed; top:0; bottom:0; right:0; width:480px; max-width:100vw; z-index:2147483002; background:#102331; box-shadow:-8px 0 30px #0005; display:flex; flex-direction:column; }
+.monthly-drawer-header { padding:24px 44px 16px 24px; border-bottom:1px solid #344d62; }
+.monthly-drawer h3 { color:#edf4fc; font-size:20px; margin:0 0 6px; }
+.monthly-articles { flex:1; overflow-y:auto; padding:0 24px; }
+.monthly-article { border-bottom:1px solid #344d62; padding:18px 0; }
+.monthly-article h4 { margin:0 0 6px; font-size:16px; color:#edf4fc; }
+.monthly-article p { margin:6px 0; }
+.monthly-article-meta { color:#b8d0e8; font-size:12px; }
+.monthly-article a { color:#79bfff; text-decoration:underline; }
+.monthly-pagination { padding:14px 24px; display:flex; justify-content:space-between; align-items:center; border-top:1px solid #344d62; }
+@media(max-width:600px) { .monthly-drawer { width:100vw; } }

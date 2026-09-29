@@ -5,13 +5,60 @@ from pathlib import Path
 
 import streamlit as st
 
+from services.analysis_service import ordered_category_names
+from services.detail_service import classification_csv
+from ui.flags import render_flags
 from utils.state import (
+  MAX_CATEGORIES,
   filter_widget_key,
   get_page_filters,
+  initialize_category_selection,
+  month_options,
+  month_period,
   remember_category,
   remember_filter,
   reset_filters,
 )
+
+BUBBLE_TEMPLATE = '''<template class="monthly-bubble-template">
+<section class="monthly-bubble" role="dialog">
+  <button type="button" class="monthly-close" aria-label="말풍선 닫기">×</button>
+  <h4></h4><div class="monthly-bubble-month"></div><strong></strong><p></p>
+  <button type="button" class="monthly-open-articles">관련 기사 보기</button>
+</section></template>'''
+
+
+def article_panel_html(panel):
+  '''기사 내용은 텍스트로 이스케이프하며, 링크는 브라우저에서 HTTP(S)만 활성화한다.'''
+  cards = []
+  for item in panel['items']:
+    cards.append(
+      '<article class="monthly-article">'
+      f'<h4>{escape(item["title"])}</h4>'
+      f'<div class="monthly-article-meta">{escape(item["date"])} · {escape(item["conflict"])}</div>'
+      f'<p>{escape(item["evidence_sentence"])}</p>'
+      f'<a data-article-url="{escape(item["article_url"], quote=True)}" '
+      'target="_blank" rel="noopener noreferrer">원문 보기 ↗</a></article>'
+    )
+  articles = ''.join(cards) or '<p>해당 조건의 사용 확인 기사가 없습니다.</p>'
+  conflict = '분쟁 전체' if panel['conflict'] == '전체' else panel['conflict']
+  page, pages = panel['page'], panel['pages']
+  previous_disabled = ' disabled' if page <= 1 else ''
+  next_disabled = ' disabled' if page >= pages else ''
+  return (
+    '<div class="monthly-backdrop"></div>'
+    '<section class="monthly-drawer" role="dialog" aria-modal="true" aria-label="관련 기사 목록">'
+    '<header class="monthly-drawer-header">'
+    '<button type="button" class="monthly-close" aria-label="기사 목록 닫기">×</button>'
+    f'<h3>{escape(panel["category"])} 관련 기사</h3>'
+    f'<div>{escape(conflict)} · {escape(panel["month"].replace("-", "."))} · {panel["total"]:,}건</div>'
+    f'</header><div class="monthly-articles">{articles}</div>'
+    '<nav class="monthly-pagination" aria-label="기사 목록 페이지">'
+    f'<button type="button" data-page="{page - 1}"{previous_disabled}>이전</button>'
+    f'<span>{page} / {pages}</span>'
+    f'<button type="button" data-page="{page + 1}"{next_disabled}>다음</button>'
+    '</nav></section>'
+  )
 
 
 def apply_styles():
@@ -22,19 +69,19 @@ def apply_styles():
 
 
 def render_filters(settings, page_key):
-  '''공통 필터를 표시하고 완성된 날짜 쌍을 반환한다. 미완성이면 None을 반환한다.'''
+  '''페이지별 월 필터를 표시하고 유효한 집계 기간을 반환한다.'''
   is_overview = page_key == 'overview'
   filters = get_page_filters(page_key)
   with st.container(key='filters'):
-    # 월간 화면은 유형 열을 제외하고 전체 폭도 줄여 초기화를 종료일 옆에 둔다.
+    # overview는 오른쪽 끝에 다운로드 영역을 두고, 월간 화면은 필터만 표시한다.
     columns = st.columns(
-      5 if is_overview else 4,
-      width=1250 if is_overview else 1000,
+      [2.1, 2.1, 2.1, 2.1, 1.1, 3.4] if is_overview else 4,
+      width='stretch' if is_overview else 1000,
       gap='small',
       vertical_alignment='center',
     )
     conflict_col, start_col, end_col = columns[:3]
-    reset_col = columns[-1]
+    reset_col = columns[4] if is_overview else columns[-1]
     conflict_options = ['전체'] + list(settings['conflicts'])
     conflict_col.selectbox(
       '분쟁',
@@ -43,25 +90,22 @@ def render_filters(settings, page_key):
       on_change=remember_filter,
       args=(page_key, 'conflict'),
     )
-    # 범위 달력은 월·연도 이동 후 종료일 선택이 새 시작일 선택으로 바뀔 수 있다.
-    # 두 날짜를 독립적으로 입력받고, 유효한 쌍만 집계용 기간에 반영한다.
-    start = start_col.date_input(
-      '시작일',
-      key=filter_widget_key(page_key, 'start'),
-      min_value=settings['start'],
-      max_value=settings['end'],
-      format='YYYY.MM.DD',
+    options = month_options(settings)
+    start_month = start_col.selectbox(
+      '시작월',
+      options,
+      key=filter_widget_key(page_key, 'start_month'),
+      format_func=lambda value: value.replace('-', '.'),
       on_change=remember_filter,
-      args=(page_key, 'start'),
+      args=(page_key, 'start_month'),
     )
-    end = end_col.date_input(
-      '종료일',
-      key=filter_widget_key(page_key, 'end'),
-      min_value=settings['start'],
-      max_value=settings['end'],
-      format='YYYY.MM.DD',
+    end_month = end_col.selectbox(
+      '종료월',
+      options,
+      key=filter_widget_key(page_key, 'end_month'),
+      format_func=lambda value: value.replace('-', '.'),
       on_change=remember_filter,
-      args=(page_key, 'end'),
+      args=(page_key, 'end_month'),
     )
     if is_overview:
       kind_col = columns[3]
@@ -79,21 +123,40 @@ def render_filters(settings, page_key):
       args=(page_key,),
       width=100,
     )
-  # 종료일을 고르는 중에는 페이지 집계를 실행하지 않도록 진입점에 알린다.
-  if start is None or end is None:
-    st.info('조회할 시작일과 종료일을 모두 선택해주세요.')
+    if is_overview:
+      kind = filters['overview_kind']
+      kinds = ['무기', '기술'] if kind == '전체' else [kind]
+      with (
+        columns[5],
+        st.container(
+          horizontal=True,
+          horizontal_alignment='right',
+          vertical_alignment='center',
+          key='classification_downloads',
+        ),
+      ):
+        for item in kinds:
+          st.download_button(
+            f'{item} CSV 다운로드',
+            classification_csv(st.session_state['_dashboard']['tables'], item),
+            file_name=f'{"weapons" if item == "무기" else "technology"}_classifications.csv',
+            mime='text/csv',
+            key=f'classification_csv_{item}',
+            on_click='ignore',
+          )
+  if start_month > end_month:
+    st.info('종료월은 시작월과 같거나 이후로 선택해주세요.')
     return None
-  if start > end:
-    st.info('종료일은 시작일 이후로 선택해주세요.')
-    return None
-  filters['period'] = (start, end)
-  return start, end
+  filters['period'] = month_period(start_month, end_month)
+  return filters['period']
 
 
-def render_category_picker(kind, settings):
+def render_category_picker(kind, settings, *, category_counts=None):
   '''무기 또는 기술 범주를 검색·선택하는 목록을 표시하고 선택한 이름 목록을 반환한다.'''
   page_key = st.session_state['_filter_page']
   filters = get_page_filters(page_key)
+  ordered = ordered_category_names(settings['categories'][kind], category_counts)
+  initialize_category_selection(page_key, ordered)
   with st.container(border=True, height=428, key=f'picker_{kind}'):
     with st.container(
       horizontal=True,
@@ -101,7 +164,10 @@ def render_category_picker(kind, settings):
       vertical_alignment='bottom',
     ):
       st.subheader(f'방산 {kind} 범주 선택', width='content')
-      st.caption(f'({len(filters["selected_categories"])}개 선택됨)', width='content')
+      st.caption(
+        f'({len(filters["selected_categories"])} / {MAX_CATEGORIES}개 선택됨)',
+        width='content',
+      )
     query = st.text_input(
       '범주 이름 검색',
       key=filter_widget_key(page_key, 'category_search'),
@@ -111,10 +177,7 @@ def render_category_picker(kind, settings):
       args=(page_key, 'category_search'),
     )
     query = query.strip().casefold()
-    visible = []
-    for category in settings['categories'][kind]:
-      if query in category.casefold():
-        visible.append(category)
+    visible = [category for category in ordered if query in category.casefold()]
     if not visible:
       st.info('검색 결과가 없습니다.')
     for category in visible:
@@ -124,6 +187,8 @@ def render_category_picker(kind, settings):
       st.checkbox(
         category,
         key=widget_key,
+        disabled=len(filters['selected_categories']) >= MAX_CATEGORIES
+        and category not in filters['selected_categories'],
         on_change=remember_category,
         args=(page_key, category, widget_key),
       )
@@ -145,7 +210,8 @@ def conflict_card(conflict, count, top_categories, conflicts):
       f'<div class="tag-row"><span class="tag-label">주요 {kind}</span>{tags or "보도 없음"}</div>'
     )
   return (
-    f'<div class="conflict-card"><div class="card-heading">{escape(config["flag"])} {escape(conflict)}</div>'
+    f'<div class="conflict-card"><div class="card-heading">{render_flags(config["flag"])} '
+    f'<span>{escape(conflict)}</span></div>'
     f'<div class="report-count" style="color:{config["color"]}">{count:,}건</div>{"".join(rows)}</div>'
   )
 

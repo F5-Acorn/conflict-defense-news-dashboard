@@ -2,6 +2,7 @@
 
 import json
 from html import escape
+from math import sqrt
 from pathlib import Path
 
 import folium
@@ -25,8 +26,12 @@ def _country_style(feature):
   }
 
 
-def build_conflict_map(counts, top_categories, conflicts):
+def build_conflict_map(
+  counts, top_categories, conflicts, *, scale_max=None, conflict_ids=None
+):
   '''분쟁별 보도 수와 유형별 Top 3 이름을 받아 Folium 지도 객체를 반환한다.'''
+  # 강조 원·라벨까지 포함해 0건인 분쟁은 지도에 생성하지 않는다.
+  counts = {name: count for name, count in counts.items() if count > 0}
   # 공개 경계 데이터를 번들해 타일 API 키 없이 어두운 세계 지도를 표시한다.
   locations = [conflicts[name]['location'] for name in counts]
   center = (
@@ -71,27 +76,46 @@ def build_conflict_map(counts, top_categories, conflicts):
       'rel="noopener noreferrer" style="color:inherit">Made with Natural Earth</a></div>'
     )
   )
+  maximum = max(counts.values(), default=0) if scale_max is None else scale_max
   for conflict, count in counts.items():
     config = conflicts[conflict]
     color = config['color']
     location = config['location']
+    radius = max(6, min(24, 24 * sqrt(count / maximum))) if maximum else 6
     folium.CircleMarker(
       location,
-      radius=18,
+      radius=radius + 8,
       color=color,
       weight=0,
       fill=True,
       fill_color=color,
       fill_opacity=0.16,
+      interactive=False,
     ).add_to(world)
     popup_rows = []
     for kind, names in top_categories[conflict].items():
       category_names = escape(', '.join(names)) or '보도 없음'
       popup_rows.append(f'주요 {escape(kind)}: {category_names}')
     popup_rows = '<br>'.join(popup_rows)
+    buttons = ''
+    if conflict_ids and conflict in conflict_ids:
+      for target in ('무기', '기술'):
+        payload = escape(
+          json.dumps(
+            {
+              'channel': 'dashboard-map',
+              'conflict_id': conflict_ids[conflict],
+              'kind': target,
+            },
+            ensure_ascii=False,
+          ),
+          quote=True,
+        )
+        buttons += f'<button type="button" style="margin:8px 5px 0 0;padding:6px;cursor:pointer" onclick="window.parent.postMessage({payload}, \'*\')">{target} 월간 분석</button>'
+
     folium.CircleMarker(
       location,
-      radius=7,
+      radius=radius,
       color=color,
       weight=3,
       fill=True,
@@ -99,7 +123,8 @@ def build_conflict_map(counts, top_categories, conflicts):
       fill_opacity=1,
       tooltip=f'{escape(conflict)}: {count:,}건',
       popup=folium.Popup(
-        f'<b>{escape(conflict)}</b><br>{count:,}건<br>{popup_rows}', max_width=300
+        f'<b>{escape(conflict)}</b><br>{count:,}건<br>{popup_rows}<br>{buttons}',
+        max_width=340,
       ),
     ).add_to(world)
     # 여러 분쟁은 툴팁과 팝업으로 확인하고, 단일 분쟁만 고정 라벨을 표시한다.
@@ -113,7 +138,10 @@ def build_conflict_map(counts, top_categories, conflicts):
     )
     # 지도 좌표는 분쟁 지역을 표시하는 대표 위치이며 개별 사건 위치가 아니다.
     folium.Marker(
-      location, icon=folium.DivIcon(html=label, icon_size=(160, 55), icon_anchor=(0, 0))
+      location,
+      icon=folium.DivIcon(html=label, icon_size=(160, 55), icon_anchor=(0, 0)),
+      interactive=False,
+      keyboard=False,
     ).add_to(world)
   if len(locations) > 1:
     bounds = [
