@@ -8,8 +8,8 @@ from sqlalchemy.exc import SQLAlchemyError
 from data.constants import UsageCode
 from data.table_contract import COLUMNS, DataValidationError, _integers, validate_tables
 
-# 실제 dev_v1 DB와 기존 판정 원본을 대조한 정의. 값으로 자동 추측하지 않는다.
-DB_USAGE_CODES = {1: UsageCode.USED, 2: UsageCode.NOT_USED, 3: UsageCode.UNCERTAIN}
+# DB 판정 정의: 0=비사용, 1=사용, 2=불확실. 값으로 자동 추측하지 않는다.
+DB_USAGE_CODES = {0: UsageCode.NOT_USED, 1: UsageCode.USED, 2: UsageCode.UNCERTAIN}
 DB_KINDS = {'wp': 'wp', 'tech': 'tech', 'weapon': 'wp', 'technology': 'tech'}
 
 
@@ -41,7 +41,7 @@ def get_db_engine(url):
 
 def normalize_tables(tables):
   results = tables['result']
-  codes = _integers('result', 'usage_code', results['usage_code'], 1, 3)
+  codes = _integers('result', 'usage_code', results['usage_code'], 0, 2)
   results['usage_code'] = codes.map(DB_USAGE_CODES).astype('int64')
   categories = tables['categories']
   categories['kind'] = categories['kind'].replace(DB_KINDS)

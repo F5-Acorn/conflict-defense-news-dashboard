@@ -31,8 +31,8 @@ def database_tables():
     ],
     'result': [
       [2**63 - 1, 'w1', 1, 'tank used'],
-      [2, 'w1', 2, ''],
-      [3, 't1', 3, None],
+      [2, 'w1', 0, ''],
+      [3, 't1', 2, None],
     ],
   }
   return {
@@ -50,8 +50,8 @@ class ContractTests(unittest.TestCase):
 
   def test_invalid_data_is_rejected(self):
     cases = [
-      ('result', 'usage_code', 0),
-      ('result', 'usage_code', 4),
+      ('result', 'usage_code', -1),
+      ('result', 'usage_code', 3),
       ('result', 'evidence_sentence', ''),
       ('result', 'article_id', 100),
       ('articles', 'article_id', 2**63),
