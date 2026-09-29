@@ -1,0 +1,99 @@
+{
+  "version": "v17.0.3",
+  "source": "https://github.com/jdecked/twemoji",
+  "license": "CC-BY-4.0",
+  "files": {
+    "af.svg": {
+      "source": "https://raw.githubusercontent.com/jdecked/twemoji/v17.0.3/assets/svg/1f1e6-1f1eb.svg",
+      "sha256": "14e87464b187fb24519faab1235abde76ed0b6777f9f82b490070405addca7dd"
+    },
+    "bd.svg": {
+      "source": "https://raw.githubusercontent.com/jdecked/twemoji/v17.0.3/assets/svg/1f1e7-1f1e9.svg",
+      "sha256": "e3cd87d7e5ed0fa1390d4d610dffe7bba79b847db4d694cea7392716de68fd9f"
+    },
+    "cd.svg": {
+      "source": "https://raw.githubusercontent.com/jdecked/twemoji/v17.0.3/assets/svg/1f1e8-1f1e9.svg",
+      "sha256": "68e82bee9c909d1d51d426286bc7bb495819bb77c017bd8f8a303653b08c0380"
+    },
+    "cn.svg": {
+      "source": "https://raw.githubusercontent.com/jdecked/twemoji/v17.0.3/assets/svg/1f1e8-1f1f3.svg",
+      "sha256": "4db67ee7fc03992f7c0d6cc737441c67aac931442267bf896cd78d4c3e97ddcd"
+    },
+    "er.svg": {
+      "source": "https://raw.githubusercontent.com/jdecked/twemoji/v17.0.3/assets/svg/1f1ea-1f1f7.svg",
+      "sha256": "5c7767ac46a9483fa9befe37e7e810787bc8b1a062784a03cb79b1475f0766aa"
+    },
+    "et.svg": {
+      "source": "https://raw.githubusercontent.com/jdecked/twemoji/v17.0.3/assets/svg/1f1ea-1f1f9.svg",
+      "sha256": "1b8f70df8f3b58cd4539fbd4b395194e0b33333016ad8fa0f0064d38f02d4185"
+    },
+    "gb.svg": {
+      "source": "https://raw.githubusercontent.com/jdecked/twemoji/v17.0.3/assets/svg/1f1ec-1f1e7.svg",
+      "sha256": "5ff2f32ed6905d887f7d771029c1e65b1ef059e92260b548908cabb4e886bf19"
+    },
+    "il.svg": {
+      "source": "https://raw.githubusercontent.com/jdecked/twemoji/v17.0.3/assets/svg/1f1ee-1f1f1.svg",
+      "sha256": "5b44da97607108fd31f0828b84ab10f78ee705f30340185d46b866cc20bb48e9"
+    },
+    "in.svg": {
+      "source": "https://raw.githubusercontent.com/jdecked/twemoji/v17.0.3/assets/svg/1f1ee-1f1f3.svg",
+      "sha256": "aa82222076d0dd86dc6f37947faf10333212886549a33c4fcf6b44141b702018"
+    },
+    "iq.svg": {
+      "source": "https://raw.githubusercontent.com/jdecked/twemoji/v17.0.3/assets/svg/1f1ee-1f1f6.svg",
+      "sha256": "255c31a947684d5d1192a4e6308440e3bef7c5ce38970c66fa47849bd011ba61"
+    },
+    "ir.svg": {
+      "source": "https://raw.githubusercontent.com/jdecked/twemoji/v17.0.3/assets/svg/1f1ee-1f1f7.svg",
+      "sha256": "18a55b8bf18a7f35c9359839b4efccff9cb891a60a4b43696aa5c7857762fdfa"
+    },
+    "kg.svg": {
+      "source": "https://raw.githubusercontent.com/jdecked/twemoji/v17.0.3/assets/svg/1f1f0-1f1ec.svg",
+      "sha256": "55d4ab3cf4677b5b99066e589c49a07daa37ab3309895cb284fa72dec69aeef4"
+    },
+    "kh.svg": {
+      "source": "https://raw.githubusercontent.com/jdecked/twemoji/v17.0.3/assets/svg/1f1f0-1f1ed.svg",
+      "sha256": "7956b59c23893565e4a37ced989c66528ec98c91dc8e2499843ffae94c57916e"
+    },
+    "mm.svg": {
+      "source": "https://raw.githubusercontent.com/jdecked/twemoji/v17.0.3/assets/svg/1f1f2-1f1f2.svg",
+      "sha256": "5eea94e181f43b22a4db0c8e5d045d3097d17f9c71f7c9e07af78e6cccb25549"
+    },
+    "pk.svg": {
+      "source": "https://raw.githubusercontent.com/jdecked/twemoji/v17.0.3/assets/svg/1f1f5-1f1f0.svg",
+      "sha256": "3fee83363617ac388bd277fd358668e1930a4022560c2670db96937fa8a0afd9"
+    },
+    "ru.svg": {
+      "source": "https://raw.githubusercontent.com/jdecked/twemoji/v17.0.3/assets/svg/1f1f7-1f1fa.svg",
+      "sha256": "c120796701b12f5a9869de1fa4f4bfe41cb9127582e27e9fb6e951637a475168"
+    },
+    "rw.svg": {
+      "source": "https://raw.githubusercontent.com/jdecked/twemoji/v17.0.3/assets/svg/1f1f7-1f1fc.svg",
+      "sha256": "b5a90dbe179a8e25537838696518520a9a1f90e54b04397d8cd30ea21c23cde6"
+    },
+    "sy.svg": {
+      "source": "https://raw.githubusercontent.com/jdecked/twemoji/v17.0.3/assets/svg/1f1f8-1f1fe.svg",
+      "sha256": "50a3c74d18633b02cc6251d3597be6b196e2ddd5f3b9a884fce72e61e36f6fde"
+    },
+    "th.svg": {
+      "source": "https://raw.githubusercontent.com/jdecked/twemoji/v17.0.3/assets/svg/1f1f9-1f1ed.svg",
+      "sha256": "6253a87f1dc0ff3125589a57bb632f89b6f4ef11017639ecb2ac25566bc9d015"
+    },
+    "tj.svg": {
+      "source": "https://raw.githubusercontent.com/jdecked/twemoji/v17.0.3/assets/svg/1f1f9-1f1ef.svg",
+      "sha256": "5f35c3b311d53a48085f6ba660d49ab2cd5f869bf2372597704511ccdf2260ad"
+    },
+    "ua.svg": {
+      "source": "https://raw.githubusercontent.com/jdecked/twemoji/v17.0.3/assets/svg/1f1fa-1f1e6.svg",
+      "sha256": "8ad31e4e2ca36d66a9484937b76f003c8534d205da98fc90fe9d8fb7706e043b"
+    },
+    "us.svg": {
+      "source": "https://raw.githubusercontent.com/jdecked/twemoji/v17.0.3/assets/svg/1f1fa-1f1f8.svg",
+      "sha256": "1feca2279a6e78133bf577b99e4f3e82896622c255d29017cec5f5cfa93e4d16"
+    },
+    "ye.svg": {
+      "source": "https://raw.githubusercontent.com/jdecked/twemoji/v17.0.3/assets/svg/1f1fe-1f1ea.svg",
+      "sha256": "382249585136c0ff400c2ebca8cac116373cbd34dd863297edf4ce5217fb63dd"
+    }
+  }
+}

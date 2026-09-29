@@ -12,11 +12,6 @@
 }
 
 /* 화면 제목과 설명 글자 */
-h1 {
-	font-size: clamp(1.45rem, 2.4vw, 2.15rem) !important;
-	letter-spacing: -0.035em;
-	padding-top: 0.25rem !important;
-}
 h3 {
 	font-size: 1.2rem !important;
 	letter-spacing: -0.025em;
@@ -47,31 +42,11 @@ h3 {
 	color: #ff7953;
 }
 
-/* 대시보드 이름, 샘플 표시와 공통 필터 간격 */
-.dashboard-brand {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 1rem;
-	margin-bottom: 0.3rem;
-}
-.dashboard-brand strong {
-	font-size: 1.05rem;
-	letter-spacing: -0.03em;
-}
-.sample-badge {
-	border: 1px solid #ab8121;
-	border-radius: 5px;
-	color: #ffd052;
-	padding: 0.3rem 0.6rem;
-	font-size: 0.76rem;
-	white-space: nowrap;
-}
+/* 공통 필터 간격 */
 .st-key-filters {
 	margin-bottom: 0.3rem;
 }
-.st-key-filters [data-testid="stSelectbox"],
-.st-key-filters [data-testid="stDateInput"] {
+.st-key-filters [data-testid="stSelectbox"] {
 	display: grid;
 	grid-template-columns: max-content minmax(0, 1fr);
 	align-items: center;
@@ -97,10 +72,6 @@ h3 {
 	}
 }
 
-/* 지도는 열 높이를 채우되, 고정 줌에서 마커·말풍선이 들어갈 최소 높이를 확보한다. */
-.st-key-conflict_map iframe {
-	min-height: 390px;
-}
 
 /* 지도 오른쪽에 세로로 표시하는 분쟁별 카드와 무기·기술 범주 태그 */
 .conflict-card {
@@ -116,6 +87,21 @@ h3 {
 	gap: 0.65rem;
 	font-size: 1rem;
 	font-weight: 650;
+}
+.conflict-flags {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	flex-shrink: 0;
+}
+.conflict-flag {
+	display: block;
+	width: 20px;
+	height: 20px;
+	object-fit: contain;
+}
+.conflict-flag-fallback {
+	font-size: 0.75rem;
 }
 .conflict-card .report-count {
 	font-size: 1.85rem;
@@ -227,25 +213,10 @@ h3 {
 	color: #a6bfd7;
 }
 
-/* 하단 데이터 해석 안내와 좁은 화면에서의 여백·글자 크기 */
-.dashboard-footer {
-	text-align: right;
-	color: #8aa9c5;
-	font-size: 0.78rem;
-	padding: 1rem 0 0.3rem;
-}
+/* 좁은 화면에서의 여백·글자 크기 */
 @media (max-width: 760px) {
 	.stMainBlockContainer {
 		padding: 4.5rem 1rem 1rem;
-	}
-	.dashboard-brand {
-		align-items: flex-start;
-	}
-	.dashboard-brand strong {
-		font-size: 0.9rem;
-	}
-	.sample-badge {
-		font-size: 0.66rem;
 	}
 	[data-testid="stMetricValue"] {
 		font-size: 2rem;
