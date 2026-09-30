@@ -2,8 +2,8 @@
 
 import streamlit as st
 
-from data.excel_loader import DataValidationError
-from data.sample_data import load_dashboard_snapshot
+from data.snapshot import load_dashboard_snapshot
+from data.table_contract import DataValidationError
 from ui.components import apply_styles, render_filters
 from utils.state import init_session_state
 
@@ -50,7 +50,6 @@ page = st.navigation(
   position='top',
 )
 
-# st.title(page.title)
 # 필터는 같은 위치에 표시하되, 선택값과 위젯 키는 페이지마다 따로 관리한다.
 # 기본 페이지의 url_path는 Streamlit에서 빈 문자열로 제공한다.
 is_overview = page.url_path in ('', 'overview')
@@ -58,5 +57,5 @@ page_key = 'overview' if is_overview else page.url_path
 init_session_state(settings, page_key=page_key)
 period = render_filters(settings, page_key)
 if period is not None:
-  # 시작일과 종료일을 모두 선택한 경우에만 화면의 집계를 실행한다.
+  # 유효한 시작월과 종료월을 선택한 경우에만 화면의 집계를 실행한다.
   page.run()
