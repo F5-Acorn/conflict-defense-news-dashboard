@@ -1,4 +1,4 @@
-'''집계된 데이터를 현재 디자인의 Plotly 선 그래프와 누적 막대그래프로 만든다.'''
+'''집계된 데이터를 기간별 Plotly 선그래프와 판정 도넛으로 만든다.'''
 
 from math import ceil
 
@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 
 from config import CHART_BACKGROUND, GRID_COLOR, TEXT_COLOR
 from data.constants import STATUS_LABELS, UsageCode
-from services.detail_service import with_month_changes
+from services.detail_service import with_period_changes
 
 
 def _base_layout(figure, height):
@@ -32,158 +32,125 @@ def _base_layout(figure, height):
   )
 
 
-def trend_chart(trend, kind, start, end, category_colors, category_ids=None):
-  '''월·범주·건수 집계와 유형·조회 기간을 받아 월별 추이 차트를 반환한다.'''
+PERIOD_STATUS_COLORS = {
+  UsageCode.USED: '#1E6BD6',
+  UsageCode.UNCERTAIN: '#8995A5',
+  UsageCode.NOT_USED: '#D8495B',
+}
+DONUT_DIAMETER = 130
+DONUT_WIDTH = 224
+DONUT_HEIGHT = 140
+
+
+def judgement_donut(counts):
+  '''기사·범주 판정 건수의 사용·불확실·비사용 비율을 표시한다.'''
+  codes = [code for code in STATUS_LABELS if counts.get(code, 0) > 0]
+  total = int(counts.sum())
+  not_used = int(counts.get(UsageCode.NOT_USED, 0))
+  rotation = (270 - 360 * (1 - not_used / (2 * total))) % 360 if not_used else 0
+  html_text = f'''%{{percent:.1%}}'''  # noqa: F541
+  hover_html_text = f'''%{{label}}: %{{value:,}}건 (%{{percent:.1%}})<extra></extra>'''  # noqa: F541
+  figure = go.Figure(
+    go.Pie(
+      labels=[STATUS_LABELS[code] for code in codes],
+      values=[int(counts.get(code, 0)) for code in codes],
+      marker={'colors': [PERIOD_STATUS_COLORS[code] for code in codes]},
+      hole=0.64,
+      sort=False,
+      direction='clockwise',
+      rotation=rotation,
+      domain={
+        'x': [
+          (DONUT_WIDTH - DONUT_DIAMETER) / (2 * DONUT_WIDTH),
+          (DONUT_WIDTH + DONUT_DIAMETER) / (2 * DONUT_WIDTH),
+        ]
+      },
+      customdata=[int(code) for code in codes],
+      textposition='inside',
+      texttemplate=html_text,
+      insidetextfont={'size': 12, 'color': '#ffffff'},
+      insidetextorientation='horizontal',
+      automargin=False,
+      hovertemplate=hover_html_text,
+    )
+  )
+  if total:
+    html_text = f'''<b>{total:,}건</b>'''
+  else:
+    html_text = f'''<b>보도 없음<br>(0건)</b>'''  # noqa: F541
+  _base_layout(figure, DONUT_HEIGHT)
+  figure.update_layout(
+    width=DONUT_WIDTH,
+    margin={'l': 0, 'r': 0, 't': 5, 'b': 5},
+    meta={'donut_diameter': DONUT_DIAMETER},
+    paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)',
+    showlegend=False,
+    annotations=[
+      {
+        'text': html_text,
+        'x': 0.5,
+        'y': 0.5,
+        'xanchor': 'center',
+        'yanchor': 'middle',
+        'xref': 'paper',
+        'yref': 'paper',
+        'showarrow': False,
+        'font': {'size': 15, 'weight': 700},
+      }
+    ],
+  )
+  return figure
+
+
+def period_trend_chart(trend, labels, colors, granularity):
+  '''기간별 선택 범주 사용 보도 수를 Plotly 선그래프로 표시한다.'''
   figure = go.Figure()
-  trend = with_month_changes(trend)
-  months = pd.date_range(start.replace(day=1), end.replace(day=1), freq='MS')
-  # 축에는 선택 기간의 모든 월을 표시하고 일부 날짜만 포함된 월을 구분한다.
-  month_keys = []
-  month_labels = []
-  for month in months:
-    month_keys.append(month.strftime('%Y-%m'))
-    label = f'{month:%Y.%m}' if start.year != end.year else f'{month.month}월'
-    month_labels.append(label)
-  selected_categories = sorted(trend['category'].unique())
-  for category in selected_categories:
-    category_rows = trend.loc[trend['category'] == category]
-    monthly_counts = category_rows.set_index('month')['count']
-    values = monthly_counts.reindex(months, fill_value=0)
-    color = category_colors[kind][category]
-    # 네 범주 이상 선택하면 숫자 라벨이 겹치지 않도록 선과 점만 표시한다.
+  trend = with_period_changes(trend)
+  date_format = '%Y-%m' if granularity == 'month' else '%Y-%m-%d'
+  buckets = sorted(trend['bucket'].unique())
+  bucket_keys = [pd.Timestamp(bucket).strftime(date_format) for bucket in buckets]
+  for category_id, label in labels.items():
+    rows = trend.loc[trend['category_id'].eq(category_id)]
     figure.add_trace(
       go.Scatter(
-        x=month_keys,
-        y=values.tolist(),
-        name=category,
-        mode=(
-          'lines+markers+text'
-          if len(selected_categories) <= 3 and len(months) <= 12
-          else 'lines+markers'
-        ),
-        line={'color': color, 'width': 3},
-        marker={'size': 9, 'color': '#edf4fc', 'line': {'color': color, 'width': 3}},
-        text=[f'{value:,}' for value in values],
-        textposition='top center',
-        textfont={'color': color, 'size': 12},
+        x=rows['bucket'].dt.strftime(date_format).tolist(),
+        y=rows['count'].tolist(),
+        name=label,
+        mode='lines+markers',
+        line={'color': colors[category_id], 'width': 3},
+        marker={'size': 7, 'color': colors[category_id]},
+        customdata=[[category_id, row.change_text] for row in rows.itertuples()],
         cliponaxis=False,
-        customdata=[
-          [
-            category_ids.get(category, category) if category_ids else category,
-            row.change_text,
-          ]
-          for row in category_rows.itertuples()
-        ],
-        hovertemplate=f'{category}<br>%{{x}} · %{{y:,}}건<extra></extra>',
+        hoverinfo='none',
       )
     )
-  _base_layout(figure, 340)
+  _base_layout(figure, 410)
   figure.update_layout(hovermode='closest', clickmode='event', dragmode=False)
-  figure.update_traces(hovertemplate=None, hoverinfo='none')
-  # 월 간격은 일정하게 두고 건수 축은 최대값보다 여유 있게 표시한다.
-  step = max(1, (len(months) + 11) // 12)
-  ticks = sorted({*range(0, len(months), step), len(months) - 1})
+  step = 7 if granularity == 'day' and len(buckets) > 14 else 1
+  ticks = sorted({*range(0, len(buckets), step), len(buckets) - 1}) if buckets else []
   figure.update_xaxes(
     type='category',
     categoryorder='array',
-    categoryarray=month_keys,
-    tickvals=[month_keys[index] for index in ticks],
-    ticktext=[month_labels[index] for index in ticks],
+    categoryarray=bucket_keys,
+    tickvals=[bucket_keys[index] for index in ticks],
+    ticktext=[
+      pd.Timestamp(buckets[index]).strftime(
+        '%m월' if granularity == 'month' else '%m.%d'
+      )
+      for index in ticks
+    ],
     gridcolor=GRID_COLOR,
-    showgrid=True,
     fixedrange=True,
   )
   maximum = max(1, int(trend['count'].max())) if not trend.empty else 1
   figure.update_yaxes(
     title_text='기사 수 (건)',
     range=[0, maximum * 1.22],
-    gridcolor=GRID_COLOR,
-    zerolinecolor=GRID_COLOR,
-    tickformat=',d',
     tickmode='linear',
-    tick0=0,
     dtick=max(1, ceil(maximum / 6)),
-    fixedrange=True,
-  )
-  return figure
-
-
-STATUS_COLORS = {
-  UsageCode.USED: '#20bda6',
-  UsageCode.UNCERTAIN: '#f1b94a',
-  UsageCode.NOT_USED: '#8598b0',
-}
-MOSAIC_BAR_HEIGHT = 48
-MOSAIC_ROW_GAP = 12
-
-
-def mosaic_chart(distribution):
-  """범주마다 고정 높이의 가로 막대로 판정 비율을 표시한다."""
-  figure = go.Figure()
-  row_height = MOSAIC_BAR_HEIGHT + MOSAIC_ROW_GAP
-  ticks, labels = [], []
-  for category, rows in distribution.groupby('category', sort=True):
-    total = int(rows['count'].sum())
-    if not total:
-      continue
-    center = len(labels)
-    ticks.append(center)
-    labels.append(category)
-    for code, label in STATUS_LABELS.items():
-      row = rows.loc[rows['usage_code'].eq(code)].iloc[0]
-      figure.add_trace(
-        go.Bar(
-          x=[float(row['ratio'])],
-          y=[center],
-          width=[MOSAIC_BAR_HEIGHT / row_height],
-          orientation='h',
-          name=label,
-          legendgroup=str(code),
-          showlegend=center == 0,
-          marker={
-            'color': STATUS_COLORS[code],
-            'line': {'color': CHART_BACKGROUND, 'width': 2},
-          },
-          customdata=[[category, int(row['count'])]],
-          text=[
-            f"{int(row['count']):,}건<br>{row['ratio']:.0%}"
-            if row['ratio'] >= 0.12
-            else ''
-          ],
-          textposition='inside',
-          hovertemplate=f'%{{customdata[0]}}<br>{label}: %{{customdata[1]:,}}건 (%{{x:.1%}})<extra></extra>',
-        )
-      )
-  row_count = max(1, len(labels))
-  # 좁은 화면에서 범례가 최대 세 줄로 나뉘어도 막대 영역을 줄이지 않는다.
-  margin = {'l': 10, 'r': 30, 't': 90, 'b': 60}
-  _base_layout(figure, row_count * row_height + margin['t'] + margin['b'])
-  figure.update_layout(
-    barmode='stack',
-    bargap=0,
-    margin=margin,
-    legend={
-      'xref': 'container',
-      'yref': 'container',
-      'x': 0.98,
-      'y': 1,
-      'xanchor': 'right',
-      'yanchor': 'top',
-    },
-  )
-  figure.update_xaxes(
-    range=[0, 1],
-    tickformat='.0%',
-    fixedrange=True,
+    tickformat=',d',
     gridcolor=GRID_COLOR,
-    title_text='판정 비율',
-  )
-  figure.update_yaxes(
-    range=[row_count - 0.5, -0.5],
-    tickvals=ticks,
-    ticktext=labels,
     fixedrange=True,
-    showgrid=False,
-    automargin='left',
   )
   return figure

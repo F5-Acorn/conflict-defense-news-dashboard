@@ -11,6 +11,7 @@ CATEGORY_PALETTE = (
   '#7fd28c',
   '#efab68',
 )
+TREND_PALETTE = ('#65C18C', '#B48AF2', '#ECA45B', '#E7CA55', '#B8D465')
 CHART_BACKGROUND = '#0b1b26'
 GRID_COLOR = '#243d50'
 TEXT_COLOR = '#b8d0e8'
@@ -45,11 +46,4 @@ def build_settings(tables):
     'conflicts': conflicts,
     'start': dates.min().date() if not dates.empty else None,
     'end': dates.max().date() if not dates.empty else None,
-    'category_colors': {
-      kind: {
-        name: CATEGORY_PALETTE[index % len(CATEGORY_PALETTE)]
-        for index, name in enumerate(names)
-      }
-      for kind, names in categories.items()
-    },
   }

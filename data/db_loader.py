@@ -49,12 +49,12 @@ def normalize_tables(tables):
   return tables
 
 
-def read_tables_from_db(url):
+def read_tables_from_db(url, *, engine=None):
   '''하나의 읽기 전용 트랜잭션에서 여섯 테이블의 일관된 데이터를 조회한다.'''
   tables = {}
   name = None
   try:
-    with get_db_engine(url).connect() as connection:
+    with (engine if engine is not None else get_db_engine(url)).connect() as connection:
       connection.exec_driver_sql(
         'START TRANSACTION WITH CONSISTENT SNAPSHOT, READ ONLY'
       )

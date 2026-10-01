@@ -1,10 +1,11 @@
-'''기사 상세, 판정 분포, 분류 내보내기와 범주별 기사 집계. UI와 분리한다.'''
+'''판정 원본 조인, 기사 상세·증감 계산과 분류 내보내기. UI와 분리한다.'''
 
 import re
+from datetime import date
 
 import pandas as pd
 
-from data.constants import KIND_LABELS, STATUS_LABELS, UsageCode
+from data.constants import KIND_LABELS, UsageCode
 
 DICTIONARIES = {
   '무기': ('wp', 'sipri_dictionary', 'wp_name'),
@@ -50,21 +51,20 @@ def classification_details(tables, kind):
   }
 
 
-def classification_csv(tables, kind):
+def classification_csv(tables, kind, *, details=None):
+  if details is None:
+    details = classification_details(tables, kind)
   result = pd.DataFrame(
-    [
-      (category, ', '.join(names))
-      for category, names in classification_details(tables, kind).items()
-    ],
+    [(category, ', '.join(names)) for category, names in details.items()],
     columns=['분류', '세부명칭'],
   )
   return result.to_csv(index=False).encode('utf-8-sig')
 
 
-def with_month_changes(trend):
-  '''첫 달은 비교하지 않고, 조회 범위 내 앞 월과의 증감을 계산한다.'''
-  result = trend.sort_values(['category', 'month']).copy()
-  result['previous'] = result.groupby('category')['count'].shift(1)
+def with_period_changes(trend, category_column='category_id', period_column='bucket'):
+  '''조회 범위 내 앞 구간과 비교한다. 월별·일별 모두 빈 구간을 포함한다.'''
+  result = trend.sort_values([category_column, period_column]).copy()
+  result['previous'] = result.groupby(category_column)['count'].shift(1)
   result['delta'] = result['count'] - result['previous']
   result['change_text'] = result.apply(_change_text, axis=1)
   return result
@@ -80,15 +80,26 @@ def _change_text(row):
   return f'{delta:+,}건 ({rate:+.1f}%)'
 
 
-def article_details(reports, category_id, month, page=1, page_size=20):
-  '''이미 페이지 조건으로 제한한 판정에서 점 하나의 사용 확인 기사를 조회한다.'''
-  selected_month = pd.Period(month, freq='M')
+def article_details(
+  reports,
+  category_id,
+  month,
+  page=1,
+  page_size=20,
+  granularity='month',
+  conflict='전체',
+):
+  '''원본 판정에서 필요한 범주·분쟁·월 또는 날짜의 기사만 조회한다.'''
+  selected_month = pd.Period(month, freq='M' if granularity == 'month' else 'D')
+  selected = (
+    reports['usage_code'].eq(UsageCode.USED)
+    & reports['category_id'].eq(category_id)
+    & reports['date'].between(selected_month.start_time, selected_month.end_time)
+  )
+  if conflict != '전체':
+    selected &= reports['conflict'].eq(conflict)
   rows = (
-    reports.loc[
-      reports['usage_code'].eq(UsageCode.USED)
-      & reports['category_id'].eq(category_id)
-      & reports['date'].between(selected_month.start_time, selected_month.end_time)
-    ]
+    reports.loc[selected]
     .drop_duplicates('article_id')
     .sort_values(['date', 'article_id'], ascending=False)
   )
@@ -115,48 +126,29 @@ def article_details(reports, category_id, month, page=1, page_size=20):
   }
 
 
-def judgement_distribution(reports, selected):
-  rows = reports.loc[reports['category'].isin(selected)]
-  summary = rows.groupby(['category', 'usage_code']).size().rename('count')
-  index = pd.MultiIndex.from_product(
-    [sorted(set(selected)), list(STATUS_LABELS)], names=['category', 'usage_code']
-  )
-  result = summary.reindex(index, fill_value=0).reset_index()
-  result['total'] = result.groupby('category')['count'].transform('sum')
-  result['ratio'] = (
-    result['count'].div(result['total'].replace(0, float('nan'))).fillna(0)
-  )
-  return result
-
-
-def category_frequencies(reports):
-  '''분쟁·기간·유형으로 필터링한 전체 범주의 사용 확인 기사를 중복 없이 센다.'''
-  summary = (
-    reports.loc[reports['usage_code'].eq(UsageCode.USED)]
-    .groupby('category')['article_id']
-    .nunique()
-    .rename('count')
-    .reset_index()
-  )
-  summary = summary.sort_values(['count', 'category'], ascending=[False, True])
-  return dict(zip(summary['category'], summary['count'].astype(int)))
-
-
-def valid_article_request(action, context, allowed_ids, start, end, kind):
-  '''브라우저 요청이 현재 페이지의 범주·월에 해당하는지 확인한다.'''
+def valid_article_request(
+  action, context, allowed_ids, start, end, kind, granularity='month'
+):
+  '''브라우저 요청이 현재 페이지의 범주·월 또는 날짜에 해당하는지 확인한다.'''
   if (
     not isinstance(action, dict)
+    or granularity not in ('month', 'day')
     or action.get('context') != context
     or action.get('kind') != kind
+    or action.get('granularity', 'month') != granularity
   ):
     return False
   if action.get('type') not in ('open_articles', 'article_page'):
     return False
   month = action.get('month')
-  if not isinstance(month, str) or not re.fullmatch(r'\d{4}-\d{2}', month):
+  pattern = r'\d{4}-\d{2}' if granularity == 'month' else r'\d{4}-\d{2}-\d{2}'
+  if not isinstance(month, str) or not re.fullmatch(pattern, month):
     return False
-  if not 1 <= int(month[-2:]) <= 12 or not start.strftime(
-    '%Y-%m'
-  ) <= month <= end.strftime('%Y-%m'):
+  try:
+    date.fromisoformat(f'{month}-01' if granularity == 'month' else month)
+  except ValueError:
+    return False
+  date_format = '%Y-%m' if granularity == 'month' else '%Y-%m-%d'
+  if not start.strftime(date_format) <= month <= end.strftime(date_format):
     return False
   return action.get('category_id') in allowed_ids

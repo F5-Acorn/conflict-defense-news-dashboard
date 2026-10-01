@@ -20,7 +20,7 @@
 
 ## 공통 국기 이모지
 
-- 자산: `flags/*.svg`, Twemoji v17.0.3 국기 23종 (원본 그대로 포함)
+- 자산: `flags/*.svg`, Twemoji v17.0.3 국기 24종 (원본 그대로 포함)
 - 출처: [Twemoji](https://github.com/jdecked/twemoji/tree/v17.0.3)
 - 그래픽 저작자: Twitter, Inc 및 Twemoji 기여자
 - 라이선스: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), 원문은 `flags/LICENSE-GRAPHICS`

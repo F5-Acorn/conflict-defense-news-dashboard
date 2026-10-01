@@ -1,6 +1,7 @@
 '''범주별 기사 수를 한글 워드클라우드로 표시한다. 아래 상수로 스타일을 조정한다.'''
 
 import hashlib
+from functools import lru_cache
 from io import BytesIO
 from pathlib import Path
 
@@ -14,8 +15,9 @@ from config import CATEGORY_PALETTE, CHART_BACKGROUND
 # 이 설정을 수정하고 앱을 새로고침하면 바뀐 설정으로 이미지를 다시 생성한다.
 WORDCLOUD_STYLE = {
   'font_path': str(Path(__file__).resolve().parents[1] / 'assets/fonts/Pretendard.ttf'),
-  'width': 1400,
-  'height': 700,
+  'width': 700,
+  'height': 1100,
+  'prefer_horizontal': 1.0,
   'background_color': CHART_BACKGROUND,
   'max_words': 200,
   'max_font_size': 160,
@@ -31,20 +33,47 @@ WORDCLOUD_ELLIPSE = {'width_ratio': 0.8, 'height_ratio': 0.8}
 WORDCLOUD_COLORS = CATEGORY_PALETTE
 
 
-def wordcloud_image(frequencies):
+def wordcloud_image(frequencies, *, images=None):
   if not frequencies:
     return None
-  # 같은 경로의 TTF가 교체된 경우에도 새 글꼴로 이미지를 생성한다.
-  font_hash = hashlib.sha256(
-    Path(WORDCLOUD_STYLE['font_path']).read_bytes()
-  ).hexdigest()
+  key = wordcloud_key(frequencies)
+  if images is not None and key in images:
+    return images[key]
   return _render_wordcloud(
-    frequencies, WORDCLOUD_STYLE, WORDCLOUD_COLORS, WORDCLOUD_ELLIPSE, font_hash
+    frequencies,
+    WORDCLOUD_STYLE,
+    WORDCLOUD_COLORS,
+    WORDCLOUD_ELLIPSE,
+    key[1],
   )
 
 
-@st.cache_data(show_spinner=False, max_entries=16)
+def wordcloud_key(frequencies):
+  '''사전 준비 이미지에도 현재 글꼴과 스타일의 동일한 캐시 기준을 적용한다.'''
+  # 같은 경로의 TTF가 교체된 경우에도 새 글꼴로 이미지를 생성한다.
+  path = Path(WORDCLOUD_STYLE['font_path'])
+  stat = path.stat()
+  font_hash = _font_hash(str(path), stat.st_mtime_ns, stat.st_size)
+  return (
+    tuple(sorted(frequencies.items())),
+    font_hash,
+    tuple(sorted(WORDCLOUD_STYLE.items())),
+    WORDCLOUD_COLORS,
+    tuple(sorted(WORDCLOUD_ELLIPSE.items())),
+  )
+
+
+@lru_cache(maxsize=4)
+def _font_hash(path, modified, size):
+  return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+@st.cache_data(show_spinner=False, max_entries=128)
 def _render_wordcloud(frequencies, style, colors, ellipse, font_hash):
+  return render_wordcloud(frequencies, style, colors, ellipse)
+
+
+def render_wordcloud(frequencies, style, colors, ellipse):
   width, height = style['width'], style['height']
   y, x = np.ogrid[:height, :width]
   inside = ((x - (width - 1) / 2) / (width * ellipse['width_ratio'] / 2)) ** 2 + (
@@ -62,10 +91,10 @@ def _render_wordcloud(frequencies, style, colors, ellipse, font_hash):
   bounds = ImageChops.difference(rendered, canvas).getbbox()
   if bounds:
     words = rendered.crop(bounds)
-    canvas.paste(
-      words,
-      ((canvas.width - words.width) // 2, (canvas.height - words.height) // 2),
+    canvas = Image.new(
+      rendered.mode, (words.width + 16, words.height + 16), style['background_color']
     )
+    canvas.paste(words, (8, 8))
   output = BytesIO()
   canvas.save(output, format='PNG')
   return output.getvalue()

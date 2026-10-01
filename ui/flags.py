@@ -30,6 +30,7 @@ COUNTRY_NAMES = {
   'TJ': '타지키스탄',
   'UA': '우크라이나',
   'US': '미국',
+  'VE': '베네수엘라',
   'YE': '예멘',
 }
 
@@ -51,12 +52,16 @@ def render_flags(value):
     label = escape(f'{COUNTRY_NAMES.get(code, code)} 국기', quote=True)
     uri = _flag_uri(code)
     if uri:
-      icons.append(
-        f'<img class="conflict-flag" src="{uri}" alt="{label}" '
-        f'title="{label}" width="20" height="20" draggable="false">'
-      )
+      html_text = f'''<img class="conflict-flag" src="{uri}" alt="{label}" title="{label}" width="20" height="20" draggable="false">'''
     else:
-      icons.append(
-        f'<span class="conflict-flag-fallback" title="{label}">{code}</span>'
-      )
-  return f'<span class="conflict-flags">{"".join(icons)}</span>' if icons else ''
+      html_text = f'''<span class="conflict-flag-fallback" title="{label}">
+                        {code}
+                      </span>'''
+    icons.append(html_text)
+  if not icons:
+    return ''
+  flags = '\n'.join(icons)
+  html_text = f'''<span class="conflict-flags">
+                    {flags}
+                  </span>'''
+  return html_text

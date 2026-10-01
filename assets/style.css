@@ -3,12 +3,39 @@
 	background: #08141e;
 }
 [data-testid="stHeader"] {
-	background: #08141e;
-	border-bottom: 1px solid #233c50;
+	display: none;
 }
 .stMainBlockContainer {
 	max-width: 1740px;
-	padding: 4.5rem 1.8rem 1rem;
+	padding: 0 1.8rem 1rem;
+}
+[data-testid="stLayoutWrapper"]:has(> .st-key-dashboard_header) {
+	position: sticky;
+	top: 0;
+	z-index: 1000;
+	background: #08141e;
+}
+.st-key-dashboard_header {
+	background: #08141e;
+	padding-top: 0.65rem;
+}
+.st-key-dashboard_navigation {
+	border-bottom: 1px solid #233c50;
+	padding-top: 0.5rem;
+	padding-bottom: 0.5rem;
+}
+.st-key-dashboard_navigation [data-testid="stPageLink"] a {
+	justify-content: flex-start;
+	text-align: left;
+	min-height: 2rem;
+}
+.st-key-dashboard_navigation [data-testid="stPageLink"] span,
+.st-key-dashboard_navigation [data-testid="stPageLink"] p {
+	white-space: normal;
+	text-overflow: clip;
+}
+.st-key-dashboard_navigation [data-testid="stPageLink"] span {
+	overflow: visible;
 }
 
 /* 화면 제목과 설명 글자 */
@@ -41,10 +68,20 @@ h3 {
 .st-key-usage_count [data-testid="stMetricValue"] {
 	color: #ff7953;
 }
+.st-key-overview_metrics [data-testid="stMetric"] {
+	min-height: 110px;
+}
 
 /* 공통 필터 간격 */
 .st-key-filters {
 	margin-bottom: 0.3rem;
+}
+.st-key-article_download {
+	margin-left: auto;
+}
+.st-key-filter_bar
+	> [data-testid="stLayoutWrapper"]:has(> .st-key-article_download) {
+	margin-left: auto;
 }
 .st-key-filters [data-testid="stSelectbox"] {
 	display: grid;
@@ -72,21 +109,408 @@ h3 {
 	}
 }
 
-
-/* 지도 오른쪽에 세로로 표시하는 분쟁별 카드와 무기·기술 범주 태그 */
-.conflict-card {
-	border: 1px solid #233e52;
-	border-radius: 6px;
-	padding: 1rem 1.1rem;
-	background: #0d1e2a;
-	min-height: 140px;
-}
-.conflict-card .card-heading {
+/* Overview의 분쟁별 카드와 선택 가능한 범주 태그 */
+.st-key-overview_conflicts .card-header {
+	background-color: #233c50;
 	display: flex;
 	align-items: center;
-	gap: 0.65rem;
-	font-size: 1rem;
+	justify-content: space-between;
+	padding-left: 1rem;
+	padding-right: 1rem;
+	margin-top: 1rem;
+	flex-wrap: wrap;
+	gap: 0.5rem 1rem;
+	padding-block: 0.35rem;
+}
+.st-key-overview_conflicts .card-title {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	min-width: 0;
+	overflow-wrap: anywhere;
+}
+.st-key-overview_conflicts .report-summary {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	flex-wrap: wrap;
+	margin-left: auto;
+	justify-content: flex-end;
+}
+.st-key-overview_conflicts .report-label {
+	font-size: 0.8rem;
+	color: #a6bfd7;
+}
+.st-key-overview_conflicts .report-count {
+	font-size: 1.5rem;
+	font-weight: 750;
+	margin: 0.15rem 0 0;
+}
+.st-key-overview_summary {
+	overflow: visible !important;
+}
+.st-key-overview_map_half,
+.st-key-overview_details_half {
+	height: auto !important;
+	min-height: 0;
+	overflow: visible !important;
+}
+.overview-indicators {
+	border: 1px solid #294759;
+	border-radius: 9px;
+	background: #102230;
+	padding: 0 20px;
+}
+.overview-indicator {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 16px 0;
+}
+.overview-indicator + .overview-indicator {
+	border-top: 1px solid #294759;
+}
+.overview-indicator-caption {
+	min-width: 0;
+}
+.overview-indicator-label {
+	display: flex;
+	align-items: center;
+	gap: 7px;
+	color: #b4cbe1;
+	font-size: 16px;
+}
+.overview-indicator-help {
+	flex-shrink: 0;
+	border: 1.5px solid #8eaabd;
+	border-radius: 50%;
+	color: #8eaabd;
+	font-size: 11px;
+	font-weight: 600;
+	width: 17px;
+	height: 17px;
+	text-align: center;
+	line-height: 15px;
+}
+.overview-indicator p {
+	color: #8eaabd;
+	font-size: 12px;
+	margin: 5px 0 0;
+	line-height: 1.5;
+	word-break: keep-all;
+}
+.overview-indicator-number {
+	display: flex;
+	flex-shrink: 0;
+	align-items: baseline;
+	gap: 5px;
+	color: #3296ff;
+	white-space: nowrap;
+	font-size: clamp(28px, 2.4vw, 40px);
+	font-weight: 750;
+	letter-spacing: -1px;
+	line-height: 1.2;
+}
+.overview-indicator-number small {
+	font-size: 15px;
+	letter-spacing: 0;
+}
+.overview-indicator.usage .overview-indicator-number {
+	color: #ff7953;
+}
+@media (max-width: 1000px) {
+	.st-key-overview_metrics {
+		flex-direction: column !important;
+	}
+	[data-testid="stLayoutWrapper"]:has(> .st-key-overview_downloads) {
+		width: 100% !important;
+	}
+}
+@media (max-width: 500px) {
+	.overview-indicators {
+		padding: 0 14px;
+	}
+	.overview-indicator {
+		flex-wrap: wrap;
+	}
+	.overview-indicator-number {
+		margin-left: auto;
+	}
+}
+.st-key-overview_conflicts [data-testid="stButton"] button {
+	border-radius: 20px;
+	font-size: 0.79rem;
+	padding: 0.2rem 0.55rem;
+	min-height: 1.9rem;
+}
+[class*="st-key-overview_category_row_"]
+	[data-testid="stHorizontalBlock"]:has(> [data-testid="stColumn"]) {
+	flex-wrap: nowrap;
+	align-items: flex-start;
+}
+[class*="st-key-overview_category_row_"]
+	[data-testid="stHorizontalBlock"]:has(> [data-testid="stColumn"])
+	> [data-testid="stColumn"]:first-child {
+	flex: 0 0 5rem;
+	min-width: 5rem;
+}
+[class*="st-key-overview_category_row_"]
+	[data-testid="stHorizontalBlock"]:has(> [data-testid="stColumn"])
+	> [data-testid="stColumn"]:last-child {
+	flex: 1 1 0;
+	min-width: 0;
+}
+[class*="st-key-overview_category_row_"] [data-testid="stCaptionContainer"] {
+	white-space: nowrap;
+	padding-top: 0.3rem;
+}
+.period-donut-label {
 	font-weight: 650;
+	text-align: center;
+	line-height: 20px;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	overflow-wrap: anywhere;
+}
+[class*="st-key-period_analysis_"]
+	[data-testid="stHorizontalBlock"]:has(> [data-testid="stColumn"])
+	> [data-testid="stColumn"]:last-child {
+	container-type: inline-size;
+	container-name: period-donuts;
+}
+/* 열과 패널 사이의 래퍼에도 높이를 전달해야 height="stretch"가 채워진다. */
+@media (min-width: 1001px) {
+	[class*="st-key-period_analysis_"]
+		> [data-testid="stLayoutWrapper"]:has(
+			> [data-testid="stHorizontalBlock"] > [data-testid="stColumn"]
+		),
+	[class*="st-key-period_analysis_"]
+		[data-testid="stColumn"]
+		> [data-testid="stVerticalBlock"]
+		> [data-testid="stLayoutWrapper"]:has(
+			> :is(
+				[class*="st-key-period_words_"],
+				[class*="st-key-period_picker_"],
+				[class*="st-key-period_donut_annual"],
+				[class*="st-key-period_donut_monthly"],
+				[class*="st-key-period_donut_weekly"]
+			)
+		) {
+		flex: 1 1 auto;
+		min-height: 0;
+	}
+}
+[class*="st-key-period_donut_header_"] {
+	justify-content: space-between;
+	gap: 8px !important;
+}
+[class*="st-key-period_donut_header_"] h3 {
+	line-height: 24px;
+	margin: 0;
+}
+[class*="st-key-period_donut_header_"]
+	> [data-testid="stLayoutWrapper"]:has(.period-donut-legend) {
+	flex-shrink: 0;
+}
+[class*="st-key-period_donut_row_"] {
+	justify-content: center;
+	gap: 8px !important;
+}
+[class*="st-key-period_donut_row_"]
+	> [data-testid="stLayoutWrapper"]:has(
+		> [class*="st-key-period_donut_item_"]
+	) {
+	flex: 0 0 224px !important;
+	width: 224px !important;
+}
+/* 세 분석 패널의 높이를 맞추고 범주 목록만 스크롤한다. */
+[class*="st-key-period_picker_"] {
+	min-height: 0;
+	overflow: hidden !important;
+}
+[class*="st-key-period_picker_"]
+	> [data-testid="stLayoutWrapper"]:has(
+		> [class*="st-key-period_category_list_"]
+	) {
+	flex: 1 1 0 !important;
+	min-height: 0;
+	height: auto !important;
+}
+[class*="st-key-period_category_list_"] {
+	height: 100% !important;
+	min-height: 0;
+	overflow: auto !important;
+}
+:is(
+	.st-key-period_donut_annual,
+	.st-key-period_donut_monthly,
+	.st-key-period_donut_weekly
+) {
+	gap: 8px !important;
+	overflow: hidden !important;
+}
+[class*="st-key-period_donut_item_"] {
+	gap: 0.5rem !important;
+}
+[data-testid="stLayoutWrapper"]:has(> [class*="st-key-period_donut_body_"]) {
+	flex: 1 1 auto;
+	min-height: 0;
+}
+[class*="st-key-period_donut_body_"] {
+	height: 100%;
+	justify-content: center;
+	gap: 8px !important;
+}
+[class*="st-key-period_words_"] {
+	overflow: hidden !important;
+}
+[class*="st-key-period_words_"]
+	> [data-testid="stElementContainer"]:has(.period-wordcloud-image) {
+	flex: 1 1 0;
+	min-height: 0;
+	position: relative;
+}
+[class*="st-key-period_words_"]
+	[data-testid="stHtml"]:has(.period-wordcloud-image) {
+	height: 100%;
+}
+.period-wordcloud-image {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	min-height: 0;
+	display: flex;
+	justify-content: center;
+}
+.period-wordcloud-image img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+.period-donut-legend {
+	display: flex;
+	justify-content: center;
+	gap: 0.75rem;
+	font-size: 0.75rem;
+	white-space: nowrap;
+}
+.period-donut-legend span {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+}
+.period-donut-legend i {
+	width: 0.7rem;
+	height: 0.7rem;
+	border-radius: 50%;
+}
+/* 패널 안쪽이 688px보다 좁으면 고정 차트를 한 열로 펼친다. */
+@container period-donuts (width < 722px) {
+	[class*="st-key-period_donut_row_"] {
+		flex-direction: column;
+		align-items: center;
+	}
+	:is(
+		.st-key-period_donut_annual,
+		.st-key-period_donut_monthly,
+		.st-key-period_donut_weekly
+	),
+	[data-testid="stLayoutWrapper"]:has(
+		> :is(
+			.st-key-period_donut_annual,
+			.st-key-period_donut_monthly,
+			.st-key-period_donut_weekly
+		)
+	) {
+		height: auto !important;
+		max-height: none !important;
+		overflow: visible !important;
+	}
+	[class*="st-key-period_donut_row_"]
+		> [data-testid="stLayoutWrapper"]:has(
+			> [class*="st-key-period_donut_item_"]
+		) {
+		flex: 0 0 auto !important;
+	}
+	[class*="st-key-period_donut_header_"] {
+		flex-wrap: wrap;
+	}
+}
+/* 좁은 화면에서 워드클라우드와 Overview의 콘텐츠 높이를 확보한다. */
+@media (max-width: 1279px) {
+	[class*="st-key-period_analysis_"],
+	[data-testid="stLayoutWrapper"]:has(> [class*="st-key-period_analysis_"]) {
+		height: auto !important;
+		flex: 0 0 auto !important;
+		overflow: visible;
+	}
+}
+@media (max-width: 1000px) {
+	[class*="st-key-period_analysis_"]
+		[data-testid="stHorizontalBlock"]:has(> [data-testid="stColumn"]) {
+		flex-direction: column;
+	}
+	[class*="st-key-period_analysis_"]
+		[data-testid="stHorizontalBlock"]:has(> [data-testid="stColumn"])
+		> [data-testid="stColumn"] {
+		width: 100%;
+		min-width: 0;
+		flex: 1 1 auto;
+	}
+	[class*="st-key-period_words_"],
+	[data-testid="stLayoutWrapper"]:has(> [class*="st-key-period_words_"]) {
+		height: auto !important;
+		flex: 0 0 auto !important;
+	}
+	.period-wordcloud-image,
+	[class*="st-key-period_words_"]
+		[data-testid="stHtml"]:has(.period-wordcloud-image) {
+		height: auto;
+	}
+	[class*="st-key-period_words_"]
+		> [data-testid="stElementContainer"]:has(.period-wordcloud-image) {
+		flex: 0 0 auto;
+	}
+	.period-wordcloud-image {
+		position: static;
+	}
+	.period-wordcloud-image img {
+		height: auto;
+		max-height: 400px;
+	}
+	[class*="st-key-period_picker_"],
+	[data-testid="stLayoutWrapper"]:has(> [class*="st-key-period_picker_"]) {
+		height: 392px !important;
+		flex: 0 0 auto !important;
+	}
+	.st-key-overview_layout
+		[data-testid="stHorizontalBlock"]:has(> [data-testid="stColumn"]) {
+		flex-direction: column;
+	}
+	/* 카드 내 라벨·태그 행은 수평 배치를 유지한다. */
+	.st-key-overview_layout
+		[class*="st-key-overview_category_row_"]
+		[data-testid="stHorizontalBlock"]:has(> [data-testid="stColumn"]) {
+		flex-direction: row;
+	}
+	.st-key-overview_layout
+		> [data-testid="stLayoutWrapper"]
+		> [data-testid="stHorizontalBlock"]
+		> [data-testid="stColumn"] {
+		width: 100%;
+		flex: 1 1 auto;
+	}
+	.st-key-overview_summary,
+	[data-testid="stLayoutWrapper"]:has(> .st-key-overview_summary),
+	.st-key-overview_map_half,
+	.st-key-overview_details_half {
+		height: auto !important;
+	}
 }
 .conflict-flags {
 	display: inline-flex;
@@ -103,132 +527,16 @@ h3 {
 .conflict-flag-fallback {
 	font-size: 0.75rem;
 }
-.conflict-card .report-count {
-	font-size: 1.85rem;
-	font-weight: 750;
-	margin: 0.25rem 0 0.7rem;
-}
-.tag-row {
-	display: flex;
-	gap: 0.4rem;
-	align-items: center;
-	flex-wrap: wrap;
-	margin-top: 0.5rem;
-}
-.tag-label {
-	font-size: 0.82rem;
-	color: #a6bfd7;
-	min-width: 4rem;
-}
-.category-tag {
-	border: 1px solid #296498;
-	border-radius: 20px;
-	color: #d9ecff;
-	padding: 0.2rem 0.55rem;
-	font-size: 0.79rem;
-	background: #102c46;
-}
-.technology-tag {
-	border-color: #238580;
-	background: #0c302f;
-}
-
-/* 주요 범주의 사전 명칭: 무기·기술 카드 안에 분류와 전체 명칭을 두 열로 표시한다. */
-.category-details-card {
-	--details-accent: #3296ff;
-	background: #0d1e2a;
-	border: 1px solid #233e52;
-	border-radius: 6px;
-	padding: 1rem 1.1rem;
-}
-.technology-details-card {
-	--details-accent: #20d6cf;
-}
-.category-details-heading {
-	display: flex;
-	align-items: center;
-	flex-wrap: wrap;
-	gap: 0.7rem;
-	margin-bottom: 0.85rem;
-	border-left: 5px solid var(--details-accent);
-	padding-left: 0.75rem;
-}
-.category-details-heading h4 {
-	margin: 0;
-	padding: 0;
-	font-size: 1.2rem;
-	font-weight: 700;
-}
-.category-details-count {
-	color: #a6bfd7;
-	font-size: 0.8rem;
-}
-.category-details-table {
-	width: 100%;
-	table-layout: fixed;
-	border-collapse: collapse;
-}
-.dictionary-names {
-	max-height: 240px;
-	overflow-y: auto;
-	padding-right: 0.5rem;
-}
-.category-details-table .category-name-column {
-	width: 22%;
-}
-.category-details-table th,
-.category-details-table td {
-	padding: 0.65rem 0.85rem;
-	text-align: left;
-	vertical-align: top;
-	border-bottom: 1px solid #233e52;
-	white-space: normal;
-	overflow-wrap: anywhere;
-	line-height: 1.7;
-}
-.category-details-table thead th {
-	background: #102c3d;
-	color: #b4cbe1;
-	font-size: 0.82rem;
-	font-weight: 500;
-}
-.category-details-table tbody th {
-	color: var(--details-accent);
-	font-size: 0.95rem;
-	font-weight: 650;
-}
-.category-details-table tbody td {
-	color: #d9e6f2;
-	font-size: 0.9rem;
-}
-.category-details-table th:first-child {
-	border-right: 1px solid #233e52;
-}
-.category-details-table tbody tr:last-child > * {
-	border-bottom: 0;
-}
-.category-details-empty {
-	margin: 0;
-	padding: 0.6rem 0;
-	color: #a6bfd7;
-}
-
 /* 좁은 화면에서의 여백·글자 크기 */
 @media (max-width: 760px) {
 	.stMainBlockContainer {
-		padding: 4.5rem 1rem 1rem;
+		padding: 0 1rem 1rem;
+	}
+	.stMainBlockContainer h1 {
+		font-size: 1.75rem;
+		line-height: 1.3;
 	}
 	[data-testid="stMetricValue"] {
 		font-size: 2rem;
-	}
-	.category-details-card {
-		padding: 0.8rem;
-	}
-	.category-details-table .category-name-column {
-		width: 30%;
-	}
-	.category-details-table th,
-	.category-details-table td {
-		padding: 0.55rem;
 	}
 }

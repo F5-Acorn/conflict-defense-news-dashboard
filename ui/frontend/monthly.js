@@ -34,6 +34,7 @@ export default function ({ parentElement, data, setTriggerValue, key }) {
 			type,
 			context: data.context,
 			kind: data.kind,
+			granularity: data.granularity || 'month',
 			conflict_id: data.conflict_id,
 			...values,
 		});
@@ -73,9 +74,9 @@ export default function ({ parentElement, data, setTriggerValue, key }) {
 			.content.firstElementChild.cloneNode(true);
 		bubble.setAttribute('aria-label', `${point.data.name} ${point.x} 기사 정보`);
 		bubble.querySelector('h4').textContent = point.data.name;
-		bubble.querySelector('.monthly-bubble-month').textContent = String(point.x).replace('-', '.');
+		bubble.querySelector('.monthly-bubble-month').textContent = String(point.x).replaceAll('-', '.');
 		bubble.querySelector('strong').textContent = `${Number(point.y).toLocaleString()}건`;
-		bubble.querySelector('p').textContent = `전월 대비: ${point.customdata[1]}`;
+		bubble.querySelector('p').textContent = `${data.granularity === 'day' ? '전일' : '전월'} 대비: ${point.customdata[1]}`;
 		bubble.querySelector('.monthly-close').onclick = () => closeBubble(true);
 		bubble.querySelector('.monthly-open-articles').onclick = () => {
 			previousFocus = plot;
@@ -184,18 +185,23 @@ export default function ({ parentElement, data, setTriggerValue, key }) {
 	plot.addEventListener("keydown", plotKey);
 	plot.setAttribute(
 		"aria-label",
-		"월별 사용 확인 기사 추이. 점 클릭 또는 방향키와 Enter로 기사 정보를 확인합니다.",
+		`${data.granularity === 'day' ? '일별' : '월별'} 사용 확인 기사 추이. 점 클릭 또는 방향키와 Enter로 기사 정보를 확인합니다.`,
 	);
 	const resize = new ResizeObserver(() => {
-		if (!disposed && plot._fullLayout)
+		if (!disposed && plot.isConnected && plot._fullLayout && plot.clientWidth && plot.clientHeight)
 			window.Plotly.Plots.resize(plot).then(() => {
 				if (!disposed) positionBubble();
+			}).catch((error) => {
+				// 크기 조정 도중 필터 변경으로 제거된 차트는 더 이상 갱신하지 않는다.
+				if (!disposed && plot.isConnected && plot._fullLayout && plot.clientWidth && plot.clientHeight)
+					throw error;
 			});
 	});
 	resize.observe(plot);
 	window.Plotly.newPlot(plot, data.figure.data, data.figure.layout, {
 		displayModeBar: false,
-		responsive: true,
+		// 부모 크기 변경은 위 ResizeObserver가 처리한다.
+		responsive: false,
 	}).then(() => {
 		if (disposed) return;
 		plot.on("plotly_click", (event) => {
