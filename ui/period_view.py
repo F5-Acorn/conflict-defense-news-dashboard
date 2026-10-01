@@ -2,7 +2,6 @@
 
 import hashlib
 import json
-from base64 import b64encode
 from html import escape
 
 import streamlit as st
@@ -23,7 +22,7 @@ from ui.charts import (
   period_trend_chart,
 )
 from ui.interactive import render_interactive_trend, render_judgement_donut
-from ui.wordcloud_view import wordcloud_image
+from ui.wordcloud_view import render_wordcloud_panel
 from utils.state import (
   MAX_CATEGORIES,
   ensure_dashboard,
@@ -213,8 +212,7 @@ def _interactive_trend(page_key, filters, snapshot, selected, categories):
   )
   labels = {cid: categories[cid][1] for cid in selected}
   colors = {
-    cid: TREND_PALETTE[index % len(TREND_PALETTE)]
-    for index, cid in enumerate(categories)
+    cid: TREND_PALETTE[index % len(TREND_PALETTE)] for index, cid in enumerate(selected)
   }
   comparison = '전월' if granularity == 'month' else '전일'
   st.caption(f'점을 선택하면 {comparison} 대비 증감과 관련 기사를 확인할 수 있습니다.')
@@ -304,14 +302,11 @@ def render_period_view(page_key):
       st.caption(
         f'선택한 국가간 분쟁과 기간을 기준으로 방산 {kind_text}별 사용 여부가 보도된 빈도 확인'
       )
-      content = wordcloud_image(word_counts, images=snapshot['wordcloud_images'])
-      if content is None:
-        st.info('선택한 조건에서 사용이 확인된 범주가 없습니다.')
-      else:
-        html_text = f'''<div class="period-wordcloud-image">
-                          <img alt="무기·기술 워드클라우드" src="data:image/png;base64,{b64encode(content).decode()}" />
-                        </div>'''
-        st.html(html_text)
+      render_wordcloud_panel(
+        word_counts,
+        images=snapshot['wordcloud_images'],
+        key=f'period_wordcloud_{page_key}',
+      )
 
     # 범주 선택
     with selected_column:

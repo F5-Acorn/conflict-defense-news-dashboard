@@ -92,7 +92,6 @@ def render_analysis_indicators(kind_text, analysis_count, usage_count):
                       <div class="overview-indicator-caption">
                         <div class="overview-indicator-label">
                           {label}
-                          <span class="overview-indicator-help" tabindex="0" title="고유 기사 기준" aria-label="고유 기사 기준">?</span>
                         </div>
                         <p>{escape(description)}</p>
                       </div>

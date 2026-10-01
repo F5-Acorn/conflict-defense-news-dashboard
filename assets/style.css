@@ -365,16 +365,20 @@ h3 {
 	gap: 8px !important;
 }
 [class*="st-key-period_words_"] {
+	height: 420px !important;
+	flex: 0 0 auto !important;
 	overflow: hidden !important;
 }
 [class*="st-key-period_words_"]
-	> [data-testid="stElementContainer"]:has(.period-wordcloud-image) {
+	> [data-testid="stLayoutWrapper"]:has(.period-wordcloud-image) {
 	flex: 1 1 0;
 	min-height: 0;
 	position: relative;
 }
 [class*="st-key-period_words_"]
-	[data-testid="stHtml"]:has(.period-wordcloud-image) {
+	> [data-testid="stLayoutWrapper"]:has(.period-wordcloud-image)
+	> [data-testid="stVerticalBlock"],
+[class*="st-key-period_wordcloud_"] {
 	height: 100%;
 }
 .period-wordcloud-image {
@@ -391,6 +395,15 @@ h3 {
 	width: 100%;
 	height: 100%;
 	object-fit: contain;
+}
+.period-wordcloud-loading {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 0.875rem;
+	color: #6f899c;
 }
 .period-donut-legend {
 	display: flex;
@@ -449,6 +462,11 @@ h3 {
 		flex: 0 0 auto !important;
 		overflow: visible;
 	}
+	[class*="st-key-period_words_"],
+	[data-testid="stLayoutWrapper"]:has(> [class*="st-key-period_words_"]) {
+		height: 420px !important;
+		flex: 0 0 auto !important;
+	}
 }
 @media (max-width: 1000px) {
 	[class*="st-key-period_analysis_"]
@@ -461,27 +479,6 @@ h3 {
 		width: 100%;
 		min-width: 0;
 		flex: 1 1 auto;
-	}
-	[class*="st-key-period_words_"],
-	[data-testid="stLayoutWrapper"]:has(> [class*="st-key-period_words_"]) {
-		height: auto !important;
-		flex: 0 0 auto !important;
-	}
-	.period-wordcloud-image,
-	[class*="st-key-period_words_"]
-		[data-testid="stHtml"]:has(.period-wordcloud-image) {
-		height: auto;
-	}
-	[class*="st-key-period_words_"]
-		> [data-testid="stElementContainer"]:has(.period-wordcloud-image) {
-		flex: 0 0 auto;
-	}
-	.period-wordcloud-image {
-		position: static;
-	}
-	.period-wordcloud-image img {
-		height: auto;
-		max-height: 400px;
 	}
 	[class*="st-key-period_picker_"],
 	[data-testid="stLayoutWrapper"]:has(> [class*="st-key-period_picker_"]) {

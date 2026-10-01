@@ -135,7 +135,8 @@ def _warm_defaults(snapshot):
   # 순수 이미지 생성 함수만 사용한다. 백그라운드에서 Streamlit UI를 호출하지 않는다.
   from ui.wordcloud_view import (
     WORDCLOUD_COLORS,
-    WORDCLOUD_ELLIPSE,
+    WORDCLOUD_EMPHASIS,
+    WORDCLOUD_LAYOUT_ATTEMPTS,
     WORDCLOUD_STYLE,
     render_wordcloud,
     wordcloud_key,
@@ -165,7 +166,8 @@ def _warm_defaults(snapshot):
         frequencies,
         WORDCLOUD_STYLE,
         WORDCLOUD_COLORS,
-        WORDCLOUD_ELLIPSE,
+        emphasis=WORDCLOUD_EMPHASIS,
+        attempts=WORDCLOUD_LAYOUT_ATTEMPTS,
       )
   snapshot['timings']['warm_seconds'] = perf_counter() - started
 

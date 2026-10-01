@@ -11,7 +11,7 @@ CATEGORY_PALETTE = (
   '#7fd28c',
   '#efab68',
 )
-TREND_PALETTE = ('#65C18C', '#B48AF2', '#ECA45B', '#E7CA55', '#B8D465')
+TREND_PALETTE = ('#f97316', '#a78bfa', '#f472b6', '#4ade80', '#dc2626')
 CHART_BACKGROUND = '#0b1b26'
 GRID_COLOR = '#243d50'
 TEXT_COLOR = '#b8d0e8'
