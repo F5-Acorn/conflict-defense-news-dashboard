@@ -110,6 +110,9 @@ h3 {
 }
 
 /* Overview의 분쟁별 카드와 선택 가능한 범주 태그 */
+.st-key-overview_conflicts [class*="st-key-overview_conflict_"] {
+	padding: 1rem;
+}
 .st-key-overview_conflicts .card-header {
 	background-color: #233c50;
 	display: flex;
@@ -117,7 +120,6 @@ h3 {
 	justify-content: space-between;
 	padding-left: 1rem;
 	padding-right: 1rem;
-	margin-top: 1rem;
 	flex-wrap: wrap;
 	gap: 0.5rem 1rem;
 	padding-block: 0.35rem;
@@ -277,12 +279,21 @@ h3 {
 }
 [class*="st-key-period_analysis_"]
 	[data-testid="stHorizontalBlock"]:has(> [data-testid="stColumn"])
-	> [data-testid="stColumn"]:last-child {
+	> [data-testid="stColumn"]:nth-child(2) {
 	container-type: inline-size;
 	container-name: period-donuts;
 }
 /* 열과 패널 사이의 래퍼에도 높이를 전달해야 height="stretch"가 채워진다. */
 @media (min-width: 1001px) {
+	:is(
+		[class*="st-key-period_picker_"],
+		.st-key-period_donut_annual,
+		.st-key-period_donut_monthly,
+		.st-key-period_donut_weekly
+	) {
+		height: 420px !important;
+		min-height: 0;
+	}
 	[class*="st-key-period_analysis_"]
 		> [data-testid="stLayoutWrapper"]:has(
 			> [data-testid="stHorizontalBlock"] > [data-testid="stColumn"]
@@ -292,7 +303,6 @@ h3 {
 		> [data-testid="stVerticalBlock"]
 		> [data-testid="stLayoutWrapper"]:has(
 			> :is(
-				[class*="st-key-period_words_"],
 				[class*="st-key-period_picker_"],
 				[class*="st-key-period_donut_annual"],
 				[class*="st-key-period_donut_monthly"],
@@ -326,7 +336,7 @@ h3 {
 	flex: 0 0 224px !important;
 	width: 224px !important;
 }
-/* 세 분석 패널의 높이를 맞추고 범주 목록만 스크롤한다. */
+/* 분석 패널의 높이를 맞추고 범주·기사 목록만 내부 스크롤한다. */
 [class*="st-key-period_picker_"] {
 	min-height: 0;
 	overflow: hidden !important;
@@ -356,7 +366,7 @@ h3 {
 	gap: 0.5rem !important;
 }
 [data-testid="stLayoutWrapper"]:has(> [class*="st-key-period_donut_body_"]) {
-	flex: 1 1 auto;
+	flex: 1 1 0;
 	min-height: 0;
 }
 [class*="st-key-period_donut_body_"] {
@@ -364,22 +374,66 @@ h3 {
 	justify-content: center;
 	gap: 8px !important;
 }
-[class*="st-key-period_words_"] {
-	height: 420px !important;
-	flex: 0 0 auto !important;
+.st-key-overview_words {
+	height: 250px !important;
+	min-height: 0;
 	overflow: hidden !important;
 }
-[class*="st-key-period_words_"]
+.st-key-overview_words
 	> [data-testid="stLayoutWrapper"]:has(.period-wordcloud-image) {
 	flex: 1 1 0;
 	min-height: 0;
 	position: relative;
 }
-[class*="st-key-period_words_"]
+.st-key-overview_words
 	> [data-testid="stLayoutWrapper"]:has(.period-wordcloud-image)
 	> [data-testid="stVerticalBlock"],
-[class*="st-key-period_wordcloud_"] {
+.st-key-overview_wordcloud {
 	height: 100%;
+}
+[class*="st-key-period_articles_"] {
+	min-height: 0;
+	overflow: hidden !important;
+	gap: 8px !important;
+}
+[class*="st-key-period_articles_"]
+	> [data-testid="stLayoutWrapper"]:has(
+		> [class*="st-key-period_article_list_"]
+	) {
+	flex: 1 1 0 !important;
+	min-height: 0;
+}
+[class*="st-key-period_article_list_"] {
+	height: 100% !important;
+	min-height: 0;
+	overflow: auto !important;
+}
+.monthly-article {
+	border-bottom: 1px solid #344d62;
+	padding: 14px 0;
+	overflow-wrap: anywhere;
+}
+.monthly-article h4 {
+	margin: 0 0 6px;
+	font-size: 16px;
+	color: #edf4fc;
+}
+.monthly-article p {
+	margin: 6px 0;
+}
+.monthly-article-meta {
+	color: #b8d0e8;
+	font-size: 12px;
+}
+.monthly-article a {
+	color: #79bfff;
+	text-decoration: underline;
+}
+[class*="st-key-period_article_pagination_"] {
+	justify-content: space-between;
+	flex: 0 0 auto;
+	border-top: 1px solid #344d62;
+	padding-top: 8px;
 }
 .period-wordcloud-image {
 	position: absolute;
@@ -395,15 +449,6 @@ h3 {
 	width: 100%;
 	height: 100%;
 	object-fit: contain;
-}
-.period-wordcloud-loading {
-	position: absolute;
-	inset: 0;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-size: 0.875rem;
-	color: #6f899c;
 }
 .period-donut-legend {
 	display: flex;
@@ -428,6 +473,32 @@ h3 {
 		flex-direction: column;
 		align-items: center;
 	}
+	[class*="st-key-period_donut_body_"] {
+		justify-content: flex-start;
+		overflow-y: auto;
+	}
+	[class*="st-key-period_donut_row_"]
+		> [data-testid="stLayoutWrapper"]:has(
+			> [class*="st-key-period_donut_item_"]
+		) {
+		flex: 0 0 auto !important;
+	}
+	[class*="st-key-period_donut_header_"] {
+		flex-wrap: wrap;
+	}
+}
+@media (max-width: 1000px) {
+	[class*="st-key-period_analysis_"],
+	[data-testid="stLayoutWrapper"]:has(> [class*="st-key-period_analysis_"]) {
+		height: auto !important;
+		flex: 0 0 auto !important;
+		overflow: visible;
+	}
+	[class*="st-key-period_articles_"],
+	[data-testid="stLayoutWrapper"]:has(> [class*="st-key-period_articles_"]) {
+		height: 420px !important;
+		flex: 0 0 auto !important;
+	}
 	:is(
 		.st-key-period_donut_annual,
 		.st-key-period_donut_monthly,
@@ -441,34 +512,17 @@ h3 {
 		)
 	) {
 		height: auto !important;
-		max-height: none !important;
+		flex: 0 0 auto !important;
 		overflow: visible !important;
 	}
-	[class*="st-key-period_donut_row_"]
-		> [data-testid="stLayoutWrapper"]:has(
-			> [class*="st-key-period_donut_item_"]
-		) {
-		flex: 0 0 auto !important;
-	}
-	[class*="st-key-period_donut_header_"] {
-		flex-wrap: wrap;
-	}
-}
-/* 좁은 화면에서 워드클라우드와 Overview의 콘텐츠 높이를 확보한다. */
-@media (max-width: 1279px) {
-	[class*="st-key-period_analysis_"],
-	[data-testid="stLayoutWrapper"]:has(> [class*="st-key-period_analysis_"]) {
-		height: auto !important;
-		flex: 0 0 auto !important;
+	[class*="st-key-period_donut_body_"] {
+		height: auto;
 		overflow: visible;
 	}
-	[class*="st-key-period_words_"],
-	[data-testid="stLayoutWrapper"]:has(> [class*="st-key-period_words_"]) {
-		height: 420px !important;
+	[data-testid="stLayoutWrapper"]:has(> [class*="st-key-period_donut_body_"]) {
 		flex: 0 0 auto !important;
 	}
-}
-@media (max-width: 1000px) {
+
 	[class*="st-key-period_analysis_"]
 		[data-testid="stHorizontalBlock"]:has(> [data-testid="stColumn"]) {
 		flex-direction: column;
@@ -499,6 +553,10 @@ h3 {
 		> [data-testid="stLayoutWrapper"]
 		> [data-testid="stHorizontalBlock"]
 		> [data-testid="stColumn"] {
+		width: 100%;
+		flex: 1 1 auto;
+	}
+	.st-key-overview_map_half [data-testid="stColumn"] {
 		width: 100%;
 		flex: 1 1 auto;
 	}
@@ -536,4 +594,67 @@ h3 {
 	[data-testid="stMetricValue"] {
 		font-size: 2rem;
 	}
+}
+
+.overview-conflict-focused {
+	outline: 2px solid var(--conflict-focus-color);
+	outline-offset: -2px;
+	border-radius: 8px;
+	background: color-mix(in srgb, var(--conflict-focus-color) 10%, transparent);
+}
+:is(
+		[class*="st-key-period_article_header_"],
+		[class*="st-key-period_trend_header_"]
+	)
+	h3 {
+	padding: 0;
+	margin: 0;
+	line-height: 24px;
+	overflow-wrap: anywhere;
+}
+@media (min-width: 1001px) {
+	[class*="st-key-period_layout_"]
+		> [data-testid="stLayoutWrapper"]
+		> [data-testid="stHorizontalBlock"]
+		> [data-testid="stColumn"]:nth-child(2) {
+		position: relative;
+		min-height: 0;
+	}
+	[class*="st-key-period_layout_"]
+		> [data-testid="stLayoutWrapper"]
+		> [data-testid="stHorizontalBlock"]
+		> [data-testid="stColumn"]:nth-child(2)
+		> [data-testid="stVerticalBlock"] {
+		position: absolute;
+		inset: 0;
+		height: 100%;
+	}
+	[data-testid="stLayoutWrapper"]:has(> [class*="st-key-period_articles_"]) {
+		flex: 1 1 0;
+		min-height: 0;
+	}
+	[class*="st-key-period_articles_"] {
+		height: 100% !important;
+	}
+}
+@media (max-width: 1000px) {
+	[class*="st-key-period_layout_"]
+		> [data-testid="stLayoutWrapper"]
+		> [data-testid="stHorizontalBlock"] {
+		flex-direction: column;
+	}
+	[class*="st-key-period_layout_"]
+		> [data-testid="stLayoutWrapper"]
+		> [data-testid="stHorizontalBlock"]
+		> [data-testid="stColumn"] {
+		width: 100%;
+		min-width: 0;
+		flex: 1 1 auto;
+	}
+}
+
+/* 사용 조각 선택 후에도 도넛에 포커스 테두리를 그리지 않는다. */
+.judgement-donut :focus,
+.judgement-donut :focus-visible {
+	outline: none !important;
 }

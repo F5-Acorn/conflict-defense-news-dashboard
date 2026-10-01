@@ -96,6 +96,7 @@ def default_filters(settings, page_key):
       'selected_category_ids': [],
       'categories_initialized': False,
       'category_search': '',
+      'article_category_id': None,
     }
   raise ValueError(f'지원하지 않는 페이지: {page_key}')
 
@@ -171,6 +172,7 @@ def reset_filters(page_key):
     filters['selected_category_ids'] = []
     filters['categories_initialized'] = False
     filters['category_search'] = ''
+    filters['article_category_id'] = None
     st.session_state.pop(filter_widget_key(page_key, 'category_search'), None)
   clear_monthly_ui(page_key)
 

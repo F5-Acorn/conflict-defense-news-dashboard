@@ -3,7 +3,7 @@ export default function ({ parentElement, data, setStateValue, key }) {
 	registry.get(key)?.();
 	const root = parentElement.querySelector('.period-wordcloud-image');
 	const image = root.querySelector('img');
-	const loading = root.querySelector('.period-wordcloud-loading');
+	const loading = root.querySelector('.dashboard-loading');
 	let timer, disposed = false;
 
 	function measure() {
@@ -21,7 +21,7 @@ export default function ({ parentElement, data, setStateValue, key }) {
 		// 부모 크기와 일치하는 최종 배치가 로드된 뒤에만 표시한다.
 		image.style.visibility = ready ? 'visible' : 'hidden';
 		image.style.objectFit = 'fill';
-		loading.style.display = ready ? 'none' : 'flex';
+		loading.hidden = ready;
 		clearTimeout(timer);
 		if (!matches) {
 			timer = setTimeout(() => {
@@ -32,6 +32,13 @@ export default function ({ parentElement, data, setStateValue, key }) {
 
 	const observer = new ResizeObserver(measure);
 	image.onload = measure;
+	image.onerror = () => {
+		if (disposed) return;
+		clearTimeout(timer);
+		loading.querySelector('.dashboard-spinner').hidden = true;
+		loading.querySelector('.dashboard-loading-message').textContent = '워드클라우드를 표시할 수 없습니다.';
+		loading.hidden = false;
+	};
 	if (data.image) image.src = data.image;
 	observer.observe(root);
 	measure();
@@ -40,6 +47,7 @@ export default function ({ parentElement, data, setStateValue, key }) {
 		clearTimeout(timer);
 		observer.disconnect();
 		image.onload = null;
+		image.onerror = null;
 		if (registry.get(key) === cleanup) registry.delete(key);
 	};
 	registry.set(key, cleanup);

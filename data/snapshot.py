@@ -159,16 +159,20 @@ def _warm_defaults(snapshot):
       selected,
       'day' if page in ('monthly', 'weekly') else 'month',
     )
-    frequencies = summary_word_counts(summary)
-    key = wordcloud_key(frequencies) if frequencies else None
-    if key is not None and key not in snapshot['wordcloud_images']:
-      snapshot['wordcloud_images'][key] = render_wordcloud(
-        frequencies,
-        WORDCLOUD_STYLE,
-        WORDCLOUD_COLORS,
-        emphasis=WORDCLOUD_EMPHASIS,
-        attempts=WORDCLOUD_LAYOUT_ATTEMPTS,
-      )
+  settings = snapshot['settings']
+  summary = category_summary(
+    snapshot, '전체', settings['start'], settings['end'], '전체'
+  )
+  frequencies = summary_word_counts(summary)
+  key = wordcloud_key(frequencies) if frequencies else None
+  if key is not None and key not in snapshot['wordcloud_images']:
+    snapshot['wordcloud_images'][key] = render_wordcloud(
+      frequencies,
+      WORDCLOUD_STYLE,
+      WORDCLOUD_COLORS,
+      emphasis=WORDCLOUD_EMPHASIS,
+      attempts=WORDCLOUD_LAYOUT_ATTEMPTS,
+    )
   snapshot['timings']['warm_seconds'] = perf_counter() - started
 
 

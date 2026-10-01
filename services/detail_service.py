@@ -83,18 +83,18 @@ def _change_text(row):
 def article_details(
   reports,
   category_id,
-  month,
+  start,
+  end,
   page=1,
   page_size=20,
-  granularity='month',
   conflict='전체',
 ):
-  '''원본 판정에서 필요한 범주·분쟁·월 또는 날짜의 기사만 조회한다.'''
-  selected_month = pd.Period(month, freq='M' if granularity == 'month' else 'D')
+  '''양 끝 날짜를 포함한 기간의 범주·분쟁별 사용 확인 기사를 조회한다.'''
   selected = (
     reports['usage_code'].eq(UsageCode.USED)
     & reports['category_id'].eq(category_id)
-    & reports['date'].between(selected_month.start_time, selected_month.end_time)
+    & reports['date'].ge(pd.Timestamp(start))
+    & reports['date'].lt(pd.Timestamp(end) + pd.Timedelta(days=1))
   )
   if conflict != '전체':
     selected &= reports['conflict'].eq(conflict)
@@ -138,7 +138,7 @@ def valid_article_request(
     or action.get('granularity', 'month') != granularity
   ):
     return False
-  if action.get('type') not in ('open_articles', 'article_page'):
+  if action.get('type') != 'open_articles':
     return False
   month = action.get('month')
   pattern = r'\d{4}-\d{2}' if granularity == 'month' else r'\d{4}-\d{2}-\d{2}'

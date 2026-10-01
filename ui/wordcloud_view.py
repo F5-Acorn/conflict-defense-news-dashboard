@@ -13,6 +13,7 @@ from PIL import ImageColor
 from wordcloud import WordCloud
 
 from config import CHART_BACKGROUND
+from ui.loading import loading_html
 
 # 이 설정을 수정하고 앱을 새로고침하면 바뀐 설정으로 이미지를 다시 생성한다.
 WORDCLOUD_STYLE = {
@@ -40,8 +41,8 @@ WORDCLOUD_LAYOUT_ATTEMPTS = 3
 
 wordcloud_component = components.component(
   'responsive_wordcloud',
-  html='''<div class="period-wordcloud-image">
-            <span class="period-wordcloud-loading" role="status">워드클라우드 준비 중...</span>
+  html=f'''<div class="period-wordcloud-image">
+            {loading_html("워드클라우드를 준비하는 중…")}
             <img alt="무기·기술 워드클라우드" style="visibility:hidden" />
           </div>''',
   js=(Path(__file__).with_name('frontend') / 'wordcloud.js').read_text(

@@ -5,6 +5,7 @@ import streamlit as st
 from data.snapshot import load_dashboard_snapshot
 from data.table_contract import DataValidationError
 from ui.components import apply_styles, render_filters
+from ui.loading import loading_html
 from utils.state import init_session_state
 
 st.set_page_config(
@@ -15,10 +16,19 @@ st.set_page_config(
 )
 
 apply_styles()
+# 표시 여부와 무관하게 자리표시자를 유지해 rerun 간 컨테이너 위치를 맞춘다.
+initial_loading = st.empty()
+if '_dashboard' not in st.session_state:
+  initial_loading.html(loading_html('대시보드를 불러오는 중…', initial=True))
+load_error = None
 try:
   snapshot = load_dashboard_snapshot()
 except DataValidationError as exc:
-  st.error(f'데이터를 불러올 수 없습니다. {exc}')
+  load_error = exc
+finally:
+  initial_loading.empty()
+if load_error is not None:
+  st.error(f'데이터를 불러올 수 없습니다. {load_error}')
   st.stop()
 previous_snapshot = st.session_state.get('_dashboard')
 if (

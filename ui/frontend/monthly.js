@@ -4,16 +4,17 @@ export default function ({ parentElement, data, setTriggerValue, key }) {
 	const registry = (window.__dashboardMonthlyRenderers ||= new Map());
 	registry.get(key)?.();
 	const plot = parentElement.querySelector(".monthly-plot");
+	const loading = parentElement.querySelector(".dashboard-loading");
+	loading.hidden = false;
+	loading.querySelector('.dashboard-spinner').hidden = false;
+	loading.querySelector('.dashboard-loading-message').textContent = '추이를 준비하는 중…';
+	plot.style.visibility = 'hidden';
 	const overlay = document.createElement("div");
 	overlay.className = "monthly-overlay-root";
 	document.body.appendChild(overlay);
-	let pending = false;
 	plot.setAttribute("aria-busy", "false");
 	let disposed = false,
-		bubble = null,
-		drawer = null,
-		previousFocus = null;
-	const oldOverflow = document.body.style.overflow;
+		bubble = null;
 	let keyboardIndex = 0,
 		activePoint = null;
 	const points = data.figure.data.flatMap((trace, curveNumber) =>
@@ -26,15 +27,14 @@ export default function ({ parentElement, data, setTriggerValue, key }) {
 			customdata: trace.customdata[pointNumber],
 		})),
 	);
+	// 목록만 바뀌면 차트 렌더러는 재실행되지 않으므로 요청 후 입력을 잠그지 않는다.
 	function emit(type, values = {}) {
-		if (pending) return;
-		pending = true;
-		plot.setAttribute("aria-busy", "true");
+		if (disposed) return;
 		setTriggerValue("action", {
 			type,
 			context: data.context,
 			kind: data.kind,
-			granularity: data.granularity || 'month',
+			granularity: data.granularity || "month",
 			conflict_id: data.conflict_id,
 			...values,
 		});
@@ -48,18 +48,8 @@ export default function ({ parentElement, data, setTriggerValue, key }) {
 		activePoint = null;
 		if (restore) focusPlot();
 	}
-	function closeDrawer() {
-		drawer?.remove();
-		drawer = null;
-		overlay.querySelector(".monthly-backdrop")?.remove();
-		document.body.style.overflow = oldOverflow;
-		if (previousFocus?.isConnected)
-			previousFocus.focus({ preventScroll: true });
-		else focusPlot();
-		emit("close_articles");
-	}
 	function showBubble(point) {
-		if (pending) return;
+		if (disposed) return;
 		closeBubble();
 		keyboardIndex = Math.max(
 			0,
@@ -70,18 +60,26 @@ export default function ({ parentElement, data, setTriggerValue, key }) {
 			),
 		);
 		activePoint = point;
-		bubble = parentElement.querySelector('.monthly-bubble-template')
+		bubble = parentElement
+			.querySelector(".monthly-bubble-template")
 			.content.firstElementChild.cloneNode(true);
-		bubble.setAttribute('aria-label', `${point.data.name} ${point.x} 기사 정보`);
-		bubble.querySelector('h4').textContent = point.data.name;
-		bubble.querySelector('.monthly-bubble-month').textContent = String(point.x).replaceAll('-', '.');
-		bubble.querySelector('strong').textContent = `${Number(point.y).toLocaleString()}건`;
-		bubble.querySelector('p').textContent = `${data.granularity === 'day' ? '전일' : '전월'} 대비: ${point.customdata[1]}`;
-		bubble.querySelector('.monthly-close').onclick = () => closeBubble(true);
-		bubble.querySelector('.monthly-open-articles').onclick = () => {
-			previousFocus = plot;
-			emit('open_articles', {category_id: point.customdata[0], month: point.x, page: 1});
-			closeBubble();
+		bubble.setAttribute(
+			"aria-label",
+			`${point.data.name} ${point.x} 기사 정보`,
+		);
+		bubble.querySelector("h4").textContent = point.data.name;
+		bubble.querySelector("strong").textContent =
+			`${Number(point.y).toLocaleString()}건`;
+		bubble.querySelector("p").textContent =
+			`${String(point.x).replaceAll("-", ".")} · ${data.granularity === "day" ? "전일" : "전월"} 대비: ${point.customdata[1]}`;
+		bubble.querySelector(".monthly-close").onclick = () => closeBubble(true);
+		bubble.querySelector(".monthly-open-articles").onclick = () => {
+			emit("open_articles", {
+				category_id: point.customdata[0],
+				month: point.x,
+				page: 1,
+			});
+			closeBubble(true);
 		};
 		overlay.appendChild(bubble);
 		positionBubble();
@@ -97,57 +95,10 @@ export default function ({ parentElement, data, setTriggerValue, key }) {
 		bubble.style.left = `${Math.max(12, Math.min(px + 12, window.innerWidth - box.width - 12))}px`;
 		bubble.style.top = `${Math.max(12, Math.min(py + 12, window.innerHeight - box.height - 12))}px`;
 	}
-	function showDrawer(payload) {
-		closeBubble();
-		previousFocus = plot;
-		// 내용과 페이지 버튼은 Python에서 생성한다. 브라우저에는 이벤트만 연결한다.
-		overlay.insertAdjacentHTML('beforeend', payload.html);
-		drawer = overlay.querySelector('.monthly-drawer');
-		overlay.querySelector('.monthly-backdrop').onclick = closeDrawer;
-		const close = drawer.querySelector('.monthly-close');
-		close.onclick = closeDrawer;
-		for (const link of drawer.querySelectorAll('[data-article-url]')) {
-			try {
-				const url = new URL(link.dataset.articleUrl);
-				if (['http:', 'https:'].includes(url.protocol)) {
-					link.href = url.href;
-					continue;
-				}
-			} catch (_) { /* 유효하지 않은 URL은 링크로 표시하지 않는다. */ }
-			link.remove();
-		}
-		for (const button of drawer.querySelectorAll('[data-page]')) {
-			button.onclick = () => emit('article_page', {
-				category_id: payload.category_id, month: payload.month,
-				page: Number(button.dataset.page),
-			});
-		}
-		document.body.style.overflow = "hidden";
-		close.focus({ preventScroll: true });
-	}
 	const onKey = (event) => {
-		if (event.key === "Escape") {
-			if (drawer) {
-				event.preventDefault();
-				closeDrawer();
-			} else if (bubble) {
-				event.preventDefault();
-				closeBubble(true);
-			}
-		}
-		if (drawer && event.key === "Tab") {
-			const focusable = [
-				...drawer.querySelectorAll("button:not(:disabled),a[href]"),
-			];
-			const first = focusable[0],
-				last = focusable.at(-1);
-			if (event.shiftKey && document.activeElement === first) {
-				event.preventDefault();
-				last.focus();
-			} else if (!event.shiftKey && document.activeElement === last) {
-				event.preventDefault();
-				first.focus();
-			}
+		if (event.key === "Escape" && bubble) {
+			event.preventDefault();
+			closeBubble(true);
 		}
 	};
 	const outside = (event) => {
@@ -185,30 +136,52 @@ export default function ({ parentElement, data, setTriggerValue, key }) {
 	plot.addEventListener("keydown", plotKey);
 	plot.setAttribute(
 		"aria-label",
-		`${data.granularity === 'day' ? '일별' : '월별'} 사용 확인 기사 추이. 점 클릭 또는 방향키와 Enter로 기사 정보를 확인합니다.`,
+		`${data.granularity === "day" ? "일별" : "월별"} 사용 확인 기사 추이. 점 클릭 또는 방향키와 Enter로 기사 정보를 확인합니다.`,
 	);
 	const resize = new ResizeObserver(() => {
-		if (!disposed && plot.isConnected && plot._fullLayout && plot.clientWidth && plot.clientHeight)
-			window.Plotly.Plots.resize(plot).then(() => {
-				if (!disposed) positionBubble();
-			}).catch((error) => {
-				// 크기 조정 도중 필터 변경으로 제거된 차트는 더 이상 갱신하지 않는다.
-				if (!disposed && plot.isConnected && plot._fullLayout && plot.clientWidth && plot.clientHeight)
-					throw error;
-			});
+		if (
+			!disposed &&
+			plot.isConnected &&
+			plot._fullLayout &&
+			plot.clientWidth &&
+			plot.clientHeight
+		)
+			window.Plotly.Plots.resize(plot)
+				.then(() => {
+					if (!disposed) positionBubble();
+				})
+				.catch((error) => {
+					// 크기 조정 도중 필터 변경으로 제거된 차트는 더 이상 갱신하지 않는다.
+					if (
+						!disposed &&
+						plot.isConnected &&
+						plot._fullLayout &&
+						plot.clientWidth &&
+						plot.clientHeight
+					)
+						throw error;
+				});
 	});
 	resize.observe(plot);
-	window.Plotly.newPlot(plot, data.figure.data, data.figure.layout, {
-		displayModeBar: false,
-		// 부모 크기 변경은 위 ResizeObserver가 처리한다.
-		responsive: false,
+	Promise.resolve().then(() => {
+		if (disposed) return;
+		return window.Plotly.newPlot(plot, data.figure.data, data.figure.layout, {
+			displayModeBar: false,
+			// 부모 크기 변경은 위 ResizeObserver가 처리한다.
+			responsive: false,
+		});
 	}).then(() => {
 		if (disposed) return;
+		plot.style.visibility = "visible";
+		loading.hidden = true;
 		plot.on("plotly_click", (event) => {
 			if (event.points?.length) showBubble(event.points[0]);
 		});
+	}).catch(() => {
+		if (disposed) return;
+		loading.querySelector('.dashboard-spinner').hidden = true;
+		loading.querySelector('.dashboard-loading-message').textContent = '추이를 표시할 수 없습니다.';
 	});
-	if (data.drawer) showDrawer(data.drawer);
 	const cleanup = () => {
 		if (disposed) return;
 		disposed = true;
@@ -219,7 +192,6 @@ export default function ({ parentElement, data, setTriggerValue, key }) {
 		window.removeEventListener("scroll", positionBubble, true);
 		plot.removeEventListener("keydown", plotKey);
 		overlay.remove();
-		document.body.style.overflow = oldOverflow;
 		window.Plotly.purge(plot);
 		if (registry.get(key) === cleanup) registry.delete(key);
 	};

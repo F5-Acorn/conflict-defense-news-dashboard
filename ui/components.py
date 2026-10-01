@@ -2,10 +2,12 @@
 
 from html import escape
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import streamlit as st
 
 from services.export_service import article_csv
+from ui.loading import LOADING_CSS
 from utils.state import (
   filter_widget_key,
   get_page_filters,
@@ -20,55 +22,46 @@ BUBBLE_TEMPLATE = f'''<template class="monthly-bubble-template">
                         <section class="monthly-bubble" role="dialog">
                           <button type="button" class="monthly-close" aria-label="말풍선 닫기">×</button>
                           <h4></h4>
-                          <div class="monthly-bubble-month"></div>
-                          <strong></strong>
                           <p></p>
-                          <button type="button" class="monthly-open-articles">관련 기사 보기</button>
+                          <div class="monthly-bubble-month">
+                            <strong></strong>
+                            <button type="button" class="monthly-open-articles">관련 기사 보기</button>
+                          </div>
                         </section>
                       </template>'''  # noqa: F541
 
 
-def article_panel_html(panel):
-  '''기사 내용은 텍스트로 이스케이프하며, 링크는 브라우저에서 HTTP(S)만 활성화한다.'''
+def article_cards_html(items):
+  '''기사 카드를 이스케이프하고 HTTP(S) 원문 링크만 활성화한다.'''
   cards = []
-  for item in panel['items']:
+  for item in items:
+    url = item['article_url']
+    try:
+      parsed = urlsplit(url)
+      valid_url = parsed.scheme.lower() in ('http', 'https') and bool(parsed.netloc)
+    except ValueError:
+      valid_url = False
+    link = (
+      f'<a href="{escape(url, quote=True)}" target="_blank" rel="noopener noreferrer">원문 보기 ↗</a>'
+      if valid_url
+      else ''
+    )
     html_text = f'''<article class="monthly-article">
                       <h4>{escape(item["title"])}</h4>
                       <div class="monthly-article-meta">{escape(item["date"])} · {escape(item["conflict"])}</div>
                       <p>{escape(item["evidence_sentence"])}</p>
-                      <a data-article-url="{escape(item["article_url"], quote=True)}" target="_blank" rel="noopener noreferrer">원문 보기 ↗</a>
+                      {link}
                     </article>'''
     cards.append(html_text)
-  articles = '\n'.join(cards)
-  if not articles:
-    html_text = f'''<p>해당 조건의 사용 확인 기사가 없습니다.</p>'''  # noqa: F541
-    articles = html_text
-  conflict = '분쟁 전체' if panel['conflict'] == '전체' else panel['conflict']
-  page, pages = panel['page'], panel['pages']
-  previous_disabled = ' disabled' if page <= 1 else ''
-  next_disabled = ' disabled' if page >= pages else ''
-  html_text = f'''<div class="monthly-backdrop"></div>
-                  <section class="monthly-drawer" role="dialog" aria-modal="true" aria-label="관련 기사 목록">
-                    <header class="monthly-drawer-header">
-                      <button type="button" class="monthly-close" aria-label="기사 목록 닫기">×</button>
-                      <h3>{escape(panel["category"])} 관련 기사</h3>
-                      <div>{escape(conflict)} · {escape(panel["month"].replace("-", "."))} · {panel["total"]:,}건</div>
-                    </header>
-                    <div class="monthly-articles">{articles}</div>
-                    <nav class="monthly-pagination" aria-label="기사 목록 페이지">
-                      <button type="button" data-page="{page - 1}"{previous_disabled}>이전</button>
-                      <span>{page} / {pages}</span>
-                      <button type="button" data-page="{page + 1}"{next_disabled}>다음</button>
-                    </nav>
-                  </section>'''
-  return html_text
+  return '\n'.join(cards)
 
 
 def apply_styles():
   '''assets/style.css를 읽어 모든 페이지에 같은 디자인을 적용한다.'''
   style_path = Path(__file__).resolve().parents[1] / 'assets' / 'style.css'
   styles = style_path.read_text(encoding='utf-8')
-  html_text = f'''<style>{styles}</style>'''
+  html_text = f'''<style>{styles}
+{LOADING_CSS}</style>'''
   st.html(html_text)
 
 

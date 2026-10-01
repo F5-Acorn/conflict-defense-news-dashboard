@@ -44,9 +44,9 @@ filtered_articles = (
 analysis_count, usage_count = article_totals(filtered_articles)
 if conflict == '전체':
   usage_count = snapshot['overview_summary']['usage_articles_total']
+conflict_ids = {name: cid for cid, name in settings['conflict_names_by_id'].items()}
 kinds = ['무기', '기술']
 kind_text = '방산 무기·기술'
-conflict_text = '국가간 분쟁 전체' if conflict == '전체' else f'{conflict} 분쟁'
 
 # 지도 수치는 기사 지표에서, 주요 범주는 범주별 보도 수에서 각각 집계한다.
 # 전체 선택 시 DB 로더의 분쟁 정렬 순서대로 지도와 왼쪽 카드를 표시한다.
@@ -54,15 +54,12 @@ selected_conflicts = list(conflicts) if conflict == '전체' else [conflict]
 counts = filtered_articles.set_index('conflict')['usage_articles'].to_dict()
 visible_conflicts = [item for item in selected_conflicts if counts.get(item, 0) > 0]
 visible_counts = {item: counts[item] for item in visible_conflicts}
-top_categories = {}
 top_rankings = {}
 for item in visible_conflicts:
-  top_categories[item] = {}
   top_rankings[item] = {}
   for category_kind in kinds:
     ranking = snapshot['overview_summary']['rankings'][item][category_kind]
     top_rankings[item][category_kind] = ranking
-    top_categories[item][category_kind] = ranking['category'].tolist()
 
 empty_usage_message = '선택한 조건의 사용 보도가 없습니다.'
 
@@ -115,7 +112,7 @@ with conflict_column.container(height=650, border=True, key='overview_conflicts'
     config = conflicts[item]
 
     # 분쟁별 카드
-    with st.container(border=False, key=f'overview_conflict_{index}'):
+    with st.container(border=False, key=f'overview_conflict_{conflict_ids[item]}'):
       html_text = f'''<div class="card-header">
                         <div class="card-title">
                           {render_flags(config["flag"])}
@@ -162,22 +159,23 @@ with summary_column.container(height='content', border=False, key='overview_summ
     with st.container(width=250, key='overview_downloads'):
       render_classification_downloads(settings)
 
-  # 국가간 분쟁 전체 방산 무기·기술 사용 보도 현황 지도
+  # 기존 지도 영역을 지도와 워드클라우드로 나눈다.
   with st.container(border=False, key='overview_map_half'):
-    st.subheader(f'{conflict_text} {kind_text} 사용 보도 현황 지도', anchor=False)
+    # map_column, words_column = st.columns([1, 1], gap='small')
+    # with map_column:
+    st.subheader('국가간 분쟁 지도', anchor=False)
     scale_max = max(counts.values(), default=0)
-    conflict_ids = {name: cid for cid, name in settings['conflict_names_by_id'].items()}
     map_context = f'{snapshot["revision"]}:{conflict}'
     map_html = snapshot['view_cache'].get(
       ('map', conflict),
       lambda: (
         build_conflict_map(
           visible_counts,
-          top_categories,
           conflicts,
           scale_max=scale_max,
           conflict_ids=conflict_ids,
           context=map_context,
+          locked_conflict_id=conflict_ids.get(conflict) if conflict != '전체' else None,
         )
         .get_root()
         .render()
@@ -185,7 +183,18 @@ with summary_column.container(height='content', border=False, key='overview_summ
     )
 
     # 지도 영역
-    event = render_map(map_html, map_context, overview_map_view(conflict))
+    event = render_map(
+      map_html,
+      map_context,
+      overview_map_view(conflict),
+      cards={
+        conflict_ids[item]: f'overview_conflict_{conflict_ids[item]}'
+        for item in visible_conflicts
+      },
+      colors={
+        conflict_ids[item]: conflicts[item]['color'] for item in visible_conflicts
+      },
+    )
     action = event.action
     if (
       isinstance(action, dict)
@@ -204,6 +213,17 @@ with summary_column.container(height='content', border=False, key='overview_summ
           'weekly': 'pages/04_weekly.py',
         }[page_key]
         st.switch_page(path)
+
+  # with words_column:
+  #   st.subheader('방산 무기·기술 현황', anchor=False)
+  #   with st.container(height=250, border=False, key='overview_words'):
+  #     start, end = filters['period']
+  #     summary = category_summary(snapshot, conflict, start, end, '전체')
+  #     render_wordcloud_panel(
+  #       summary_word_counts(summary),
+  #       images=snapshot['wordcloud_images'],
+  #       key='overview_wordcloud',
+  #     )
 
   # 세부 명칭
   with st.container(border=False, key='overview_details_half'):

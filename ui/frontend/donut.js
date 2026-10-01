@@ -1,7 +1,13 @@
-export default function ({ parentElement, data, key }) {
+export default function ({ parentElement, data, setTriggerValue, key }) {
 	const registry = (window.__dashboardDonutRenderers ||= new Map());
 	registry.get(key)?.();
 	const plot = parentElement.querySelector('.judgement-donut');
+	const figure = data.figure;
+	const loading = parentElement.querySelector('.dashboard-loading');
+	loading.hidden = false;
+	loading.querySelector('.dashboard-spinner').hidden = false;
+	loading.querySelector('.dashboard-loading-message').textContent = '차트를 준비하는 중…';
+	plot.style.visibility = 'hidden';
 	const svgNS = 'http://www.w3.org/2000/svg';
 	let disposed = false;
 
@@ -63,7 +69,7 @@ export default function ({ parentElement, data, key }) {
 	}
 
 	function placeRatios() {
-		const trace = data.data[0];
+		const trace = figure.data[0];
 		const total = trace.values.reduce((sum, value) => sum + value, 0);
 		for (const slice of plot.querySelectorAll('.pielayer .slice')) {
 			const point = slice.__data__;
@@ -71,11 +77,23 @@ export default function ({ parentElement, data, key }) {
 			slice.querySelectorAll('text.slicetext, path.textline').forEach(element => element.remove());
 			const index = point.i;
 			const code = trace.customdata[index];
+			if (code === data.used_code) {
+				slice.setAttribute('tabindex', '0');
+				slice.setAttribute('role', 'button');
+				slice.setAttribute('aria-label', '이 범주의 선택 기간 전체 사용 기사 보기');
+				slice.style.cursor = 'pointer';
+				slice.onkeydown = event => {
+					if (event.key === 'Enter' || event.key === ' ') {
+						event.preventDefault();
+						openArticles(code);
+					}
+				};
+			}
 			const fraction = trace.values[index] / total;
-			const radius = data.layout.meta.donut_diameter / 2;
+			const radius = figure.layout.meta.donut_diameter / 2;
 			const text = svg('text', {
 				class: 'donut-ratio-label', fill: '#ffffff',
-				'font-family': data.layout.font.family, 'font-size': 12,
+				'font-family': figure.layout.font.family, 'font-size': 12,
 				'pointer-events': 'none', 'data-status': code,
 				'aria-label': `${trace.labels[index]} ${(fraction * 100).toFixed(1)}%`,
 			}, slice);
@@ -94,14 +112,14 @@ export default function ({ parentElement, data, key }) {
 				positionText(text, outsideBox, x, point.cyFinal);
 				svg('path', {
 					class: 'textline', d: `M${edge},${point.cyFinal} H${edge - 6}`,
-					fill: 'none', stroke: data.layout.font.color, 'stroke-width': 1,
+					fill: 'none', stroke: figure.layout.font.color, 'stroke-width': 1,
 					'pointer-events': 'none',
 				}, slice);
 			} else {
 				// 작은 사용·불확실은 차트 오른쪽 빈 공간에 색상 표시와 함께 놓는다.
 				const x = point.cxFinal + radius + 4;
 				const y = point.cyFinal + (code === 0 ? -22 : 22);
-				const fallbackBox = fitLabelWidth(text, box, data.layout.width - x - 10);
+				const fallbackBox = fitLabelWidth(text, box, figure.layout.width - x - 10);
 				text.dataset.placement = 'fallback';
 				positionText(text, fallbackBox, x + 8 + fallbackBox.width / 2, y);
 				svg('circle', {cx: x + 2, cy: y, r: 2.5, fill: trace.marker.colors[index], 'pointer-events': 'none'}, slice);
@@ -109,22 +127,42 @@ export default function ({ parentElement, data, key }) {
 		}
 	}
 
+	function openArticles(code) {
+		if (disposed || code !== data.used_code) return;
+		setTriggerValue('action', {
+			type: 'period_articles', context: data.context,
+			category_id: data.category_id, usage_code: code,
+		});
+	}
+
 	async function draw() {
 		if (disposed) return;
 		const context = document.createElement('canvas').getContext('2d');
-		const annotations = data.layout.annotations.map(item => {
+		const annotations = figure.layout.annotations.map(item => {
 			const lines = item.text.split(/<br\s*\/?\s*>/i).map(line => line.replace(/<[^>]*>/g, ''));
-			context.font = `700 ${item.font.size}px ${data.layout.font.family}`;
+			context.font = `700 ${item.font.size}px ${figure.layout.font.family}`;
 			const longest = Math.max(...lines.map(line => context.measureText(line).width));
-			const available = data.layout.meta.donut_diameter * data.data[0].hole - 10;
+			const available = figure.layout.meta.donut_diameter * figure.data[0].hole - 10;
 			return {...item, x: .5, y: .5, xanchor: 'center', yanchor: 'middle',
 				font: {...item.font, size: Math.min(item.font.size, item.font.size * available / longest)}};
 		});
-		await window.Plotly.react(plot, data.data, {...data.layout, annotations}, {displayModeBar: false, responsive: false});
-		if (!disposed) placeRatios();
+		await window.Plotly.react(plot, figure.data, {...figure.layout, annotations}, {displayModeBar: false, responsive: false});
+		if (!disposed) {
+			placeRatios();
+			plot.style.visibility = 'visible';
+			loading.hidden = true;
+			plot.on('plotly_click', event => {
+				const point = event.points?.[0];
+				if (point) openArticles(figure.data[0].customdata[point.pointNumber]);
+			});
+		}
 	}
 
-	document.fonts.ready.then(draw);
+	document.fonts.ready.then(draw).catch(() => {
+		if (disposed) return;
+		loading.querySelector('.dashboard-spinner').hidden = true;
+		loading.querySelector('.dashboard-loading-message').textContent = '차트를 표시할 수 없습니다.';
+	});
 	const cleanup = () => {
 		disposed = true;
 		window.Plotly.purge(plot);
