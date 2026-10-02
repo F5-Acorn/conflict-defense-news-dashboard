@@ -5,14 +5,12 @@ import streamlit as st
 from sqlalchemy import create_engine, text
 from sqlalchemy.exc import SQLAlchemyError
 
-from data.constants import UsageCode
-from data.table_contract import COLUMNS, DataValidationError, _integers, validate_tables
+from data.table_contract import COLUMNS, DataValidationError, validate_tables
 
-# DB 판정 정의: 0=비사용, 1=사용, 2=불확실. 값으로 자동 추측하지 않는다.
-DB_USAGE_CODES = {0: UsageCode.NOT_USED, 1: UsageCode.USED, 2: UsageCode.UNCERTAIN}
 DB_KINDS = {'wp': 'wp', 'tech': 'tech', 'weapon': 'wp', 'technology': 'tech'}
 
 
+# secrets.toml 파일에서 DB url 정보를 조회해서 반환하는 함수
 def database_url():
   try:
     url = st.secrets['connections']['dashboarddb']['url']
@@ -27,6 +25,7 @@ def database_url():
 
 @st.cache_resource(show_spinner=False, max_entries=2)
 def get_db_engine(url):
+  '''URL별 DB 엔진을 생성·재사용하는 함수로, 캐싱 데이터 생성 시점이 30분 이내라면 재사용, 아니면 생성한다.'''
   try:
     return create_engine(
       url,
@@ -36,13 +35,12 @@ def get_db_engine(url):
       connect_args={'connect_timeout': 10, 'read_timeout': 60, 'write_timeout': 10},
     )
   except (SQLAlchemyError, ValueError) as exc:
-    raise DataValidationError('DB 연결 URL 형식을 확인해주세요.') from exc
+    raise DataValidationError(
+      'DB 엔진을 생성할 수 없습니다. 연결 URL과 엔진 설정을 확인해주세요.'
+    ) from exc
 
 
 def normalize_tables(tables):
-  results = tables['result']
-  codes = _integers('result', 'usage_code', results['usage_code'], 0, 2)
-  results['usage_code'] = codes.map(DB_USAGE_CODES).astype('int64')
   categories = tables['categories']
   categories['kind'] = categories['kind'].replace(DB_KINDS)
   validate_tables(tables)

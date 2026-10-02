@@ -32,7 +32,7 @@ def build_overview_article_counts(tables):
 def build_dashboard_data(tables, reports):
   '''조인된 판정에서 article_id를 중복 제거해 화면용 일별 지표를 만든다.
 
-  결과가 없는 수집 기사는 분석 지표에서 제외한다. 사용 건수는 내부 코드 0만 센다.
+  결과가 없는 수집 기사는 분석 지표에서 제외한다. 사용 건수는 usage_code=0만 센다.
   전체는 무기·기술의 합이 아닌 기사 집합의 합집합이며, 범주별 건수는 중복될 수 있다.
   '''
   articles = tables['articles']

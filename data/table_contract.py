@@ -85,7 +85,7 @@ def _validate_columns(name, frame, columns):
 
 
 def validate_tables(tables):
-  '''내부 코드(0=사용, 1=비사용, 2=불확실)로 변환된 테이블을 검증한다.'''
+  '''DB 판정 원값(0=사용, 1=비사용, 2=불확실)을 포함한 테이블을 검증한다.'''
   for name, columns in COLUMNS.items():
     if name not in tables:
       _invalid(name, '필수 테이블이 없습니다.')
@@ -144,6 +144,4 @@ def validate_tables(tables):
   results = tables['result']
   evidence = results.loc[results['usage_code'].eq(UsageCode.USED), 'evidence_sentence']
   if (evidence.isna() | evidence.astype(str).str.strip().eq('')).any():
-    _invalid(
-      'result', '사용 판정(내부 usage_code=0)에는 evidence_sentence가 필요합니다.'
-    )
+    _invalid('result', '사용 판정(usage_code=0)에는 evidence_sentence가 필요합니다.')

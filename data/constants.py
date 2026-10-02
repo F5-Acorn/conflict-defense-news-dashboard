@@ -1,4 +1,4 @@
-'''화면 내부 유형 이름과 판정 코드.'''
+'''화면 유형 이름과 DB 원값을 그대로 사용하는 판정 코드.'''
 
 from enum import IntEnum
 
@@ -13,6 +13,6 @@ class UsageCode(IntEnum):
 
 STATUS_LABELS = {
   UsageCode.USED: '사용',
-  UsageCode.UNCERTAIN: '불확실',
   UsageCode.NOT_USED: '비사용',
+  UsageCode.UNCERTAIN: '불확실',
 }
