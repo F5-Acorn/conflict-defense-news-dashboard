@@ -9,17 +9,23 @@ from ui.loading import loading_html
 from utils.state import init_session_state
 
 st.set_page_config(
-  page_title='해외 언론 보도 기반 국가간 분쟁의 방산 무기·기술 사용 동향 분석 대시보드',
-  page_icon='🌐',
-  layout='wide',
-  initial_sidebar_state='collapsed',
+  page_title='해외 언론 보도 기반 국가간 분쟁의 방산 무기·기술 사용 동향 분석 대시보드',  # 브라우저 탭명 설정
+  page_icon='🌐',  # 브라우저 탭 파비콘 설정
+  layout='wide',  # 본문 배치 레이아웃 설정 centered 보다 넓게 배치
+  initial_sidebar_state='collapsed',  # 왼쪽 사이드바 상태 설정 (접힌 상태로 시작)
 )
 
+# assets/styles.css 및 ui/frontend/loading.css 스타일 적용
 apply_styles()
-# 표시 여부와 무관하게 자리표시자를 유지해 rerun 간 컨테이너 위치를 맞춘다.
+
+# 로딩 표시 여부와 관계없이 매 실행마다 같은 위치에 빈 자리 할당
 initial_loading = st.empty()
+
+# 세션에 대시보드 데이터가 없으면 로딩 문구를 표시
 if '_dashboard' not in st.session_state:
   initial_loading.html(loading_html('대시보드를 불러오는 중…', initial=True))
+
+# 데이터 로딩 에러 예외처리 (데이터 로드에 실패해도 로딩 표기는 비가시화)
 load_error = None
 try:
   snapshot = load_dashboard_snapshot()
@@ -27,9 +33,12 @@ except DataValidationError as exc:
   load_error = exc
 finally:
   initial_loading.empty()
+
+# 데이터 로딩 실패시 streamlit 코드 실행 중단
 if load_error is not None:
   st.error(f'데이터를 불러올 수 없습니다. {load_error}')
   st.stop()
+
 previous_snapshot = st.session_state.get('_dashboard')
 if (
   previous_snapshot is not None

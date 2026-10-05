@@ -60,9 +60,7 @@ def apply_styles():
   '''assets/style.css를 읽어 모든 페이지에 같은 디자인을 적용한다.'''
   style_path = Path(__file__).resolve().parents[1] / 'assets' / 'style.css'
   styles = style_path.read_text(encoding='utf-8')
-  html_text = f'''<style>{styles}
-{LOADING_CSS}</style>'''
-  st.html(html_text)
+  st.html(f'<style>{styles}{LOADING_CSS}</style>')
 
 
 def render_analysis_indicators(kind_text, analysis_count, usage_count):
